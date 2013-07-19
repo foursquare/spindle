@@ -1,0 +1,10 @@
+<%
+  import com.foursquare.recordv2.codegen.runtime.ScalaField
+%>
+<%@ val field: ScalaField %>
+  def ${field.escapedName}: ${field.renderType.text}
+  def ${field.name}Option: Option[${field.renderType.text}]
+  def ${field.name}OrDefault: ${field.renderType.text}
+  def ${field.name}OrNull: ${field.renderType.text}
+  def ${field.name}OrThrow: ${field.renderType.text}
+  def ${field.isSetName}: Boolean

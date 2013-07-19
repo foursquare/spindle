@@ -1,0 +1,19 @@
+<%
+  import com.foursquare.recordv2.codegen.runtime.StructLike 
+%>
+<%@ val cls: StructLike %>
+  override def compare(that: ${cls.name}): Int = {
+    var cmp: Int = 0
+    if (that == null) {
+      1
+    }
+#for (field <- cls.fields)
+    else if ({
+      cmp = this.${field.isSetName}.compareTo(that.${field.isSetName})
+      cmp != 0 }) cmp
+    else if (this.${field.isSetName} && {
+      cmp = ${render(field.renderType.compareTemplate, Map("field" -> field))}
+      cmp != 0 }) cmp
+#end
+    else 0
+  }

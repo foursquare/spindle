@@ -1,0 +1,4 @@
+<%@ val renderType: com.foursquare.recordv2.codegen.runtime.PrimitiveRenderType %>
+<%@ val valueExpr: String %>
+<%@ val indent: String %>
+${indent}oprot.write${renderType.tprotocolSuffix}(${valueExpr})

@@ -1,0 +1,4 @@
+<%@ val renderType: com.foursquare.recordv2.codegen.runtime.StringRenderType.type %>
+<%@ val valueExpr: String %>
+<%@ val indent: String %>
+${indent}oprot.writeString(${valueExpr})

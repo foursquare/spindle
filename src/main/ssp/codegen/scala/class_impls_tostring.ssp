@@ -1,0 +1,13 @@
+<%
+  import com.foursquare.recordv2.codegen.runtime.StructLike 
+%>
+<%@ val cls: StructLike %>
+  override def toString: String = {
+    val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
+    val indenter = new org.codehaus.jackson.util.DefaultPrettyPrinter.FixedSpaceIndenter
+    val pp = new org.codehaus.jackson.util.DefaultPrettyPrinter
+    pp.indentObjectsWith(indenter)
+    val oprot = new com.foursquare.common.thrift.json.TReadableJSONProtocol(trans, pp)
+    write(oprot)
+    trans.toString("UTF8")
+  }

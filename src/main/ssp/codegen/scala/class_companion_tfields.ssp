@@ -1,0 +1,38 @@
+<%
+  import com.foursquare.recordv2.codegen.runtime.StructLike
+%>
+<%@ val cls: StructLike %>
+
+  // Thrift descriptors.
+  val ${cls.tstructName}: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("${cls.name}")
+
+#for (field <- cls.fields)
+  val ${field.tfieldName}: org.apache.thrift.protocol.TField =
+    new com.foursquare.common.thrift.base.EnhancedTField(
+      "${field.wireName}",
+      org.apache.thrift.protocol.TType.${field.renderType.ttype.name},
+      ${field.identifier},
+      Map[String, String](${(for ((k, v) <- field.enhancedTypeAnnotations) yield "\"%s\" -> \"%s\"".format(k, v)).mkString(", ")}).asJava
+    )
+#end
+
+  val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
+
+  val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
+    ${cls.fields.map(field => "\"%s\" -> %s".format(field.wireName, field.tfieldName)).mkString(",\n    ")}
+  )
+
+  object _Fields {
+#for (field <- cls.fields)
+    case object ${field.escapedName} extends _Fields(${field.identifier}, "${field.name}")
+#end
+  }
+
+  sealed abstract class _Fields private (id: Short, name: String) extends org.apache.thrift.TFieldIdEnum {
+    def getThriftFieldId: Short = id
+    def getFieldName: String = name
+  }
+
+  val idToTFieldIdEnum: Map[Short, org.apache.thrift.TFieldIdEnum] = Map(
+    ${cls.fields.map(field => "%s.toShort -> _Fields.%s".format(field.identifier, field.escapedName)).mkString(",\n    ")}
+  )

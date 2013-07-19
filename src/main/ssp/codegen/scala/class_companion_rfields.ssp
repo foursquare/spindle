@@ -1,0 +1,44 @@
+<%
+  import com.foursquare.recordv2.codegen.runtime.StructLike 
+%>
+<%@ val cls: StructLike %>
+  // Record v2 Descriptors.
+<%--
+  // These look very much like the Thrift Descriptors, but they include type parameters
+  // which will be useful for Rogue. Maybe there's a way to merge the two?
+--%>
+#for (field <- cls.fields)
+
+  val ${field.escapedName} =
+#if (field.isForeignKey)
+    new com.foursquare.recordv2.ForeignKeyFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type](
+#elseif (field.renderType.isInstanceOf[com.foursquare.recordv2.codegen.runtime.BitfieldStructRenderType])
+<% val structName = field.renderType.asInstanceOf[com.foursquare.recordv2.codegen.runtime.BitfieldStructRenderType].className %>
+    new com.foursquare.recordv2.BitfieldFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type, ${structName}, ${structName}.type]( 
+#else
+    new com.foursquare.recordv2.OptionalFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type](
+#end
+      name = "${field.wireName}",
+      longName = "${field.name}",
+      id = ${field.identifier},
+      annotations = Map(${field.annotations.toSeq.map(at => "\"%s\" -> \"%s\"".format(at._1, at._2)).mkString(", ")}),
+      owner = ${cls.name},
+      getter = _.${field.name}Option,
+      setterRaw = (r: ${cls.name}.Raw, v: ${field.renderType.text}) => { r.${field.escapedName}_=(v) },
+#if (field.isForeignKey)
+      objSetter = (r: ${cls.name}, obj: com.foursquare.recordv2.SemitypedHasPrimaryKey[${field.renderType.text}]) => { r.${field.name}SetObj(obj) },
+      objGetter = (r: ${cls.name}, m: com.foursquare.recordv2.UntypedMetaRecord) => { r.${field.name}UntypedFk(m) },
+      alternateObjSetter = (r: ${cls.name}, obj: AnyRef) => { r.${field.name}SetAlternateObj(obj) },
+      alternateObjGetter = (r: ${cls.name}) => { r.${field.name}AlternateFk },
+#elseif (field.renderType.isInstanceOf[com.foursquare.recordv2.codegen.runtime.BitfieldStructRenderType])
+<% val structName = field.renderType.asInstanceOf[com.foursquare.recordv2.codegen.runtime.BitfieldStructRenderType].className %>
+      structMeta = ${structName},
+#end
+      manifest = manifest[${field.renderType.text}]
+    )
+#end
+
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, ${cls.name}, ${cls.name}.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, ${cls.name}, ${cls.name}.type]](
+      ${cls.fields.map(_.escapedName).mkString(",\n      ")}
+    )

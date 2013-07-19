@@ -1,0 +1,13 @@
+<%@ val renderType: com.foursquare.recordv2.codegen.runtime.NewtypeRenderType %>
+<%@ val lhs: String %>
+<%@ val indent: String %>
+<%@ val wrapLeft: String = "" %>
+<%@ val wrapRight: String = "" %>
+<% import renderType.ref %>
+<% render("../" + ref.fieldReadTemplate,
+    Map(
+      "renderType" -> renderType.ref,
+      "lhs" -> lhs,
+      "indent" -> indent,
+      "wrapLeft" -> (renderType.text + "(" + wrapLeft),
+      "wrapRight" -> (wrapRight + ")"))) %>

@@ -1,0 +1,60 @@
+<%
+  import com.foursquare.recordv2.codegen.runtime.ScalaEnum
+%>
+<%@ val enum: ScalaEnum %>
+<%--
+// Scala Enumeration is awful, so we just generate our own enum-like thing
+// here. Enumeration (and Java's type-safe enums) are just boilerplate-reducing
+// conveniences, and since we're generating code, we don't need that
+// convenience anyway.
+
+// Making enumeration classes 'sealed' and 'abstract' will prevent new
+// instances being defined outside of this file, and will also provide
+// exhaustiveness checking when pattern matching on the enumeration.
+--%>
+sealed abstract class ${enum.name} private (
+    override val id: Int,
+    override val name: String,
+    override val stringValue: String
+) extends com.foursquare.recordv2.Enum[${enum.name}] with org.apache.thrift.TEnum {
+  override def toString: String = name
+  override def getValue: Int = id
+  override def meta: ${enum.name}.type = ${enum.name}
+}
+
+object ${enum.name} extends com.foursquare.recordv2.EnumMeta[${enum.name}] {
+<%--
+// Making enumeration instances case objects provides exhaustiveness checking
+// when pattern matching on the enumeration.
+--%>
+#for (elem <- enum.elements)
+  <% val alt = elem.alternateValue.getOrElse(elem.name) %>
+  object ${elem.name} extends ${enum.name}(${elem.value.toString}, "${elem.name}", "${alt}")
+#end
+
+  override val values: Vector[${enum.name}] =
+    Vector(
+      ${enum.elements.map(_.name).mkString(",\n      ")}
+    )
+
+  override def findByIdOrNull(id: Int): ${enum.name} = id match {
+#for (elem <- enum.elements)
+    case ${elem.value.toString} => ${elem.name}
+#end
+    case _ => null
+  }
+
+  override def findByNameOrNull(name: String): ${enum.name} = name match {
+#for (elem <- enum.elements)
+    case "${elem.name}" => ${elem.name}
+#end
+    case _ => null
+  }
+
+  override def findByStringValueOrNull(v: String): ${enum.name} = v match {
+#for (elem <- enum.elements)
+    case "${elem.alternateValue.getOrElse(elem.name)}" => ${enum.name}.${elem.name}
+#end
+    case _ => null
+  }
+}

@@ -1,0 +1,76 @@
+<%
+  import com.foursquare.recordv2.codegen.runtime.{PrimitiveRenderType, StructLike}
+%>
+<%@ val cls: StructLike %>
+<%
+val isIndexed = cls.annotations.contains("index")
+
+def escapeQuotes(str: String): String = str.replace("\"", "\\\"")
+%>\
+
+object ${cls.name}
+    extends com.foursquare.recordv2.MetaRecord[${cls.name}]
+#for (pkField <- cls.primaryKeyField)
+    with com.foursquare.recordv2.HasMetaPrimaryKey[${pkField.renderType.text}, ${cls.name}]
+#end
+    with com.foursquare.recordv2.RecordProvider[${cls.name}] \
+#if (isIndexed)\
+with com.foursquare.index.IndexedRecord[${cls.name}] \
+#end
+{
+  override def recordName: String = "${cls.name}"
+
+<% render("class_companion_tfields.ssp", Map("cls" -> cls)) %>
+
+  // Record v2
+  override type Self = ${cls.name}.type
+  override type Trait = ${cls.name}
+  override type Mutable = Mutable${cls.name}
+  override type Raw = Raw${cls.name}
+
+  override def createRecord: ${cls.name} = createRawRecord
+  override def createRawRecord: ${cls.name}.Raw = new ${cls.name}.Raw
+
+  override def ifInstanceFrom(x: AnyRef): Option[${cls.name}] = {
+    if (x.isInstanceOf[${cls.name}]) Some(x.asInstanceOf[${cls.name}]) else None
+  }
+
+  override val annotations: com.foursquare.recordv2.Annotations =
+#if (cls.annotations.nonEmpty)
+    new com.foursquare.recordv2.Annotations(scala.collection.immutable.Vector(
+      ${cls.annotations.toSeq.map(annot => "(\"%s\", \"%s\")".format(annot._1, escapeQuotes(annot._2))).mkString(",\n      ")}
+    ))
+#else
+    com.foursquare.recordv2.Annotations.empty
+#end
+
+<% render("class_companion_rfields.ssp", Map("cls" -> cls)) %>
+
+#for (pkField <- cls.primaryKeyField)
+  override def primaryKey: com.foursquare.recordv2.FieldDescriptor[${pkField.renderType.text}, ${cls.name}, ${cls.name}.type] = this.${pkField.name}
+#end
+\
+#if (isIndexed)
+
+<% render("class_companion_indexlist.ssp", Map("cls" -> cls)) %>
+#end
+
+  def apply(
+      ${cls.fields.map(field => "%s: %s".format(field.escapedName, field.renderType.text)).mkString(",\n      ")}
+  ): ${cls.name} = {
+    val ret = ${cls.name}.createRawRecord
+#for (field <- cls.fields)
+    ret.${field.escapedName}_=(${field.escapedName})
+#end
+    ret
+  }
+
+<% render("class_companion_builder.ssp", Map("cls" -> cls)) %>
+
+  implicit val companionProvider: ${cls.name}CompanionProvider = new ${cls.name}CompanionProvider
+}
+
+class ${cls.name}CompanionProvider extends com.foursquare.recordv2.CompanionProvider[${cls.name}] {
+  type CompanionT = ${cls.name}.type
+  override def provide: ${cls.name}.type = ${cls.name}
+}

@@ -1,0 +1,6 @@
+<%
+  import com.foursquare.recordv2.codegen.runtime.ScalaField
+%>
+<%@ val field: ScalaField %>
+<% render("proxy_ref.ssp", Map("field" -> field)) %>
+  override def ${field.name}ByteArray: Array[Byte] = underlying.${field.name}ByteArray

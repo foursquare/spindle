@@ -1,0 +1,8 @@
+<%
+  import com.foursquare.recordv2.codegen.runtime.StructLike 
+%>
+<%@ val cls: StructLike %>
+  def validate(): Boolean = {
+    // TODO(benjy): Implement checks that all required fields are set.
+    true
+  }

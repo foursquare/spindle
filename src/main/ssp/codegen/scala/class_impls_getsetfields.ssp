@@ -1,0 +1,12 @@
+<%
+  import com.foursquare.recordv2.codegen.runtime.StructLike 
+%>
+<%@ val cls: StructLike %>
+  // Returns the values of the set fields on this object, in id order.
+  def getSetFields: Seq[Any] = {
+    var ret: List[Any] = Nil
+#for (field <- cls.fields)
+    if (${field.isSetName}) ret = ${field.defaultName} :: ret
+#end
+    ret.reverse
+  }

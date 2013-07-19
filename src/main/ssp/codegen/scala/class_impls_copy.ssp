@@ -1,0 +1,13 @@
+<%
+  import com.foursquare.recordv2.codegen.runtime.StructLike 
+%>
+<%@ val cls: StructLike %>
+  override def copy(
+      ${cls.fields.map(field => "%s: %s = %sOrNull".format(field.escapedName, field.renderType.boxedText, field.name)).mkString(",\n      ")}
+  ): ${cls.name}.Raw = {
+    val ret = new ${cls.name}.Raw
+#for (field <- cls.fields)
+    if (${field.escapedName} != null) ret.${field.escapedName}_=(${field.escapedName})
+#end
+    ret
+  }

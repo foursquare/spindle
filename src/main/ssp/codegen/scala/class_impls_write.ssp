@@ -1,0 +1,15 @@
+<%@ val cls: com.foursquare.recordv2.codegen.runtime.StructLike  %>
+
+  override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
+    validate()
+    oprot.writeStructBegin(${cls.name}.${cls.tstructName})
+#for (field <- cls.fields)
+    if (${field.isSetName}) {
+      oprot.writeFieldBegin(${cls.name}.${field.tfieldName})
+<% render(field.renderType.fieldWriteTemplate, Map("renderType" -> field.renderType, "valueExpr" -> field.varName, "indent" -> "      ")) %>
+      oprot.writeFieldEnd()
+    }
+#end
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+  }

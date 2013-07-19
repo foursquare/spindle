@@ -1,0 +1,9 @@
+<%
+  import com.foursquare.recordv2.codegen.runtime.{BitfieldStructRenderType, ScalaField}
+%>
+<%@ val field: ScalaField %>
+<%
+  val renderType = field.renderType.asInstanceOf[BitfieldStructRenderType]
+  render("../" + renderType.ref.fieldDefTemplate, Map("field" -> field))
+%>
+  def ${field.name}Struct: ${renderType.className} = ${renderType.bitfieldRead}(this.${field.escapedName}, ${renderType.className})

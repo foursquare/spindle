@@ -1,0 +1,9 @@
+<%
+  import com.foursquare.recordv2.codegen.runtime.StructLike 
+%>
+<%@ val cls: StructLike %>
+  override def clear() {
+#for (field <- cls.fields)
+    ${field.name}Unset()
+#end
+  }
