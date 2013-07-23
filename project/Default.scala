@@ -6,7 +6,7 @@ import sbt._
 object Default {
   val all: Seq[Setting[_]] = Seq(
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
-    Keys.version := "0.1-SNAPSHOT",
+    Keys.version := "0.2-SNAPSHOT",
     Keys.organization := "com.foursquare.common"
   ) ++ net.virtualvoid.sbt.graph.Plugin.graphSettings
 
