@@ -17,13 +17,13 @@ sealed abstract class SimpleBaseType private (
     override val id: Int,
     override val name: String,
     override val stringValue: String
-) extends com.foursquare.recordv2.runtime.Enum[SimpleBaseType] with org.apache.thrift.TEnum {
+) extends com.foursquare.recordv2.Enum[SimpleBaseType] with org.apache.thrift.TEnum {
   override def toString: String = name
   override def getValue: Int = id
   override def meta: SimpleBaseType.type = SimpleBaseType
 }
 
-object SimpleBaseType extends com.foursquare.recordv2.runtime.EnumMeta[SimpleBaseType] {
+object SimpleBaseType extends com.foursquare.recordv2.EnumMeta[SimpleBaseType] {
 
     object BOOL extends SimpleBaseType(0, "BOOL", "BOOL")
     object BYTE extends SimpleBaseType(1, "BYTE", "BYTE")
@@ -87,13 +87,13 @@ sealed abstract class Requiredness private (
     override val id: Int,
     override val name: String,
     override val stringValue: String
-) extends com.foursquare.recordv2.runtime.Enum[Requiredness] with org.apache.thrift.TEnum {
+) extends com.foursquare.recordv2.Enum[Requiredness] with org.apache.thrift.TEnum {
   override def toString: String = name
   override def getValue: Int = id
   override def meta: Requiredness.type = Requiredness
 }
 
-object Requiredness extends com.foursquare.recordv2.runtime.EnumMeta[Requiredness] {
+object Requiredness extends com.foursquare.recordv2.EnumMeta[Requiredness] {
 
     object REQUIRED extends Requiredness(0, "REQUIRED", "REQUIRED")
     object OPTIONAL extends Requiredness(1, "OPTIONAL", "OPTIONAL")
@@ -127,8 +127,8 @@ object Requiredness extends com.foursquare.recordv2.runtime.EnumMeta[Requirednes
 
 
 object Include
-    extends com.foursquare.recordv2.runtime.MetaRecord[Include]
-    with com.foursquare.recordv2.runtime.RecordProvider[Include] {
+    extends com.foursquare.recordv2.MetaRecord[Include]
+    with com.foursquare.recordv2.RecordProvider[Include] {
   override def recordName: String = "Include"
 
 
@@ -175,16 +175,16 @@ object Include
     if (x.isInstanceOf[Include]) Some(x.asInstanceOf[Include]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val path =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Include, Include.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Include, Include.type](
       name = "path",
       longName = "path",
       id = 1,
@@ -195,8 +195,8 @@ object Include
       manifest = manifest[String]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Include, Include.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Include, Include.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Include, Include.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Include, Include.type]](
       path
     )
 
@@ -247,7 +247,7 @@ object Include
   implicit val companionProvider: IncludeCompanionProvider = new IncludeCompanionProvider
 }
 
-class IncludeCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Include] {
+class IncludeCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Include] {
   type CompanionT = Include.type
   override def provide: Include.type = Include
 }
@@ -256,7 +256,7 @@ class IncludeCompanionProvider extends com.foursquare.recordv2.runtime.Companion
 
 trait Include
 
-    extends com.foursquare.recordv2.runtime.Record[Include]
+    extends com.foursquare.recordv2.Record[Include]
     with scala.Ordered[Include]
     with org.apache.thrift.TBase[Include, Include._Fields] {
 
@@ -557,8 +557,8 @@ final class RawInclude extends MutableInclude {
 
 
 object Namespace
-    extends com.foursquare.recordv2.runtime.MetaRecord[Namespace]
-    with com.foursquare.recordv2.runtime.RecordProvider[Namespace] {
+    extends com.foursquare.recordv2.MetaRecord[Namespace]
+    with com.foursquare.recordv2.RecordProvider[Namespace] {
   override def recordName: String = "Namespace"
 
 
@@ -615,16 +615,16 @@ object Namespace
     if (x.isInstanceOf[Namespace]) Some(x.asInstanceOf[Namespace]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val language =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Namespace, Namespace.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Namespace, Namespace.type](
       name = "language",
       longName = "language",
       id = 1,
@@ -637,7 +637,7 @@ object Namespace
 
   val name =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Namespace, Namespace.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Namespace, Namespace.type](
       name = "name",
       longName = "name",
       id = 2,
@@ -648,8 +648,8 @@ object Namespace
       manifest = manifest[String]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Namespace, Namespace.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Namespace, Namespace.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Namespace, Namespace.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Namespace, Namespace.type]](
       language,
       name
     )
@@ -708,7 +708,7 @@ object Namespace
   implicit val companionProvider: NamespaceCompanionProvider = new NamespaceCompanionProvider
 }
 
-class NamespaceCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Namespace] {
+class NamespaceCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Namespace] {
   type CompanionT = Namespace.type
   override def provide: Namespace.type = Namespace
 }
@@ -717,7 +717,7 @@ class NamespaceCompanionProvider extends com.foursquare.recordv2.runtime.Compani
 
 trait Namespace
 
-    extends com.foursquare.recordv2.runtime.Record[Namespace]
+    extends com.foursquare.recordv2.Record[Namespace]
     with scala.Ordered[Namespace]
     with org.apache.thrift.TBase[Namespace, Namespace._Fields] {
 
@@ -1086,8 +1086,8 @@ final class RawNamespace extends MutableNamespace {
 
 
 object Annotation
-    extends com.foursquare.recordv2.runtime.MetaRecord[Annotation]
-    with com.foursquare.recordv2.runtime.RecordProvider[Annotation] {
+    extends com.foursquare.recordv2.MetaRecord[Annotation]
+    with com.foursquare.recordv2.RecordProvider[Annotation] {
   override def recordName: String = "Annotation"
 
 
@@ -1144,16 +1144,16 @@ object Annotation
     if (x.isInstanceOf[Annotation]) Some(x.asInstanceOf[Annotation]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val key =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Annotation, Annotation.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Annotation, Annotation.type](
       name = "key",
       longName = "key",
       id = 1,
@@ -1166,7 +1166,7 @@ object Annotation
 
   val value =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Annotation, Annotation.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Annotation, Annotation.type](
       name = "value",
       longName = "value",
       id = 2,
@@ -1177,8 +1177,8 @@ object Annotation
       manifest = manifest[String]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Annotation, Annotation.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Annotation, Annotation.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Annotation, Annotation.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Annotation, Annotation.type]](
       key,
       value
     )
@@ -1237,7 +1237,7 @@ object Annotation
   implicit val companionProvider: AnnotationCompanionProvider = new AnnotationCompanionProvider
 }
 
-class AnnotationCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Annotation] {
+class AnnotationCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Annotation] {
   type CompanionT = Annotation.type
   override def provide: Annotation.type = Annotation
 }
@@ -1246,7 +1246,7 @@ class AnnotationCompanionProvider extends com.foursquare.recordv2.runtime.Compan
 
 trait Annotation
 
-    extends com.foursquare.recordv2.runtime.Record[Annotation]
+    extends com.foursquare.recordv2.Record[Annotation]
     with scala.Ordered[Annotation]
     with org.apache.thrift.TBase[Annotation, Annotation._Fields] {
 
@@ -1615,8 +1615,8 @@ final class RawAnnotation extends MutableAnnotation {
 
 
 object BaseType
-    extends com.foursquare.recordv2.runtime.MetaRecord[BaseType]
-    with com.foursquare.recordv2.runtime.RecordProvider[BaseType] {
+    extends com.foursquare.recordv2.MetaRecord[BaseType]
+    with com.foursquare.recordv2.RecordProvider[BaseType] {
   override def recordName: String = "BaseType"
 
 
@@ -1673,16 +1673,16 @@ object BaseType
     if (x.isInstanceOf[BaseType]) Some(x.asInstanceOf[BaseType]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val simpleBaseType =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SimpleBaseType, BaseType, BaseType.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SimpleBaseType, BaseType, BaseType.type](
       name = "simpleBaseType",
       longName = "simpleBaseType",
       id = 1,
@@ -1695,7 +1695,7 @@ object BaseType
 
   val __annotations =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], BaseType, BaseType.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], BaseType, BaseType.type](
       name = "annotations",
       longName = "annotations",
       id = 99,
@@ -1706,8 +1706,8 @@ object BaseType
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, BaseType, BaseType.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, BaseType, BaseType.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, BaseType, BaseType.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, BaseType, BaseType.type]](
       simpleBaseType,
       __annotations
     )
@@ -1774,7 +1774,7 @@ object BaseType
   implicit val companionProvider: BaseTypeCompanionProvider = new BaseTypeCompanionProvider
 }
 
-class BaseTypeCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[BaseType] {
+class BaseTypeCompanionProvider extends com.foursquare.recordv2.CompanionProvider[BaseType] {
   type CompanionT = BaseType.type
   override def provide: BaseType.type = BaseType
 }
@@ -1783,7 +1783,7 @@ class BaseTypeCompanionProvider extends com.foursquare.recordv2.runtime.Companio
 
 trait BaseType
 
-    extends com.foursquare.recordv2.runtime.Record[BaseType]
+    extends com.foursquare.recordv2.Record[BaseType]
     with scala.Ordered[BaseType]
     with org.apache.thrift.TBase[BaseType, BaseType._Fields] {
 
@@ -2175,8 +2175,8 @@ final class RawBaseType extends MutableBaseType {
 
 
 object ListType
-    extends com.foursquare.recordv2.runtime.MetaRecord[ListType]
-    with com.foursquare.recordv2.runtime.RecordProvider[ListType] {
+    extends com.foursquare.recordv2.MetaRecord[ListType]
+    with com.foursquare.recordv2.RecordProvider[ListType] {
   override def recordName: String = "ListType"
 
 
@@ -2223,16 +2223,16 @@ object ListType
     if (x.isInstanceOf[ListType]) Some(x.asInstanceOf[ListType]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val elementTypeId =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, ListType, ListType.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, ListType, ListType.type](
       name = "elementTypeId",
       longName = "elementTypeId",
       id = 1,
@@ -2243,8 +2243,8 @@ object ListType
       manifest = manifest[String]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, ListType, ListType.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, ListType, ListType.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, ListType, ListType.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, ListType, ListType.type]](
       elementTypeId
     )
 
@@ -2295,7 +2295,7 @@ object ListType
   implicit val companionProvider: ListTypeCompanionProvider = new ListTypeCompanionProvider
 }
 
-class ListTypeCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[ListType] {
+class ListTypeCompanionProvider extends com.foursquare.recordv2.CompanionProvider[ListType] {
   type CompanionT = ListType.type
   override def provide: ListType.type = ListType
 }
@@ -2304,7 +2304,7 @@ class ListTypeCompanionProvider extends com.foursquare.recordv2.runtime.Companio
 
 trait ListType
 
-    extends com.foursquare.recordv2.runtime.Record[ListType]
+    extends com.foursquare.recordv2.Record[ListType]
     with scala.Ordered[ListType]
     with org.apache.thrift.TBase[ListType, ListType._Fields] {
 
@@ -2605,8 +2605,8 @@ final class RawListType extends MutableListType {
 
 
 object SetType
-    extends com.foursquare.recordv2.runtime.MetaRecord[SetType]
-    with com.foursquare.recordv2.runtime.RecordProvider[SetType] {
+    extends com.foursquare.recordv2.MetaRecord[SetType]
+    with com.foursquare.recordv2.RecordProvider[SetType] {
   override def recordName: String = "SetType"
 
 
@@ -2653,16 +2653,16 @@ object SetType
     if (x.isInstanceOf[SetType]) Some(x.asInstanceOf[SetType]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val elementTypeId =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, SetType, SetType.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, SetType, SetType.type](
       name = "elementTypeId",
       longName = "elementTypeId",
       id = 1,
@@ -2673,8 +2673,8 @@ object SetType
       manifest = manifest[String]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, SetType, SetType.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, SetType, SetType.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, SetType, SetType.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, SetType, SetType.type]](
       elementTypeId
     )
 
@@ -2725,7 +2725,7 @@ object SetType
   implicit val companionProvider: SetTypeCompanionProvider = new SetTypeCompanionProvider
 }
 
-class SetTypeCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[SetType] {
+class SetTypeCompanionProvider extends com.foursquare.recordv2.CompanionProvider[SetType] {
   type CompanionT = SetType.type
   override def provide: SetType.type = SetType
 }
@@ -2734,7 +2734,7 @@ class SetTypeCompanionProvider extends com.foursquare.recordv2.runtime.Companion
 
 trait SetType
 
-    extends com.foursquare.recordv2.runtime.Record[SetType]
+    extends com.foursquare.recordv2.Record[SetType]
     with scala.Ordered[SetType]
     with org.apache.thrift.TBase[SetType, SetType._Fields] {
 
@@ -3035,8 +3035,8 @@ final class RawSetType extends MutableSetType {
 
 
 object MapType
-    extends com.foursquare.recordv2.runtime.MetaRecord[MapType]
-    with com.foursquare.recordv2.runtime.RecordProvider[MapType] {
+    extends com.foursquare.recordv2.MetaRecord[MapType]
+    with com.foursquare.recordv2.RecordProvider[MapType] {
   override def recordName: String = "MapType"
 
 
@@ -3093,16 +3093,16 @@ object MapType
     if (x.isInstanceOf[MapType]) Some(x.asInstanceOf[MapType]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val keyTypeId =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, MapType, MapType.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, MapType, MapType.type](
       name = "keyTypeId",
       longName = "keyTypeId",
       id = 1,
@@ -3115,7 +3115,7 @@ object MapType
 
   val valueTypeId =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, MapType, MapType.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, MapType, MapType.type](
       name = "valueTypeId",
       longName = "valueTypeId",
       id = 2,
@@ -3126,8 +3126,8 @@ object MapType
       manifest = manifest[String]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, MapType, MapType.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, MapType, MapType.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, MapType, MapType.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, MapType, MapType.type]](
       keyTypeId,
       valueTypeId
     )
@@ -3186,7 +3186,7 @@ object MapType
   implicit val companionProvider: MapTypeCompanionProvider = new MapTypeCompanionProvider
 }
 
-class MapTypeCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[MapType] {
+class MapTypeCompanionProvider extends com.foursquare.recordv2.CompanionProvider[MapType] {
   type CompanionT = MapType.type
   override def provide: MapType.type = MapType
 }
@@ -3195,7 +3195,7 @@ class MapTypeCompanionProvider extends com.foursquare.recordv2.runtime.Companion
 
 trait MapType
 
-    extends com.foursquare.recordv2.runtime.Record[MapType]
+    extends com.foursquare.recordv2.Record[MapType]
     with scala.Ordered[MapType]
     with org.apache.thrift.TBase[MapType, MapType._Fields] {
 
@@ -3564,8 +3564,8 @@ final class RawMapType extends MutableMapType {
 
 
 object ContainerType
-    extends com.foursquare.recordv2.runtime.MetaRecord[ContainerType]
-    with com.foursquare.recordv2.runtime.RecordProvider[ContainerType] {
+    extends com.foursquare.recordv2.MetaRecord[ContainerType]
+    with com.foursquare.recordv2.RecordProvider[ContainerType] {
   override def recordName: String = "ContainerType"
 
 
@@ -3622,16 +3622,16 @@ object ContainerType
     if (x.isInstanceOf[ContainerType]) Some(x.asInstanceOf[ContainerType]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val simpleContainerType =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SimpleContainerType, ContainerType, ContainerType.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SimpleContainerType, ContainerType, ContainerType.type](
       name = "simpleContainerType",
       longName = "simpleContainerType",
       id = 1,
@@ -3644,7 +3644,7 @@ object ContainerType
 
   val __annotations =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], ContainerType, ContainerType.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], ContainerType, ContainerType.type](
       name = "annotations",
       longName = "annotations",
       id = 99,
@@ -3655,8 +3655,8 @@ object ContainerType
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, ContainerType, ContainerType.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, ContainerType, ContainerType.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, ContainerType, ContainerType.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, ContainerType, ContainerType.type]](
       simpleContainerType,
       __annotations
     )
@@ -3723,7 +3723,7 @@ object ContainerType
   implicit val companionProvider: ContainerTypeCompanionProvider = new ContainerTypeCompanionProvider
 }
 
-class ContainerTypeCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[ContainerType] {
+class ContainerTypeCompanionProvider extends com.foursquare.recordv2.CompanionProvider[ContainerType] {
   type CompanionT = ContainerType.type
   override def provide: ContainerType.type = ContainerType
 }
@@ -3732,7 +3732,7 @@ class ContainerTypeCompanionProvider extends com.foursquare.recordv2.runtime.Com
 
 trait ContainerType
 
-    extends com.foursquare.recordv2.runtime.Record[ContainerType]
+    extends com.foursquare.recordv2.Record[ContainerType]
     with scala.Ordered[ContainerType]
     with org.apache.thrift.TBase[ContainerType, ContainerType._Fields] {
 
@@ -4128,8 +4128,8 @@ final class RawContainerType extends MutableContainerType {
 
 
 object Typeref
-    extends com.foursquare.recordv2.runtime.MetaRecord[Typeref]
-    with com.foursquare.recordv2.runtime.RecordProvider[Typeref] {
+    extends com.foursquare.recordv2.MetaRecord[Typeref]
+    with com.foursquare.recordv2.RecordProvider[Typeref] {
   override def recordName: String = "Typeref"
 
 
@@ -4176,16 +4176,16 @@ object Typeref
     if (x.isInstanceOf[Typeref]) Some(x.asInstanceOf[Typeref]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val typeAlias =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Typeref, Typeref.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Typeref, Typeref.type](
       name = "typeAlias",
       longName = "typeAlias",
       id = 1,
@@ -4196,8 +4196,8 @@ object Typeref
       manifest = manifest[String]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Typeref, Typeref.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Typeref, Typeref.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Typeref, Typeref.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Typeref, Typeref.type]](
       typeAlias
     )
 
@@ -4248,7 +4248,7 @@ object Typeref
   implicit val companionProvider: TyperefCompanionProvider = new TyperefCompanionProvider
 }
 
-class TyperefCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Typeref] {
+class TyperefCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Typeref] {
   type CompanionT = Typeref.type
   override def provide: Typeref.type = Typeref
 }
@@ -4257,7 +4257,7 @@ class TyperefCompanionProvider extends com.foursquare.recordv2.runtime.Companion
 
 trait Typeref
 
-    extends com.foursquare.recordv2.runtime.Record[Typeref]
+    extends com.foursquare.recordv2.Record[Typeref]
     with scala.Ordered[Typeref]
     with org.apache.thrift.TBase[Typeref, Typeref._Fields] {
 
@@ -4558,8 +4558,8 @@ final class RawTyperef extends MutableTyperef {
 
 
 object Type
-    extends com.foursquare.recordv2.runtime.MetaRecord[Type]
-    with com.foursquare.recordv2.runtime.RecordProvider[Type] {
+    extends com.foursquare.recordv2.MetaRecord[Type]
+    with com.foursquare.recordv2.RecordProvider[Type] {
   override def recordName: String = "Type"
 
 
@@ -4616,16 +4616,16 @@ object Type
     if (x.isInstanceOf[Type]) Some(x.asInstanceOf[Type]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val id =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Type, Type.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Type, Type.type](
       name = "id",
       longName = "id",
       id = 1,
@@ -4638,7 +4638,7 @@ object Type
 
   val simpleType =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SimpleType, Type, Type.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SimpleType, Type, Type.type](
       name = "simpleType",
       longName = "simpleType",
       id = 2,
@@ -4649,8 +4649,8 @@ object Type
       manifest = manifest[com.twitter.thrift.descriptors.SimpleType]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Type, Type.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Type, Type.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Type, Type.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Type, Type.type]](
       id,
       simpleType
     )
@@ -4709,7 +4709,7 @@ object Type
   implicit val companionProvider: TypeCompanionProvider = new TypeCompanionProvider
 }
 
-class TypeCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Type] {
+class TypeCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Type] {
   type CompanionT = Type.type
   override def provide: Type.type = Type
 }
@@ -4718,7 +4718,7 @@ class TypeCompanionProvider extends com.foursquare.recordv2.runtime.CompanionPro
 
 trait Type
 
-    extends com.foursquare.recordv2.runtime.Record[Type]
+    extends com.foursquare.recordv2.Record[Type]
     with scala.Ordered[Type]
     with org.apache.thrift.TBase[Type, Type._Fields] {
 
@@ -5091,8 +5091,8 @@ final class RawType extends MutableType {
 
 
 object Typedef
-    extends com.foursquare.recordv2.runtime.MetaRecord[Typedef]
-    with com.foursquare.recordv2.runtime.RecordProvider[Typedef] {
+    extends com.foursquare.recordv2.MetaRecord[Typedef]
+    with com.foursquare.recordv2.RecordProvider[Typedef] {
   override def recordName: String = "Typedef"
 
 
@@ -5159,16 +5159,16 @@ object Typedef
     if (x.isInstanceOf[Typedef]) Some(x.asInstanceOf[Typedef]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val typeId =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Typedef, Typedef.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Typedef, Typedef.type](
       name = "typeId",
       longName = "typeId",
       id = 1,
@@ -5181,7 +5181,7 @@ object Typedef
 
   val typeAlias =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Typedef, Typedef.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Typedef, Typedef.type](
       name = "typeAlias",
       longName = "typeAlias",
       id = 2,
@@ -5194,7 +5194,7 @@ object Typedef
 
   val __annotations =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Typedef, Typedef.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Typedef, Typedef.type](
       name = "annotations",
       longName = "annotations",
       id = 99,
@@ -5205,8 +5205,8 @@ object Typedef
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Typedef, Typedef.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Typedef, Typedef.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Typedef, Typedef.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Typedef, Typedef.type]](
       typeId,
       typeAlias,
       __annotations
@@ -5281,7 +5281,7 @@ object Typedef
   implicit val companionProvider: TypedefCompanionProvider = new TypedefCompanionProvider
 }
 
-class TypedefCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Typedef] {
+class TypedefCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Typedef] {
   type CompanionT = Typedef.type
   override def provide: Typedef.type = Typedef
 }
@@ -5290,7 +5290,7 @@ class TypedefCompanionProvider extends com.foursquare.recordv2.runtime.Companion
 
 trait Typedef
 
-    extends com.foursquare.recordv2.runtime.Record[Typedef]
+    extends com.foursquare.recordv2.Record[Typedef]
     with scala.Ordered[Typedef]
     with org.apache.thrift.TBase[Typedef, Typedef._Fields] {
 
@@ -5750,8 +5750,8 @@ final class RawTypedef extends MutableTypedef {
 
 
 object TypeRegistry
-    extends com.foursquare.recordv2.runtime.MetaRecord[TypeRegistry]
-    with com.foursquare.recordv2.runtime.RecordProvider[TypeRegistry] {
+    extends com.foursquare.recordv2.MetaRecord[TypeRegistry]
+    with com.foursquare.recordv2.RecordProvider[TypeRegistry] {
   override def recordName: String = "TypeRegistry"
 
 
@@ -5808,16 +5808,16 @@ object TypeRegistry
     if (x.isInstanceOf[TypeRegistry]) Some(x.asInstanceOf[TypeRegistry]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val idToType =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type], TypeRegistry, TypeRegistry.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type], TypeRegistry, TypeRegistry.type](
       name = "idToType",
       longName = "idToType",
       id = 1,
@@ -5830,7 +5830,7 @@ object TypeRegistry
 
   val aliasToTypeId =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.immutable.Map[String, String], TypeRegistry, TypeRegistry.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.immutable.Map[String, String], TypeRegistry, TypeRegistry.type](
       name = "aliasToTypeId",
       longName = "aliasToTypeId",
       id = 2,
@@ -5841,8 +5841,8 @@ object TypeRegistry
       manifest = manifest[scala.collection.immutable.Map[String, String]]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, TypeRegistry, TypeRegistry.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, TypeRegistry, TypeRegistry.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, TypeRegistry, TypeRegistry.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, TypeRegistry, TypeRegistry.type]](
       idToType,
       aliasToTypeId
     )
@@ -5901,7 +5901,7 @@ object TypeRegistry
   implicit val companionProvider: TypeRegistryCompanionProvider = new TypeRegistryCompanionProvider
 }
 
-class TypeRegistryCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[TypeRegistry] {
+class TypeRegistryCompanionProvider extends com.foursquare.recordv2.CompanionProvider[TypeRegistry] {
   type CompanionT = TypeRegistry.type
   override def provide: TypeRegistry.type = TypeRegistry
 }
@@ -5910,7 +5910,7 @@ class TypeRegistryCompanionProvider extends com.foursquare.recordv2.runtime.Comp
 
 trait TypeRegistry
 
-    extends com.foursquare.recordv2.runtime.Record[TypeRegistry]
+    extends com.foursquare.recordv2.Record[TypeRegistry]
     with scala.Ordered[TypeRegistry]
     with org.apache.thrift.TBase[TypeRegistry, TypeRegistry._Fields] {
 
@@ -6327,8 +6327,8 @@ final class RawTypeRegistry extends MutableTypeRegistry {
 
 
 object Const
-    extends com.foursquare.recordv2.runtime.MetaRecord[Const]
-    with com.foursquare.recordv2.runtime.RecordProvider[Const] {
+    extends com.foursquare.recordv2.MetaRecord[Const]
+    with com.foursquare.recordv2.RecordProvider[Const] {
   override def recordName: String = "Const"
 
 
@@ -6395,16 +6395,16 @@ object Const
     if (x.isInstanceOf[Const]) Some(x.asInstanceOf[Const]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val typeId =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Const, Const.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Const, Const.type](
       name = "typeId",
       longName = "typeId",
       id = 1,
@@ -6417,7 +6417,7 @@ object Const
 
   val name =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Const, Const.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Const, Const.type](
       name = "name",
       longName = "name",
       id = 2,
@@ -6430,7 +6430,7 @@ object Const
 
   val value =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Const, Const.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Const, Const.type](
       name = "value",
       longName = "value",
       id = 3,
@@ -6441,8 +6441,8 @@ object Const
       manifest = manifest[String]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Const, Const.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Const, Const.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Const, Const.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Const, Const.type]](
       typeId,
       name,
       value
@@ -6509,7 +6509,7 @@ object Const
   implicit val companionProvider: ConstCompanionProvider = new ConstCompanionProvider
 }
 
-class ConstCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Const] {
+class ConstCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Const] {
   type CompanionT = Const.type
   override def provide: Const.type = Const
 }
@@ -6518,7 +6518,7 @@ class ConstCompanionProvider extends com.foursquare.recordv2.runtime.CompanionPr
 
 trait Const
 
-    extends com.foursquare.recordv2.runtime.Record[Const]
+    extends com.foursquare.recordv2.Record[Const]
     with scala.Ordered[Const]
     with org.apache.thrift.TBase[Const, Const._Fields] {
 
@@ -6955,8 +6955,8 @@ final class RawConst extends MutableConst {
 
 
 object EnumElement
-    extends com.foursquare.recordv2.runtime.MetaRecord[EnumElement]
-    with com.foursquare.recordv2.runtime.RecordProvider[EnumElement] {
+    extends com.foursquare.recordv2.MetaRecord[EnumElement]
+    with com.foursquare.recordv2.RecordProvider[EnumElement] {
   override def recordName: String = "EnumElement"
 
 
@@ -7023,16 +7023,16 @@ object EnumElement
     if (x.isInstanceOf[EnumElement]) Some(x.asInstanceOf[EnumElement]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val name =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, EnumElement, EnumElement.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, EnumElement, EnumElement.type](
       name = "name",
       longName = "name",
       id = 1,
@@ -7045,7 +7045,7 @@ object EnumElement
 
   val value =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[Int, EnumElement, EnumElement.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[Int, EnumElement, EnumElement.type](
       name = "value",
       longName = "value",
       id = 2,
@@ -7058,7 +7058,7 @@ object EnumElement
 
   val __annotations =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], EnumElement, EnumElement.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], EnumElement, EnumElement.type](
       name = "annotations",
       longName = "annotations",
       id = 99,
@@ -7069,8 +7069,8 @@ object EnumElement
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, EnumElement, EnumElement.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, EnumElement, EnumElement.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, EnumElement, EnumElement.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, EnumElement, EnumElement.type]](
       name,
       value,
       __annotations
@@ -7145,7 +7145,7 @@ object EnumElement
   implicit val companionProvider: EnumElementCompanionProvider = new EnumElementCompanionProvider
 }
 
-class EnumElementCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[EnumElement] {
+class EnumElementCompanionProvider extends com.foursquare.recordv2.CompanionProvider[EnumElement] {
   type CompanionT = EnumElement.type
   override def provide: EnumElement.type = EnumElement
 }
@@ -7154,7 +7154,7 @@ class EnumElementCompanionProvider extends com.foursquare.recordv2.runtime.Compa
 
 trait EnumElement
 
-    extends com.foursquare.recordv2.runtime.Record[EnumElement]
+    extends com.foursquare.recordv2.Record[EnumElement]
     with scala.Ordered[EnumElement]
     with org.apache.thrift.TBase[EnumElement, EnumElement._Fields] {
 
@@ -7618,8 +7618,8 @@ final class RawEnumElement extends MutableEnumElement {
 
 
 object Enum
-    extends com.foursquare.recordv2.runtime.MetaRecord[Enum]
-    with com.foursquare.recordv2.runtime.RecordProvider[Enum] {
+    extends com.foursquare.recordv2.MetaRecord[Enum]
+    with com.foursquare.recordv2.RecordProvider[Enum] {
   override def recordName: String = "Enum"
 
 
@@ -7686,16 +7686,16 @@ object Enum
     if (x.isInstanceOf[Enum]) Some(x.asInstanceOf[Enum]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val name =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Enum, Enum.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Enum, Enum.type](
       name = "name",
       longName = "name",
       id = 1,
@@ -7708,7 +7708,7 @@ object Enum
 
   val elements =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement], Enum, Enum.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement], Enum, Enum.type](
       name = "elements",
       longName = "elements",
       id = 2,
@@ -7721,7 +7721,7 @@ object Enum
 
   val __annotations =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Enum, Enum.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Enum, Enum.type](
       name = "annotations",
       longName = "annotations",
       id = 99,
@@ -7732,8 +7732,8 @@ object Enum
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Enum, Enum.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Enum, Enum.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Enum, Enum.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Enum, Enum.type]](
       name,
       elements,
       __annotations
@@ -7808,7 +7808,7 @@ object Enum
   implicit val companionProvider: EnumCompanionProvider = new EnumCompanionProvider
 }
 
-class EnumCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Enum] {
+class EnumCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Enum] {
   type CompanionT = Enum.type
   override def provide: Enum.type = Enum
 }
@@ -7817,7 +7817,7 @@ class EnumCompanionProvider extends com.foursquare.recordv2.runtime.CompanionPro
 
 trait Enum
 
-    extends com.foursquare.recordv2.runtime.Record[Enum]
+    extends com.foursquare.recordv2.Record[Enum]
     with scala.Ordered[Enum]
     with org.apache.thrift.TBase[Enum, Enum._Fields] {
 
@@ -8300,8 +8300,8 @@ final class RawEnum extends MutableEnum {
 
 
 object Field
-    extends com.foursquare.recordv2.runtime.MetaRecord[Field]
-    with com.foursquare.recordv2.runtime.RecordProvider[Field] {
+    extends com.foursquare.recordv2.MetaRecord[Field]
+    with com.foursquare.recordv2.RecordProvider[Field] {
   override def recordName: String = "Field"
 
 
@@ -8398,16 +8398,16 @@ object Field
     if (x.isInstanceOf[Field]) Some(x.asInstanceOf[Field]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val identifier =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[Short, Field, Field.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[Short, Field, Field.type](
       name = "identifier",
       longName = "identifier",
       id = 1,
@@ -8420,7 +8420,7 @@ object Field
 
   val name =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Field, Field.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Field, Field.type](
       name = "name",
       longName = "name",
       id = 2,
@@ -8433,7 +8433,7 @@ object Field
 
   val typeId =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Field, Field.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Field, Field.type](
       name = "typeId",
       longName = "typeId",
       id = 3,
@@ -8446,7 +8446,7 @@ object Field
 
   val requiredness =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[com.twitter.thrift.descriptors.Requiredness, Field, Field.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[com.twitter.thrift.descriptors.Requiredness, Field, Field.type](
       name = "requiredness",
       longName = "requiredness",
       id = 4,
@@ -8459,7 +8459,7 @@ object Field
 
   val defaultValue =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Field, Field.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Field, Field.type](
       name = "defaultValue",
       longName = "defaultValue",
       id = 5,
@@ -8472,7 +8472,7 @@ object Field
 
   val __annotations =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Field, Field.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Field, Field.type](
       name = "annotations",
       longName = "annotations",
       id = 99,
@@ -8483,8 +8483,8 @@ object Field
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Field, Field.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Field, Field.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Field, Field.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Field, Field.type]](
       identifier,
       name,
       typeId,
@@ -8599,7 +8599,7 @@ object Field
   implicit val companionProvider: FieldCompanionProvider = new FieldCompanionProvider
 }
 
-class FieldCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Field] {
+class FieldCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Field] {
   type CompanionT = Field.type
   override def provide: Field.type = Field
 }
@@ -8608,7 +8608,7 @@ class FieldCompanionProvider extends com.foursquare.recordv2.runtime.CompanionPr
 
 trait Field
 
-    extends com.foursquare.recordv2.runtime.Record[Field]
+    extends com.foursquare.recordv2.Record[Field]
     with scala.Ordered[Field]
     with org.apache.thrift.TBase[Field, Field._Fields] {
 
@@ -9266,8 +9266,8 @@ final class RawField extends MutableField {
 
 
 object Struct
-    extends com.foursquare.recordv2.runtime.MetaRecord[Struct]
-    with com.foursquare.recordv2.runtime.RecordProvider[Struct] {
+    extends com.foursquare.recordv2.MetaRecord[Struct]
+    with com.foursquare.recordv2.RecordProvider[Struct] {
   override def recordName: String = "Struct"
 
 
@@ -9334,16 +9334,16 @@ object Struct
     if (x.isInstanceOf[Struct]) Some(x.asInstanceOf[Struct]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val name =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Struct, Struct.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Struct, Struct.type](
       name = "name",
       longName = "name",
       id = 1,
@@ -9356,7 +9356,7 @@ object Struct
 
   val __fields =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Struct, Struct.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Struct, Struct.type](
       name = "fields",
       longName = "fields",
       id = 2,
@@ -9369,7 +9369,7 @@ object Struct
 
   val __annotations =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Struct, Struct.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Struct, Struct.type](
       name = "annotations",
       longName = "annotations",
       id = 99,
@@ -9380,8 +9380,8 @@ object Struct
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Struct, Struct.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Struct, Struct.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Struct, Struct.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Struct, Struct.type]](
       name,
       __fields,
       __annotations
@@ -9456,7 +9456,7 @@ object Struct
   implicit val companionProvider: StructCompanionProvider = new StructCompanionProvider
 }
 
-class StructCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Struct] {
+class StructCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Struct] {
   type CompanionT = Struct.type
   override def provide: Struct.type = Struct
 }
@@ -9465,7 +9465,7 @@ class StructCompanionProvider extends com.foursquare.recordv2.runtime.CompanionP
 
 trait Struct
 
-    extends com.foursquare.recordv2.runtime.Record[Struct]
+    extends com.foursquare.recordv2.Record[Struct]
     with scala.Ordered[Struct]
     with org.apache.thrift.TBase[Struct, Struct._Fields] {
 
@@ -9948,8 +9948,8 @@ final class RawStruct extends MutableStruct {
 
 
 object Union
-    extends com.foursquare.recordv2.runtime.MetaRecord[Union]
-    with com.foursquare.recordv2.runtime.RecordProvider[Union] {
+    extends com.foursquare.recordv2.MetaRecord[Union]
+    with com.foursquare.recordv2.RecordProvider[Union] {
   override def recordName: String = "Union"
 
 
@@ -10016,16 +10016,16 @@ object Union
     if (x.isInstanceOf[Union]) Some(x.asInstanceOf[Union]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val name =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Union, Union.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Union, Union.type](
       name = "name",
       longName = "name",
       id = 1,
@@ -10038,7 +10038,7 @@ object Union
 
   val __fields =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Union, Union.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Union, Union.type](
       name = "fields",
       longName = "fields",
       id = 2,
@@ -10051,7 +10051,7 @@ object Union
 
   val __annotations =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Union, Union.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Union, Union.type](
       name = "annotations",
       longName = "annotations",
       id = 99,
@@ -10062,8 +10062,8 @@ object Union
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Union, Union.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Union, Union.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Union, Union.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Union, Union.type]](
       name,
       __fields,
       __annotations
@@ -10138,7 +10138,7 @@ object Union
   implicit val companionProvider: UnionCompanionProvider = new UnionCompanionProvider
 }
 
-class UnionCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Union] {
+class UnionCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Union] {
   type CompanionT = Union.type
   override def provide: Union.type = Union
 }
@@ -10147,7 +10147,7 @@ class UnionCompanionProvider extends com.foursquare.recordv2.runtime.CompanionPr
 
 trait Union
 
-    extends com.foursquare.recordv2.runtime.Record[Union]
+    extends com.foursquare.recordv2.Record[Union]
     with scala.Ordered[Union]
     with org.apache.thrift.TBase[Union, Union._Fields] {
 
@@ -10630,8 +10630,8 @@ final class RawUnion extends MutableUnion {
 
 
 object Exception
-    extends com.foursquare.recordv2.runtime.MetaRecord[Exception]
-    with com.foursquare.recordv2.runtime.RecordProvider[Exception] {
+    extends com.foursquare.recordv2.MetaRecord[Exception]
+    with com.foursquare.recordv2.RecordProvider[Exception] {
   override def recordName: String = "Exception"
 
 
@@ -10698,16 +10698,16 @@ object Exception
     if (x.isInstanceOf[Exception]) Some(x.asInstanceOf[Exception]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val name =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Exception, Exception.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Exception, Exception.type](
       name = "name",
       longName = "name",
       id = 1,
@@ -10720,7 +10720,7 @@ object Exception
 
   val __fields =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Exception, Exception.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Exception, Exception.type](
       name = "fields",
       longName = "fields",
       id = 2,
@@ -10733,7 +10733,7 @@ object Exception
 
   val __annotations =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Exception, Exception.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Exception, Exception.type](
       name = "annotations",
       longName = "annotations",
       id = 99,
@@ -10744,8 +10744,8 @@ object Exception
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Exception, Exception.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Exception, Exception.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Exception, Exception.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Exception, Exception.type]](
       name,
       __fields,
       __annotations
@@ -10820,7 +10820,7 @@ object Exception
   implicit val companionProvider: ExceptionCompanionProvider = new ExceptionCompanionProvider
 }
 
-class ExceptionCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Exception] {
+class ExceptionCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Exception] {
   type CompanionT = Exception.type
   override def provide: Exception.type = Exception
 }
@@ -10829,7 +10829,7 @@ class ExceptionCompanionProvider extends com.foursquare.recordv2.runtime.Compani
 
 trait Exception
 
-    extends com.foursquare.recordv2.runtime.Record[Exception]
+    extends com.foursquare.recordv2.Record[Exception]
     with scala.Ordered[Exception]
     with org.apache.thrift.TBase[Exception, Exception._Fields] {
 
@@ -11312,8 +11312,8 @@ final class RawException extends MutableException {
 
 
 object Function
-    extends com.foursquare.recordv2.runtime.MetaRecord[Function]
-    with com.foursquare.recordv2.runtime.RecordProvider[Function] {
+    extends com.foursquare.recordv2.MetaRecord[Function]
+    with com.foursquare.recordv2.RecordProvider[Function] {
   override def recordName: String = "Function"
 
 
@@ -11410,16 +11410,16 @@ object Function
     if (x.isInstanceOf[Function]) Some(x.asInstanceOf[Function]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val name =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Function, Function.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Function, Function.type](
       name = "name",
       longName = "name",
       id = 1,
@@ -11432,7 +11432,7 @@ object Function
 
   val returnTypeId =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Function, Function.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Function, Function.type](
       name = "returnTypeId",
       longName = "returnTypeId",
       id = 2,
@@ -11445,7 +11445,7 @@ object Function
 
   val oneWay =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[Boolean, Function, Function.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[Boolean, Function, Function.type](
       name = "oneWay",
       longName = "oneWay",
       id = 3,
@@ -11458,7 +11458,7 @@ object Function
 
   val argz =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Function, Function.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Function, Function.type](
       name = "argz",
       longName = "argz",
       id = 4,
@@ -11471,7 +11471,7 @@ object Function
 
   val throwz =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Function, Function.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Function, Function.type](
       name = "throwz",
       longName = "throwz",
       id = 5,
@@ -11484,7 +11484,7 @@ object Function
 
   val __annotations =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Function, Function.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Function, Function.type](
       name = "annotations",
       longName = "annotations",
       id = 99,
@@ -11495,8 +11495,8 @@ object Function
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Function, Function.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Function, Function.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Function, Function.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Function, Function.type]](
       name,
       returnTypeId,
       oneWay,
@@ -11611,7 +11611,7 @@ object Function
   implicit val companionProvider: FunctionCompanionProvider = new FunctionCompanionProvider
 }
 
-class FunctionCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Function] {
+class FunctionCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Function] {
   type CompanionT = Function.type
   override def provide: Function.type = Function
 }
@@ -11620,7 +11620,7 @@ class FunctionCompanionProvider extends com.foursquare.recordv2.runtime.Companio
 
 trait Function
 
-    extends com.foursquare.recordv2.runtime.Record[Function]
+    extends com.foursquare.recordv2.Record[Function]
     with scala.Ordered[Function]
     with org.apache.thrift.TBase[Function, Function._Fields] {
 
@@ -12329,8 +12329,8 @@ final class RawFunction extends MutableFunction {
 
 
 object Service
-    extends com.foursquare.recordv2.runtime.MetaRecord[Service]
-    with com.foursquare.recordv2.runtime.RecordProvider[Service] {
+    extends com.foursquare.recordv2.MetaRecord[Service]
+    with com.foursquare.recordv2.RecordProvider[Service] {
   override def recordName: String = "Service"
 
 
@@ -12407,16 +12407,16 @@ object Service
     if (x.isInstanceOf[Service]) Some(x.asInstanceOf[Service]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val name =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Service, Service.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Service, Service.type](
       name = "name",
       longName = "name",
       id = 1,
@@ -12429,7 +12429,7 @@ object Service
 
   val extendz =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[String, Service, Service.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[String, Service, Service.type](
       name = "extendz",
       longName = "extendz",
       id = 2,
@@ -12442,7 +12442,7 @@ object Service
 
   val functions =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Function], Service, Service.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Function], Service, Service.type](
       name = "functions",
       longName = "functions",
       id = 3,
@@ -12455,7 +12455,7 @@ object Service
 
   val __annotations =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Service, Service.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Service, Service.type](
       name = "annotations",
       longName = "annotations",
       id = 99,
@@ -12466,8 +12466,8 @@ object Service
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Service, Service.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Service, Service.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Service, Service.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Service, Service.type]](
       name,
       extendz,
       functions,
@@ -12558,7 +12558,7 @@ object Service
   implicit val companionProvider: ServiceCompanionProvider = new ServiceCompanionProvider
 }
 
-class ServiceCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Service] {
+class ServiceCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Service] {
   type CompanionT = Service.type
   override def provide: Service.type = Service
 }
@@ -12567,7 +12567,7 @@ class ServiceCompanionProvider extends com.foursquare.recordv2.runtime.Companion
 
 trait Service
 
-    extends com.foursquare.recordv2.runtime.Record[Service]
+    extends com.foursquare.recordv2.Record[Service]
     with scala.Ordered[Service]
     with org.apache.thrift.TBase[Service, Service._Fields] {
 
@@ -13113,8 +13113,8 @@ final class RawService extends MutableService {
 
 
 object Program
-    extends com.foursquare.recordv2.runtime.MetaRecord[Program]
-    with com.foursquare.recordv2.runtime.RecordProvider[Program] {
+    extends com.foursquare.recordv2.MetaRecord[Program]
+    with com.foursquare.recordv2.RecordProvider[Program] {
   override def recordName: String = "Program"
 
 
@@ -13251,16 +13251,16 @@ object Program
     if (x.isInstanceOf[Program]) Some(x.asInstanceOf[Program]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val namespaces =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Namespace], Program, Program.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Namespace], Program, Program.type](
       name = "namespaces",
       longName = "namespaces",
       id = 1,
@@ -13273,7 +13273,7 @@ object Program
 
   val includes =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Include], Program, Program.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Include], Program, Program.type](
       name = "includes",
       longName = "includes",
       id = 2,
@@ -13286,7 +13286,7 @@ object Program
 
   val constants =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Const], Program, Program.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Const], Program, Program.type](
       name = "constants",
       longName = "constants",
       id = 3,
@@ -13299,7 +13299,7 @@ object Program
 
   val enums =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Enum], Program, Program.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Enum], Program, Program.type](
       name = "enums",
       longName = "enums",
       id = 4,
@@ -13312,7 +13312,7 @@ object Program
 
   val typedefs =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Typedef], Program, Program.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Typedef], Program, Program.type](
       name = "typedefs",
       longName = "typedefs",
       id = 5,
@@ -13325,7 +13325,7 @@ object Program
 
   val structs =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Struct], Program, Program.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Struct], Program, Program.type](
       name = "structs",
       longName = "structs",
       id = 6,
@@ -13338,7 +13338,7 @@ object Program
 
   val unions =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Union], Program, Program.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Union], Program, Program.type](
       name = "unions",
       longName = "unions",
       id = 7,
@@ -13351,7 +13351,7 @@ object Program
 
   val exceptions =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Exception], Program, Program.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Exception], Program, Program.type](
       name = "exceptions",
       longName = "exceptions",
       id = 8,
@@ -13364,7 +13364,7 @@ object Program
 
   val services =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Service], Program, Program.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Service], Program, Program.type](
       name = "services",
       longName = "services",
       id = 9,
@@ -13377,7 +13377,7 @@ object Program
 
   val typeRegistry =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[com.twitter.thrift.descriptors.TypeRegistry, Program, Program.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[com.twitter.thrift.descriptors.TypeRegistry, Program, Program.type](
       name = "typeRegistry",
       longName = "typeRegistry",
       id = 98,
@@ -13388,8 +13388,8 @@ object Program
       manifest = manifest[com.twitter.thrift.descriptors.TypeRegistry]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, Program, Program.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, Program, Program.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, Program, Program.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, Program, Program.type]](
       namespaces,
       includes,
       constants,
@@ -13584,7 +13584,7 @@ object Program
   implicit val companionProvider: ProgramCompanionProvider = new ProgramCompanionProvider
 }
 
-class ProgramCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[Program] {
+class ProgramCompanionProvider extends com.foursquare.recordv2.CompanionProvider[Program] {
   type CompanionT = Program.type
   override def provide: Program.type = Program
 }
@@ -13593,7 +13593,7 @@ class ProgramCompanionProvider extends com.foursquare.recordv2.runtime.Companion
 
 trait Program
 
-    extends com.foursquare.recordv2.runtime.Record[Program]
+    extends com.foursquare.recordv2.Record[Program]
     with scala.Ordered[Program]
     with org.apache.thrift.TBase[Program, Program._Fields] {
 
@@ -14719,8 +14719,8 @@ final class RawProgram extends MutableProgram {
 
 
 object SimpleContainerType
-    extends com.foursquare.recordv2.runtime.MetaRecord[SimpleContainerType]
-    with com.foursquare.recordv2.runtime.RecordProvider[SimpleContainerType] {
+    extends com.foursquare.recordv2.MetaRecord[SimpleContainerType]
+    with com.foursquare.recordv2.RecordProvider[SimpleContainerType] {
   override def recordName: String = "SimpleContainerType"
 
 
@@ -14787,16 +14787,16 @@ object SimpleContainerType
     if (x.isInstanceOf[SimpleContainerType]) Some(x.asInstanceOf[SimpleContainerType]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val listType =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[com.twitter.thrift.descriptors.ListType, SimpleContainerType, SimpleContainerType.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[com.twitter.thrift.descriptors.ListType, SimpleContainerType, SimpleContainerType.type](
       name = "listType",
       longName = "listType",
       id = 1,
@@ -14809,7 +14809,7 @@ object SimpleContainerType
 
   val setType =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SetType, SimpleContainerType, SimpleContainerType.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SetType, SimpleContainerType, SimpleContainerType.type](
       name = "setType",
       longName = "setType",
       id = 2,
@@ -14822,7 +14822,7 @@ object SimpleContainerType
 
   val mapType =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[com.twitter.thrift.descriptors.MapType, SimpleContainerType, SimpleContainerType.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[com.twitter.thrift.descriptors.MapType, SimpleContainerType, SimpleContainerType.type](
       name = "mapType",
       longName = "mapType",
       id = 3,
@@ -14833,8 +14833,8 @@ object SimpleContainerType
       manifest = manifest[com.twitter.thrift.descriptors.MapType]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, SimpleContainerType, SimpleContainerType.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, SimpleContainerType, SimpleContainerType.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, SimpleContainerType, SimpleContainerType.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, SimpleContainerType, SimpleContainerType.type]](
       listType,
       setType,
       mapType
@@ -14921,7 +14921,7 @@ object SimpleContainerType
   implicit val companionProvider: SimpleContainerTypeCompanionProvider = new SimpleContainerTypeCompanionProvider
 }
 
-class SimpleContainerTypeCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[SimpleContainerType] {
+class SimpleContainerTypeCompanionProvider extends com.foursquare.recordv2.CompanionProvider[SimpleContainerType] {
   type CompanionT = SimpleContainerType.type
   override def provide: SimpleContainerType.type = SimpleContainerType
 }
@@ -14930,7 +14930,7 @@ class SimpleContainerTypeCompanionProvider extends com.foursquare.recordv2.runti
 
 trait SimpleContainerType
 
-    extends com.foursquare.recordv2.runtime.Record[SimpleContainerType]
+    extends com.foursquare.recordv2.Record[SimpleContainerType]
     with scala.Ordered[SimpleContainerType]
     with org.apache.thrift.TBase[SimpleContainerType, SimpleContainerType._Fields] {
 
@@ -15365,8 +15365,8 @@ final class RawSimpleContainerType extends MutableSimpleContainerType {
 
 
 object SimpleType
-    extends com.foursquare.recordv2.runtime.MetaRecord[SimpleType]
-    with com.foursquare.recordv2.runtime.RecordProvider[SimpleType] {
+    extends com.foursquare.recordv2.MetaRecord[SimpleType]
+    with com.foursquare.recordv2.RecordProvider[SimpleType] {
   override def recordName: String = "SimpleType"
 
 
@@ -15433,16 +15433,16 @@ object SimpleType
     if (x.isInstanceOf[SimpleType]) Some(x.asInstanceOf[SimpleType]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.runtime.Annotations =
+  override val annotations: com.foursquare.recordv2.Annotations =
 
-    com.foursquare.recordv2.runtime.Annotations.empty
+    com.foursquare.recordv2.Annotations.empty
 
   // Record v2 Descriptors.
 
 
   val baseType =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[com.twitter.thrift.descriptors.BaseType, SimpleType, SimpleType.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[com.twitter.thrift.descriptors.BaseType, SimpleType, SimpleType.type](
       name = "baseType",
       longName = "baseType",
       id = 1,
@@ -15455,7 +15455,7 @@ object SimpleType
 
   val containerType =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[com.twitter.thrift.descriptors.ContainerType, SimpleType, SimpleType.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[com.twitter.thrift.descriptors.ContainerType, SimpleType, SimpleType.type](
       name = "containerType",
       longName = "containerType",
       id = 2,
@@ -15468,7 +15468,7 @@ object SimpleType
 
   val typeref =
 
-    new com.foursquare.recordv2.runtime.OptionalFieldDescriptor[com.twitter.thrift.descriptors.Typeref, SimpleType, SimpleType.type](
+    new com.foursquare.recordv2.OptionalFieldDescriptor[com.twitter.thrift.descriptors.Typeref, SimpleType, SimpleType.type](
       name = "typeref",
       longName = "typeref",
       id = 3,
@@ -15479,8 +15479,8 @@ object SimpleType
       manifest = manifest[com.twitter.thrift.descriptors.Typeref]
     )
 
-  override val fields: Seq[com.foursquare.recordv2.runtime.FieldDescriptor[_, SimpleType, SimpleType.type]] =
-    Vector[com.foursquare.recordv2.runtime.FieldDescriptor[_, SimpleType, SimpleType.type]](
+  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, SimpleType, SimpleType.type]] =
+    Vector[com.foursquare.recordv2.FieldDescriptor[_, SimpleType, SimpleType.type]](
       baseType,
       containerType,
       typeref
@@ -15567,7 +15567,7 @@ object SimpleType
   implicit val companionProvider: SimpleTypeCompanionProvider = new SimpleTypeCompanionProvider
 }
 
-class SimpleTypeCompanionProvider extends com.foursquare.recordv2.runtime.CompanionProvider[SimpleType] {
+class SimpleTypeCompanionProvider extends com.foursquare.recordv2.CompanionProvider[SimpleType] {
   type CompanionT = SimpleType.type
   override def provide: SimpleType.type = SimpleType
 }
@@ -15576,7 +15576,7 @@ class SimpleTypeCompanionProvider extends com.foursquare.recordv2.runtime.Compan
 
 trait SimpleType
 
-    extends com.foursquare.recordv2.runtime.Record[SimpleType]
+    extends com.foursquare.recordv2.Record[SimpleType]
     with scala.Ordered[SimpleType]
     with org.apache.thrift.TBase[SimpleType, SimpleType._Fields] {
 

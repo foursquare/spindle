@@ -1,10 +1,13 @@
+// import com.foursquare.recordv2.codegen.plugin.ThriftCodegenPlugin
 import com.mojolly.scalate.ScalatePlugin
 import com.mojolly.scalate.ScalatePlugin.{ScalateKeys, TemplateConfig}
 import sbt._
 
 object Default {
   val all: Seq[Setting[_]] = Seq(
-    Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name))
+    Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
+    Keys.version := "0.1-SNAPSHOT",
+    Keys.organization := "com.foursquare.common"
   ) ++ net.virtualvoid.sbt.graph.Plugin.graphSettings
 
   val scala: Seq[Setting[_]] = all ++ Seq(
@@ -31,4 +34,9 @@ object Default {
     Keys.libraryDependencies ++= (
       ThirdParty.scalate)
   ) 
+
+  // val thrift = Default.scala ++ ThriftCodegenPlugin.thriftSettings ++ Seq(
+  //   ThriftCodegenPlugin.thriftCodegenVersion := "0.4-SNAPSHOT",
+  //   Keys.sources in ThriftCodegenPlugin.thrift in Compile <<= Keys.baseDirectory.map(base => (base ** "*.thrift").get)
+  // )
 }

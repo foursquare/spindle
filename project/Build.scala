@@ -3,7 +3,9 @@ import Keys._
 
 object Recordv2Build extends Build {
   lazy val all = Project(id = "all", base = file("all")) aggregate(
-    thriftBase, thriftBson, thriftJson, runtime, thriftDescriptors, thriftDescriptorsScala, parser2, codegenRuntime, codegenBinary, templates)
+    thriftBase, thriftBson, thriftJson, runtime, /*thriftDescriptors,*/ thriftDescriptorsScala, parser2, codegenRuntime,
+    codegenBinary, templates, codegenSbtPlugin
+  )
 
   lazy val thriftBase =
     Project(
@@ -21,10 +23,10 @@ object Recordv2Build extends Build {
     Project(
       id = "recordv2-runtime",
       base = file("src/main/scala/com/foursquare/recordv2/runtime"))
-  lazy val thriftDescriptors =
-    Project(
-      id = "thrift-descriptors",
-      base = file("src/main/thrift/com/twitter/thrift/descriptors")) dependsOn(runtime, thriftBase, thriftJson)
+  // lazy val thriftDescriptors =
+  //   Project(
+  //     id = "thrift-descriptors",
+  //     base = file("src/main/thrift/com/twitter/thrift/descriptors")) dependsOn(runtime, thriftBase, thriftJson)
   lazy val thriftDescriptorsScala =
     Project(
       id = "thrift-descriptors-scala",
@@ -41,6 +43,10 @@ object Recordv2Build extends Build {
     Project(
       id = "thrift-codegen-binary",
       base = file("src/main/scala/com/foursquare/recordv2/codegen/binary")) dependsOn(codegenRuntime, parser2)
+  lazy val codegenSbtPlugin =
+    Project(
+      id = "thrift-codegen-plugin",
+      base = file("src/main/scala/com/foursquare/recordv2/codegen/plugin"))
   lazy val templates =
     Project(
       id = "codegen-templates",
