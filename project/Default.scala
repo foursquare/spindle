@@ -21,7 +21,7 @@ object Default {
       "-unchecked")
   )
 
-  val scalate: Seq[Setting[_]] = all ++ ScalatePlugin.scalateSettings ++ Seq(
+  val scalate: Seq[Setting[_]] = scala ++ ScalatePlugin.scalateSettings ++ Seq(
     ScalateKeys.scalateTemplateConfig in Compile <<= (Keys.baseDirectory in Compile) { base => 
       Seq(
         TemplateConfig(

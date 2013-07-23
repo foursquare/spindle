@@ -9,4 +9,4 @@ libraryDependencies ++= (
   ThirdParty.scalate ++
   ThirdParty.slf4jNoLogging)
 
-libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.9.1"
+libraryDependencies <+= (scalaVersion)(v => "org.scala-lang" % "scala-compiler" % v)

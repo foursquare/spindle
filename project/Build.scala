@@ -4,7 +4,7 @@ import Keys._
 object Recordv2Build extends Build {
   lazy val all = Project(id = "all", base = file("all")) aggregate(
     thriftBase, thriftBson, thriftJson, runtime, /*thriftDescriptors,*/ thriftDescriptorsScala, parser2, codegenRuntime,
-    codegenBinary, templates, codegenSbtPlugin
+    codegenBinary, templates
   )
 
   lazy val thriftBase =
