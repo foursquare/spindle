@@ -1,8 +1,8 @@
 seq(Default.scala: _*)
 
-assemblySettings
+// assemblySettings
 
-addArtifact(Artifact("thrift-codegen-binary", "assembly"), AssemblyKeys.assembly)
+// addArtifact(Artifact("thrift-codegen-binary", "assembly"), AssemblyKeys.assembly)
 
 libraryDependencies ++= (
   ThirdParty.argot ++

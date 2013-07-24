@@ -9,23 +9,29 @@ object ThriftCodegenPlugin extends Plugin {
   val Thrift   = config("thrift").hide
 
   val thrift = TaskKey[Seq[File]]("thrift", "Generate Scala sources from Thrift files(s)")
-  val thriftCodegenVersion = SettingKey[String]("thrift-codegen-version", "Version of thrift-codegen-binary to use.")
+  val thriftCodegenLibs = SettingKey[Seq[ModuleID]]("thrift-codegen-libs", "Library versions of Thrift codegen to use.")
+  val thriftCodegenIncludes = SettingKey[Seq[File]]("thrift-codegen-includes", "Directories to include in Thrift dependency resolution.")
+  val thriftCodegenTemplate = SettingKey[String]("thrift-codegen-template", "Template to use for generating code.")
 
   val thriftSettings     = Seq[Project.Setting[_]](
     Keys.ivyConfigurations += Thrift,
-    Keys.libraryDependencies <+= (thriftCodegenVersion)(v =>
-      "com.foursquare.common" %% "thrift-codegen-binary" % v % "thrift"
-    )
+    Keys.libraryDependencies <++= (thriftCodegenLibs)(_.map(_ % "thrift")),
+    thriftCodegenTemplate := "scala/record.ssp"
   ) ++ thriftSettingsIn(Compile) ++ thriftSettingsIn(Test)
 
   def thriftSettingsIn(conf: Configuration): Seq[Project.Setting[_]] =
-    inConfig(conf)(thriftSettings0) ++ Seq(Keys.clean <<= Keys.clean.dependsOn(Keys.clean in thrift in conf))
+    inConfig(conf)(thriftSettings0) ++ Seq(
+      Keys.clean <<= Keys.clean.dependsOn(Keys.clean in thrift in conf),
+      Keys.sourceDirectory in thrift in conf <<= (Keys.sourceDirectory in conf)(_ / "thrift"),
+      Keys.sources in thrift in conf <<= (Keys.sourceDirectory in thrift in conf).map(dir => (dir ** "*.thrift").get),
+      thriftCodegenIncludes in conf <<= (Keys.sourceDirectory in thrift in conf)(dir => Seq(dir))
+    )
 
   private def thriftSettings0 = Seq[Project.Setting[_]](
-    Keys.sources in thrift       <<= Keys.unmanagedResourceDirectories.map(dirs => (dirs ** "*.thrift").get),
     Keys.sourceManaged in thrift ~= (_ / "thrift"), // e.g. /target/scala-2.8.1.final/src_managed/main/thrift
-    thrift                       <<= (Keys.javaHome, Keys.classpathTypes in thrift, Keys.update, Keys.sources in thrift,
-                                  Keys.sourceManaged in thrift, Keys.resolvedScoped, Keys.streams).map(thriftCompile),
+    thrift                       <<= (Keys.javaHome, Keys.classpathTypes in thrift, Keys.update,
+                                  Keys.sources in thrift, thriftCodegenTemplate, Keys.sourceManaged in thrift,
+                                  thriftCodegenIncludes, Keys.resolvedScoped, Keys.streams).map(thriftCompile),
     Keys.sourceGenerators        <+= thrift,
     Keys.clean in thrift         <<= (Keys.sourceManaged in thrift, Keys.resolvedScoped, Keys.streams).map(thriftClean)
   )
@@ -38,7 +44,9 @@ object ThriftCodegenPlugin extends Plugin {
       classpathTypes: Set[String],
       updateReport: UpdateReport,
       thriftSources: Seq[File],
+      template: String,
       sourceManaged: File,
+      includes: Seq[File],
       resolvedScoped: Project.ScopedKey[_],
       streams: TaskStreams
   ): Seq[File] = {
@@ -62,9 +70,10 @@ object ThriftCodegenPlugin extends Plugin {
       val jvmCpOptions    = Seq("-classpath", mainJars.mkString(pathSeparator))
       val thriftSourcePaths  = thriftSources.map(_.absolutePath)
       val appOptions = Seq(
-        "--template", "src/main/ssp/codegen/scala/record.ssp",
+        "--template", template,
         "--extension", "scala",
-        "--namespace_out", sourceManaged.absolutePath
+        "--namespace_out", sourceManaged.absolutePath,
+        "--thrift_include", includes.map(_.absolutePath).mkString(":")
       )
       val mainClass  = "com.foursquare.recordv2.codegen.binary.ThriftCodegen"
 

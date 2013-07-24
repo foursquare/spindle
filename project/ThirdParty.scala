@@ -14,8 +14,8 @@ object ThirdParty {
   val parboiledScala = Seq("org.parboiled" % "parboiled-scala_2.9.2" % "1.1.4")
   val rogueField = Seq("com.foursquare" %% "rogue-field" % "2.2.0")
   val scalaIo = Seq(
-    "com.github.scala-incubator.io" %% "scala-io-core" % "0.3.0",
-    "com.github.scala-incubator.io" %% "scala-io-file" % "0.3.0")
+    "com.github.scala-incubator.io" % "scala-io-core_2.9.1" % "0.3.0",
+    "com.github.scala-incubator.io" % "scala-io-file_2.9.1" % "0.3.0")
   val scalajCollection = Seq("org.scalaj" %% "scalaj-collection" % "1.5")
   val scalajTime = Seq("org.scalaj" %% "scalaj-time" % "0.7")
   val scalate = Seq(
