@@ -52,4 +52,16 @@ object Recordv2Build extends Build {
     Project(
       id = "thrift-codegen-plugin",
       base = file("src/main/scala/com/foursquare/recordv2/codegen/plugin"))
+  lazy val testCodegen =
+    Project(
+      id = "test-codegen",
+      base = file("src/test/thrift/com/foursquare/recordv2/codegen")) dependsOn(runtime, thriftBase, thriftJson)
+  lazy val testParser =
+    Project(
+      id = "test-parser",
+      base = file("src/test/scala/com/foursquare/recordv2/parser2")) dependsOn(parser2)
+  lazy val testRuntime =
+    Project(
+      id = "test-runtime",
+      base = file("src/test/scala/com/foursquare/recordv2/runtime"))
 }

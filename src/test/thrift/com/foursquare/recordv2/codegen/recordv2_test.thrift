@@ -1,5 +1,6 @@
 namespace java com.foursquare.recordv2.test.gen
 
+typedef binary MyBinary
 
 enum TestEnum {
   Zero = 0
@@ -27,6 +28,7 @@ struct TestStruct {
   10: optional set<string> aSet
   11: optional list<i32> aList
   12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
 }
 
 // Identical structs, with one field missing. Useful for testing forwards wire compatibility, that is that you can

@@ -3,6 +3,7 @@ import sbt._
 object ThirdParty {
   val argot = Seq("org.clapper" %% "argot" % "0.4")
   val commonsIo = Seq("commons-io" % "commons-io" % "2.1")
+  val finagleThrift = Seq("com.twitter" % "finagle-thrift" % "6.3.0")
   val jackson = Seq(
     "org.codehaus.jackson" % "jackson-core-asl" % "1.9.8",
     "org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.8",

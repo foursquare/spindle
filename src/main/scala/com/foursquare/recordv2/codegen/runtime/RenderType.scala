@@ -14,8 +14,8 @@ trait RenderType {
   def fieldDefTemplate: String
   def fieldImplTemplate: String
   def fieldProxyTemplate: String
-  def fieldMutableTemplate: String = "field/mutable.ssp"
-  def fieldMutableProxyTemplate: String = "field/mutableproxy.ssp"
+  def fieldMutableTemplate: String // = "field/mutable.ssp"
+  def fieldMutableProxyTemplate: String // = "field/mutableproxy.ssp"
   def fieldWriteTemplate: String
   def fieldReadTemplate: String
   def underlying: RenderType = this
@@ -51,6 +51,8 @@ case class PrimitiveRenderType(
   override def fieldDefTemplate: String = "field/def_primitive.ssp"
   override def fieldImplTemplate: String = "field/impl_primitive.ssp"
   override def fieldProxyTemplate: String = "field/proxy_primitive.ssp"
+  override def fieldMutableTemplate: String = "field/mutable.ssp"
+  override def fieldMutableProxyTemplate: String = "field/mutableproxy.ssp"
   override def fieldWriteTemplate: String = "write/primitive.ssp"
   override def fieldReadTemplate: String = "read/primitive.ssp"
   override def usesSetVar: Boolean = true
@@ -66,6 +68,8 @@ trait RefRenderType extends RenderType {
   override def fieldDefTemplate: String = "field/def_ref.ssp"
   override def fieldImplTemplate: String = "field/impl_ref.ssp"
   override def fieldProxyTemplate: String = "field/proxy_ref.ssp"
+  override def fieldMutableTemplate: String = "field/mutable.ssp"
+  override def fieldMutableProxyTemplate: String = "field/mutableproxy.ssp"
   override def isNullable: Boolean = true
   override def usesSetVar: Boolean = false
 }
@@ -205,6 +209,8 @@ case class TypedefRenderType(override val text: String, ref: RenderType) extends
   override def fieldImplTemplate: String = ref.fieldImplTemplate
   override def fieldProxyTemplate: String = ref.fieldProxyTemplate
   override def compareTemplate: String = ref.compareTemplate
+  override def fieldMutableTemplate: String = ref.fieldMutableTemplate
+  override def fieldMutableProxyTemplate: String = ref.fieldMutableProxyTemplate
   override def fieldWriteTemplate: String = "write/typedef.ssp"
   override def fieldReadTemplate: String = "read/typedef.ssp"
   override def underlying: RenderType = ref.underlying
@@ -226,6 +232,8 @@ case class NewtypeRenderType(override val text: String, ref: RenderType) extends
   override def fieldImplTemplate: String = ref.fieldImplTemplate
   override def fieldProxyTemplate: String = ref.fieldProxyTemplate
   override def compareTemplate: String = ref.compareTemplate
+  override def fieldMutableTemplate: String = ref.fieldMutableTemplate
+  override def fieldMutableProxyTemplate: String = ref.fieldMutableProxyTemplate
   override def fieldWriteTemplate: String = "write/newtype.ssp"
   override def fieldReadTemplate: String = "read/newtype.ssp"
   override def underlying: RenderType = ref.underlying
@@ -313,6 +321,8 @@ case class BitfieldStructRenderType(
   override def fieldDefTemplate: String = "field/def_bitfield.ssp"
   override def fieldImplTemplate: String = "field/impl_bitfield.ssp"
   override def fieldProxyTemplate: String = "field/proxy_primitive.ssp"
+  override def fieldMutableTemplate: String = "field/mutable.ssp"
+  override def fieldMutableProxyTemplate: String = "field/mutableproxy.ssp"
   override def fieldWriteTemplate: String = "write/bitfield.ssp"
   override def fieldReadTemplate: String = "read/bitfield.ssp"
   override def underlying: RenderType = ref.underlying

@@ -49,3 +49,4 @@ object Default {
       ThirdParty.scalajCollection)
   )
 }
+
