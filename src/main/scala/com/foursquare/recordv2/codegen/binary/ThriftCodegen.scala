@@ -23,7 +23,8 @@ object ThriftCodegen {
         args.namespaceOut.value,
         args.workingDir.value,
         args.output.value,
-        args.extension.value.getOrElse("scala"))
+        args.extension.value.getOrElse("scala"),
+        args.allowReload.value.getOrElse(false))
     } catch {
       case e: CodegenException =>
         println("Codegen error:\n%s".format(e.getMessage))
@@ -38,7 +39,8 @@ object ThriftCodegen {
       namespaceOutputPath: Option[File],
       workingDirPath: Option[File],
       outputPath: Option[File],
-      extension: String
+      extension: String,
+      allowReload: Boolean
   ): Unit = {
     val enhancedTypes = (ref: TypeReference, annots: Annotations, scope: Scope) => {
       if (annots.contains("enhanced_types")) {
@@ -74,7 +76,7 @@ object ThriftCodegen {
     }
     engine.workingDirectory = workingDirPath.getOrElse(new File(".scalate.d/"))
     engine.escapeMarkup = false
-    engine.allowReload = false
+    engine.allowReload = allowReload
 
     try {
       for (source <- sourcesToCompile) {
@@ -215,6 +217,8 @@ object ThriftCodegen {
     }
 
     val extension = parser.option[String](List("extension"), "js|scala", "the extension the files should have")
+
+    val allowReload = parser.flag[Boolean](List("allow_reload"), "allow reloading of codegen templates")
 
     parser.parse(args)
     if (template.value.isEmpty) {

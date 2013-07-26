@@ -9,14 +9,29 @@ object ThriftCodegenPlugin extends Plugin {
   val Thrift   = config("thrift").hide
 
   val thrift = TaskKey[Seq[File]]("thrift", "Generate Scala sources from Thrift files(s)")
-  val thriftCodegenLibs = SettingKey[Seq[ModuleID]]("thrift-codegen-libs", "Library versions of Thrift codegen to use.")
+  val thriftCodegenVersion = SettingKey[String]("thrift-codegen-version", "Version of Thrift codegen to use.")
+  val thriftCodegenBinaryLibs = SettingKey[Seq[ModuleID]]("thrift-codegen-binary-libs", "Version of Thrift codegen binary to use.")
+  val thriftCodegenRuntimeLibs = SettingKey[Seq[ModuleID]]("thrift-codegen-runtime-libs", "Libraries needed for Thrift generated code.")
   val thriftCodegenIncludes = SettingKey[Seq[File]]("thrift-codegen-includes", "Directories to include in Thrift dependency resolution.")
   val thriftCodegenTemplate = SettingKey[String]("thrift-codegen-template", "Template to use for generating code.")
+  val thriftCodegenAllowReload = SettingKey[Boolean]("thrift-codegen-allow-reload", "Allow reloading of codegen templates.")
 
   val thriftSettings     = Seq[Project.Setting[_]](
     Keys.ivyConfigurations += Thrift,
-    Keys.libraryDependencies <++= (thriftCodegenLibs)(_.map(_ % "thrift")),
-    thriftCodegenTemplate := "scala/record.ssp"
+    Keys.libraryDependencies <++= (thriftCodegenBinaryLibs, thriftCodegenRuntimeLibs)((binary, runtime) => {
+      runtime ++ binary.map(_ % "thrift")
+    }),
+    thriftCodegenTemplate := "scala/record.ssp",
+    thriftCodegenAllowReload := false,
+    thriftCodegenVersion := "0.10-SNAPSHOT",
+    thriftCodegenBinaryLibs <<= (thriftCodegenVersion)(v => Seq("com.foursquare.common" %% "thrift-codegen-binary" % v)),
+    thriftCodegenRuntimeLibs <<= (thriftCodegenVersion)(v => Seq(
+      "com.twitter" % "finagle-thrift" % "6.3.0",
+      "com.foursquare.common" %% "recordv2-runtime" % v,
+      "com.foursquare.common" %% "common-thrift-base" % v,
+      "com.foursquare.common" %% "common-thrift-json" % v,
+      "org.scalaj" %% "scalaj-collection" % "1.5"
+    ))
   ) ++ thriftSettingsIn(Compile) ++ thriftSettingsIn(Test)
 
   def thriftSettingsIn(conf: Configuration): Seq[Project.Setting[_]] =
@@ -31,7 +46,8 @@ object ThriftCodegenPlugin extends Plugin {
     Keys.sourceManaged in thrift ~= (_ / "thrift"), // e.g. /target/scala-2.8.1.final/src_managed/main/thrift
     thrift                       <<= (Keys.javaHome, Keys.classpathTypes in thrift, Keys.update,
                                   Keys.sources in thrift, thriftCodegenTemplate, Keys.sourceManaged in thrift,
-                                  thriftCodegenIncludes, Keys.resolvedScoped, Keys.streams).map(thriftCompile),
+                                  thriftCodegenIncludes, thriftCodegenAllowReload, Keys.resolvedScoped, Keys.streams
+                                  ).map(thriftCompile),
     Keys.sourceGenerators        <+= thrift,
     Keys.clean in thrift         <<= (Keys.sourceManaged in thrift, Keys.resolvedScoped, Keys.streams).map(thriftClean)
   )
@@ -47,6 +63,7 @@ object ThriftCodegenPlugin extends Plugin {
       template: String,
       sourceManaged: File,
       includes: Seq[File],
+      allowReload: Boolean,
       resolvedScoped: Project.ScopedKey[_],
       streams: TaskStreams
   ): Seq[File] = {
@@ -69,13 +86,15 @@ object ThriftCodegenPlugin extends Plugin {
       val mainJars        = jars(Thrift)
       val jvmCpOptions    = Seq("-classpath", mainJars.mkString(pathSeparator))
       val thriftSourcePaths  = thriftSources.map(_.absolutePath)
+      val mainClass  = "com.foursquare.recordv2.codegen.binary.ThriftCodegen"
       val appOptions = Seq(
         "--template", template,
         "--extension", "scala",
         "--namespace_out", sourceManaged.absolutePath,
         "--thrift_include", includes.map(_.absolutePath).mkString(":")
+      ) ++ (
+        if (allowReload) Seq("--allow_reload") else Nil
       )
-      val mainClass  = "com.foursquare.recordv2.codegen.binary.ThriftCodegen"
 
       jvmCpOptions ++ List(mainClass) ++ appOptions ++ thriftSourcePaths
     }

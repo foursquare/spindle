@@ -6,7 +6,7 @@ import sbt._
 object Default {
   val all: Seq[Setting[_]] = Seq(
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
-    Keys.version := "0.10-SNAPSHOT",
+    Keys.version := "0.11-SNAPSHOT",
     Keys.organization := "com.foursquare.common",
     Keys.scalaVersion := "2.9.1",
     Keys.crossScalaVersions := Seq("2.9.1", "2.9.2")
@@ -37,12 +37,8 @@ object Default {
   ) 
 
   val thrift = Default.scala ++ ThriftCodegenPlugin.thriftSettings ++ Seq(
-    ThriftCodegenPlugin.thriftCodegenLibs := Seq(
-      "com.foursquare.common" % "thrift-codegen-binary_2.9.1" % "0.4-SNAPSHOT"
-    ),
     Keys.sourceDirectory in ThriftCodegenPlugin.thrift in Compile <<= (Keys.baseDirectory)(identity),
-    ThriftCodegenPlugin.thriftCodegenIncludes := Seq(file("src/main/thrift")),
-    Keys.sources in ThriftCodegenPlugin.thrift in Compile <<= Keys.baseDirectory.map(base => (base ** "*.thrift").get),
+    ThriftCodegenPlugin.thriftCodegenRuntimeLibs := Nil,
     Keys.libraryDependencies ++= (
       ThirdParty.jackson ++
       ThirdParty.thrift ++
