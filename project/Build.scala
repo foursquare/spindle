@@ -8,8 +8,8 @@ object Recordv2Build extends Build {
       base = file("all"),
       settings = Defaults.defaultSettings ++ Default.scala
     ).aggregate(
-      thriftBase, thriftBson, thriftJson, runtime, thriftDescriptors, parser2, codegenRuntime,
-      codegenBinary, codegenTemplates, codegenSbtPlugin
+      thriftBase, thriftBson, thriftJson, runtime, thriftDescriptors, parser2, codegenRuntime, codegenTemplates,
+      codegenBinary, codegenSbtPlugin, testCodegen, testThriftExample, testParser, testRuntime
     )
 
   lazy val thriftBase =
@@ -56,6 +56,10 @@ object Recordv2Build extends Build {
     Project(
       id = "test-codegen",
       base = file("src/test/thrift/com/foursquare/recordv2/codegen")) dependsOn(runtime, thriftBase, thriftJson)
+  lazy val testThriftExample =
+    Project(
+      id = "test-thriftexample",
+      base = file("src/test/thrift/com/foursquare/thriftexample")) dependsOn(runtime, thriftBase, thriftJson)
   lazy val testParser =
     Project(
       id = "test-parser",
@@ -63,5 +67,5 @@ object Recordv2Build extends Build {
   lazy val testRuntime =
     Project(
       id = "test-runtime",
-      base = file("src/test/scala/com/foursquare/recordv2/runtime"))
+      base = file("src/test/scala/com/foursquare/recordv2/runtime")) dependsOn(runtime, thriftJson, thriftBson, testThriftExample, testCodegen)
 }

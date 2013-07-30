@@ -2,8 +2,6 @@
 
 package com.foursquare.recordv2.test
 
-
-import com.foursquare.common.json.JsonPrettyPrinter
 import com.foursquare.common.thrift.bson.TBSONProtocol
 import com.foursquare.thriftexample.{Content, TvListingEntry}
 import com.foursquare.thriftexample.av.Movie

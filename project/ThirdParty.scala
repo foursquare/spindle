@@ -14,12 +14,19 @@ object ThirdParty {
   val jodaTime = Seq(
     "joda-time" % "joda-time" % "2.0_2012b",
     "org.joda" % "joda-convert" % "1.2")
+  val junit = Seq(
+    "junit" % "junit" % "4.10" withSources(),
+    "com.novocode" % "junit-interface" % "0.7")
   val mongodb = Seq(
     "org.mongodb" % "mongo-java-driver" % "2.9.3")
   val parboiledScala = Seq(
     "org.parboiled" % "parboiled-scala_2.9.2" % "1.1.4")
+  val phonenumbers = Seq(
+    "com.googlecode.libphonenumber" % "libphonenumber" % "5.6")
   val rogueField = Seq(
     "com.foursquare" %% "rogue-field" % "2.2.0")
+  val rogueIndex = Seq(
+    "com.foursquare" %% "rogue-index" % "2.2.0")
   val scalaIo = Seq(
     "com.github.scala-incubator.io" % "scala-io-core_2.9.1" % "0.3.0",
     "com.github.scala-incubator.io" % "scala-io-file_2.9.1" % "0.3.0")
@@ -32,6 +39,8 @@ object ThirdParty {
       "org.scala-lang", "scala-compiler"))
   val slf4jNoLogging = Seq(
     "org.slf4j" % "slf4j-nop" % "1.6.4")
+  val specs = Seq(
+    "org.scala-tools.testing" %% "specs" % "1.6.9" withSources())
   val thrift = Seq(
     "org.apache.thrift" % "libthrift" % "0.9.0")
 }
