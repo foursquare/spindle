@@ -53,7 +53,8 @@ object ThriftCodegenPlugin extends Plugin {
                                   thriftCodegenIncludes, thriftCodegenAllowReload, thriftCodegenWorkingDir,
                                   Keys.resolvedScoped, Keys.streams).map(thriftCompile),
     Keys.sourceGenerators        <+= thrift,
-    Keys.clean in thrift         <<= (Keys.sourceManaged in thrift, Keys.resolvedScoped, Keys.streams).map(thriftClean)
+    Keys.clean in thrift         <<= (Keys.sourceManaged in thrift, thriftCodegenWorkingDir, Keys.resolvedScoped,
+                                  Keys.streams).map(thriftClean)
   )
 
   /**
@@ -118,13 +119,24 @@ object ThriftCodegenPlugin extends Plugin {
     generated
   }
 
-  private def thriftClean(sourceManaged: File, resolvedScoped: Project.ScopedKey[_], streams: TaskStreams) {
+  private def thriftClean(
+      sourceManaged: File,
+      workingDir: File,
+      resolvedScoped: Project.ScopedKey[_],
+      streams: TaskStreams
+  ): Unit = {
     import streams.log
-    val filesToDelete = (sourceManaged ** "*.scala").get
+    val scalaFilesToDelete = (sourceManaged ** "*.scala").get
+    val scalateFilesToDelete = (workingDir ***).get
+    val filesToDelete = scalaFilesToDelete ++ scalateFilesToDelete
     log.debug("Cleaning Files:\n%s".format(filesToDelete.mkString("\n")))
-    if (filesToDelete.nonEmpty) {
-      log.info("Cleaning %d Thrift generated files in %s".format(filesToDelete.size, Project.displayFull(resolvedScoped)))
-      IO.delete(filesToDelete)
+    if (scalaFilesToDelete.nonEmpty) {
+      log.info("Cleaning %d Thrift generated files in %s".format(scalaFilesToDelete.size, Project.displayFull(resolvedScoped)))
+      IO.delete(scalaFilesToDelete)
+    }
+    if (scalateFilesToDelete.nonEmpty) {
+      log.info("Cleaning %d Scalate generated files.".format(scalateFilesToDelete.size))
+      IO.delete(scalateFilesToDelete)
     }
   }
 }
