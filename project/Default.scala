@@ -40,10 +40,11 @@ object Default {
     Keys.sourceDirectory in ThriftCodegenPlugin.thrift in Compile <<= (Keys.baseDirectory)(identity),
     ThriftCodegenPlugin.thriftCodegenRuntimeLibs := ThirdParty.scalajCollection,
     ThriftCodegenPlugin.thriftCodegenBinaryLibs ++= ThirdParty.scalajCollection,
-    ThriftCodegenPlugin.thriftCodegenBinaryLibs ++= Seq(
-      "com.foursquare.common" %% "common-thrift-base" % "0.11-SNAPSHOT",
-      "com.foursquare.common" %% "common-thrift-json" % "0.11-SNAPSHOT"
-    )
+    ThriftCodegenPlugin.thriftCodegenVersion := "0.13-SNAPSHOT",
+    ThriftCodegenPlugin.thriftCodegenBinaryLibs <++= (ThriftCodegenPlugin.thriftCodegenVersion)(v => Seq(
+      "com.foursquare.common" %% "common-thrift-base" % v,
+      "com.foursquare.common" %% "common-thrift-json" % v
+    ))
   )
 
   val test = Default.scala ++ Seq(
