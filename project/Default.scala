@@ -1,4 +1,4 @@
-import com.foursquare.recordv2.codegen.plugin.ThriftCodegenPlugin
+import com.foursquare.spindle.codegen.plugin.ThriftCodegenPlugin
 import com.mojolly.scalate.ScalatePlugin
 import com.mojolly.scalate.ScalatePlugin.{ScalateKeys, TemplateConfig}
 import sbt._
