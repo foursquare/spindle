@@ -11,12 +11,12 @@
 
   val ${field.escapedName} =
 #if (field.isForeignKey)
-    new com.foursquare.recordv2.ForeignKeyFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type](
+    new com.foursquare.spindle.ForeignKeyFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type](
 #elseif (field.renderType.isInstanceOf[com.foursquare.recordv2.codegen.runtime.BitfieldStructRenderType])
 <% val structName = field.renderType.asInstanceOf[com.foursquare.recordv2.codegen.runtime.BitfieldStructRenderType].className %>
-    new com.foursquare.recordv2.BitfieldFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type, ${structName}, ${structName}.type]( 
+    new com.foursquare.spindle.BitfieldFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type, ${structName}, ${structName}.type]( 
 #else
-    new com.foursquare.recordv2.OptionalFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type](
 #end
       name = "${field.wireName}",
       longName = "${field.name}",
@@ -26,8 +26,8 @@
       getter = _.${field.name}Option,
       setterRaw = (r: ${cls.name}.Raw, v: ${field.renderType.text}) => { r.${field.escapedName}_=(v) },
 #if (field.isForeignKey)
-      objSetter = (r: ${cls.name}, obj: com.foursquare.recordv2.SemitypedHasPrimaryKey[${field.renderType.text}]) => { r.${field.name}SetObj(obj) },
-      objGetter = (r: ${cls.name}, m: com.foursquare.recordv2.UntypedMetaRecord) => { r.${field.name}UntypedFk(m) },
+      objSetter = (r: ${cls.name}, obj: com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]) => { r.${field.name}SetObj(obj) },
+      objGetter = (r: ${cls.name}, m: com.foursquare.spindle.UntypedMetaRecord) => { r.${field.name}UntypedFk(m) },
       alternateObjSetter = (r: ${cls.name}, obj: AnyRef) => { r.${field.name}SetAlternateObj(obj) },
       alternateObjGetter = (r: ${cls.name}) => { r.${field.name}AlternateFk },
 #elseif (field.renderType.isInstanceOf[com.foursquare.recordv2.codegen.runtime.BitfieldStructRenderType])
@@ -38,7 +38,7 @@
     )
 #end
 
-  override val fields: Seq[com.foursquare.recordv2.FieldDescriptor[_, ${cls.name}, ${cls.name}.type]] =
-    Vector[com.foursquare.recordv2.FieldDescriptor[_, ${cls.name}, ${cls.name}.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, ${cls.name}, ${cls.name}.type]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, ${cls.name}, ${cls.name}.type]](
       ${cls.fields.map(_.escapedName).mkString(",\n      ")}
     )

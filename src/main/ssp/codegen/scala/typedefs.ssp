@@ -15,7 +15,7 @@ object ${baseName}Typedefs {
       implicitly[scala.math.Ordering[${typedef.renderType.boxedText}]].asInstanceOf[scala.math.Ordering[${typedef.typeAlias}]]
   }
 #end
-  type ${typedef.typeAlias} = com.foursquare.recordv2.Id[${typedef.renderType.boxedText}, __${typedef.typeAlias}Tag]
+  type ${typedef.typeAlias} = com.foursquare.spindle.Id[${typedef.renderType.boxedText}, __${typedef.typeAlias}Tag]
   def ${typedef.typeAlias}(x: ${typedef.renderType.boxedText}): ${typedef.typeAlias} = x.asInstanceOf[${typedef.typeAlias}]
 #else
   type ${typedef.typeAlias} = ${typedef.renderType.text}  // Underlying type: ${typedef.renderType.underlying.text}

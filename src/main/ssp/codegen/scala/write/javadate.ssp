@@ -1,4 +1,4 @@
 <%@ val renderType: com.foursquare.recordv2.codegen.runtime.JavaDateRenderType %>
 <%@ val valueExpr: String %>
 <%@ val indent: String %>
-${indent}oprot.writeString(com.foursquare.recordv2.DateFieldHelpers.printJavaDate(${valueExpr}))
+${indent}oprot.writeString(com.foursquare.spindle.DateFieldHelpers.printJavaDate(${valueExpr}))

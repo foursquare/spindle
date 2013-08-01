@@ -4,7 +4,7 @@
 <%@ val field: ScalaField %>
   private var ${field.varName}Obj: AnyRef = null
   private var ${field.varName}AlternateObj: AnyRef = null
-  override def ${field.name}Fk[R <: com.foursquare.recordv2.Record[R] with com.foursquare.recordv2.HasPrimaryKey[${field.renderType.text}, R]](meta: com.foursquare.recordv2.MetaRecord[R]): Option[R] = {
+  override def ${field.name}Fk[R <: com.foursquare.spindle.Record[R] with com.foursquare.spindle.HasPrimaryKey[${field.renderType.text}, R]](meta: com.foursquare.spindle.MetaRecord[R]): Option[R] = {
     val foreignOpt = meta.ifInstanceFrom(${field.varName}Obj)
     if (${field.isSetName} && foreignOpt.isDefined && foreignOpt.get.primaryKey == ${field.name}OrThrow) {
       foreignOpt
@@ -13,8 +13,8 @@
       None
     }
   }
-  override def ${field.name}UntypedFk(meta: com.foursquare.recordv2.UntypedMetaRecord): Option[com.foursquare.recordv2.UntypedRecord with com.foursquare.recordv2.SemitypedHasPrimaryKey[${field.renderType.text}]] = {
-    val foreignOpt = meta.ifInstanceFrom(${field.varName}Obj).asInstanceOf[Option[com.foursquare.recordv2.UntypedRecord with com.foursquare.recordv2.SemitypedHasPrimaryKey[${field.renderType.text}]]]
+  override def ${field.name}UntypedFk(meta: com.foursquare.spindle.UntypedMetaRecord): Option[com.foursquare.spindle.UntypedRecord with com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]] = {
+    val foreignOpt = meta.ifInstanceFrom(${field.varName}Obj).asInstanceOf[Option[com.foursquare.spindle.UntypedRecord with com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]]]
     if (${field.isSetName} && foreignOpt.isDefined && foreignOpt.get.primaryKey == ${field.name}OrThrow) {
       foreignOpt
     } else {
@@ -22,7 +22,7 @@
       None
     }
   }
-  override def ${field.name}SetObj(x: com.foursquare.recordv2.SemitypedHasPrimaryKey[${field.renderType.text}]): Unit = {
+  override def ${field.name}SetObj(x: com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]): Unit = {
     ${field.varName}Obj = x
   }
   override def ${field.name}AlternateFk: Option[AnyRef] = {

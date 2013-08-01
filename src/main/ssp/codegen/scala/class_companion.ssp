@@ -9,11 +9,11 @@ def escapeQuotes(str: String): String = str.replace("\"", "\\\"")
 %>\
 
 object ${cls.name}
-    extends com.foursquare.recordv2.MetaRecord[${cls.name}]
+    extends com.foursquare.spindle.MetaRecord[${cls.name}]
 #for (pkField <- cls.primaryKeyField)
-    with com.foursquare.recordv2.HasMetaPrimaryKey[${pkField.renderType.text}, ${cls.name}]
+    with com.foursquare.spindle.HasMetaPrimaryKey[${pkField.renderType.text}, ${cls.name}]
 #end
-    with com.foursquare.recordv2.RecordProvider[${cls.name}] \
+    with com.foursquare.spindle.RecordProvider[${cls.name}] \
 #if (isIndexed)\
 with com.foursquare.index.IndexedRecord[${cls.name}] \
 #end
@@ -35,19 +35,19 @@ with com.foursquare.index.IndexedRecord[${cls.name}] \
     if (x.isInstanceOf[${cls.name}]) Some(x.asInstanceOf[${cls.name}]) else None
   }
 
-  override val annotations: com.foursquare.recordv2.Annotations =
+  override val annotations: com.foursquare.spindle.Annotations =
 #if (cls.annotations.nonEmpty)
-    new com.foursquare.recordv2.Annotations(scala.collection.immutable.Vector(
+    new com.foursquare.spindle.Annotations(scala.collection.immutable.Vector(
       ${cls.annotations.toSeq.map(annot => "(\"%s\", \"%s\")".format(annot._1, escapeQuotes(annot._2))).mkString(",\n      ")}
     ))
 #else
-    com.foursquare.recordv2.Annotations.empty
+    com.foursquare.spindle.Annotations.empty
 #end
 
 <% render("class_companion_rfields.ssp", Map("cls" -> cls)) %>
 
 #for (pkField <- cls.primaryKeyField)
-  override def primaryKey: com.foursquare.recordv2.FieldDescriptor[${pkField.renderType.text}, ${cls.name}, ${cls.name}.type] = this.${pkField.name}
+  override def primaryKey: com.foursquare.spindle.FieldDescriptor[${pkField.renderType.text}, ${cls.name}, ${cls.name}.type] = this.${pkField.name}
 #end
 \
 #if (isIndexed)
@@ -70,7 +70,7 @@ with com.foursquare.index.IndexedRecord[${cls.name}] \
   implicit val companionProvider: ${cls.name}CompanionProvider = new ${cls.name}CompanionProvider
 }
 
-class ${cls.name}CompanionProvider extends com.foursquare.recordv2.CompanionProvider[${cls.name}] {
+class ${cls.name}CompanionProvider extends com.foursquare.spindle.CompanionProvider[${cls.name}] {
   type CompanionT = ${cls.name}.type
   override def provide: ${cls.name}.type = ${cls.name}
 }

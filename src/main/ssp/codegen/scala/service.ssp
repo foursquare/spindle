@@ -8,7 +8,7 @@ trait Has${service.name} {
   def get${service.name}: ${service.name}.ServiceIface
 }
 
-object ${service.name} extends com.foursquare.recordv2.ServiceDescriptor {
+object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
 <%--  Synchronous client interface --%>
   trait Iface #if (service.extendzIsSet && service.extendzOrThrow != "")extends ${service.extendzOrThrow}.Iface #(end){
 #for (function <- service.functions)
@@ -290,7 +290,7 @@ object ${service.name} extends com.foursquare.recordv2.ServiceDescriptor {
   class Service(
       iface: ServiceIface,
       protocolFactory: org.apache.thrift.protocol.TProtocolFactory
-  ) extends #if (service.extendzIsSet && service.extendzOrThrow != "")${service.extendzOrThrow}.Service(iface, protocolFactory)#(else)com.twitter.finagle.Service[Array[Byte], Array[Byte]]#(end) with com.foursquare.recordv2.ServiceDescriptor {
+  ) extends #if (service.extendzIsSet && service.extendzOrThrow != "")${service.extendzOrThrow}.Service(iface, protocolFactory)#(else)com.twitter.finagle.Service[Array[Byte], Array[Byte]]#(end) with com.foursquare.spindle.ServiceDescriptor {
   override def serviceName = ${service.name}.serviceName
   override def functionDescriptors = ${service.name}.functionDescriptors
 
@@ -440,7 +440,7 @@ object ${service.name} extends com.foursquare.recordv2.ServiceDescriptor {
 <%-- Output the ServiceDescriptor and FunctionDescriptors. --%>
   override val serviceName = "${service.name}"
   override val functionDescriptors = Seq(
-<% val items = for (function <- service.functions) yield ("""    new com.foursquare.recordv2.FunctionDescriptor[%s_args, %s_result] {
+<% val items = for (function <- service.functions) yield ("""    new com.foursquare.spindle.FunctionDescriptor[%s_args, %s_result] {
       override val functionName = "%s"
       override val requestMetaRecord = %s_args
       override val responseMetaRecord = %s_result

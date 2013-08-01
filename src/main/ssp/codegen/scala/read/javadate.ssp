@@ -8,5 +8,5 @@
       "renderType" -> renderType.ref,
       "lhs" -> lhs,
       "indent" -> indent,
-      "wrapLeft" -> (wrapLeft + "com.foursquare.recordv2.DateFieldHelpers.parseJavaDate("),
+      "wrapLeft" -> (wrapLeft + "com.foursquare.spindle.DateFieldHelpers.parseJavaDate("),
       "wrapRight" -> (")" + wrapRight))) %>

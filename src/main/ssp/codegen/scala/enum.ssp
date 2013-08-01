@@ -16,13 +16,13 @@ sealed abstract class ${enum.name} private (
     override val id: Int,
     override val name: String,
     override val stringValue: String
-) extends com.foursquare.recordv2.Enum[${enum.name}] with org.apache.thrift.TEnum {
+) extends com.foursquare.spindle.Enum[${enum.name}] with org.apache.thrift.TEnum {
   override def toString: String = name
   override def getValue: Int = id
   override def meta: ${enum.name}.type = ${enum.name}
 }
 
-object ${enum.name} extends com.foursquare.recordv2.EnumMeta[${enum.name}] {
+object ${enum.name} extends com.foursquare.spindle.EnumMeta[${enum.name}] {
 <%--
 // Making enumeration instances case objects provides exhaustiveness checking
 // when pattern matching on the enumeration.
