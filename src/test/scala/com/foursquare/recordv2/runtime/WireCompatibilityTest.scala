@@ -1,10 +1,10 @@
 // Copyright 2012 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2.test
+package com.foursquare.spindle.test
 
 import com.foursquare.common.thrift.bson.TBSONProtocol
-import com.foursquare.recordv2.MetaRecord
-import com.foursquare.recordv2.test.gen.{InnerStruct, TestStruct, TestStructNoBinary, TestStructNoBool,
+import com.foursquare.spindle.MetaRecord
+import com.foursquare.spindle.test.gen.{InnerStruct, TestStruct, TestStructNoBinary, TestStructNoBool,
     TestStructNoByte, TestStructNoDouble, TestStructNoI16, TestStructNoI32, TestStructNoI64, TestStructNoList,
     TestStructNoMap, TestStructNoSet, TestStructNoString, TestStructNoStruct}
 import java.nio.ByteBuffer

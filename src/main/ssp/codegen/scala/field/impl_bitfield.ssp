@@ -1,5 +1,5 @@
 <%
-  import com.foursquare.recordv2.codegen.runtime.{BitfieldStructRenderType, ScalaField}
+  import com.foursquare.spindle.codegen.runtime.{BitfieldStructRenderType, ScalaField}
 %>
 <%@ val field: ScalaField %>
 <%

@@ -1,5 +1,5 @@
 <%
-  import com.foursquare.recordv2.codegen.runtime.ScalaField
+  import com.foursquare.spindle.codegen.runtime.ScalaField
 %>
 <%@ val field: ScalaField %>
 {com.foursquare.common.types.ThriftJsonHelper.compareJson(this.${field.name}OrNull, that.${field.name}OrNull)}

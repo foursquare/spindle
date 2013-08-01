@@ -1,5 +1,5 @@
 <%
-  import com.foursquare.recordv2.codegen.runtime.{CodegenException, ScalaField, StructLike}
+  import com.foursquare.spindle.codegen.runtime.{CodegenException, ScalaField, StructLike}
 
 %>
 <%@ val cls: StructLike %>

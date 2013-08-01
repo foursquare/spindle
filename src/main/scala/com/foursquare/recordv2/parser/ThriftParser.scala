@@ -1,6 +1,6 @@
 // Copyright 2012 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2.parser
+package com.foursquare.spindle.parser
 
 import com.twitter.thrift.descriptors.Program
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, FileNotFoundException}

@@ -1,5 +1,5 @@
 <%
-  import com.foursquare.recordv2.codegen.runtime.ScalaField
+  import com.foursquare.spindle.codegen.runtime.ScalaField
 %>
 <%@ val field: ScalaField %>
   private var ${field.varName}Obj: AnyRef = null

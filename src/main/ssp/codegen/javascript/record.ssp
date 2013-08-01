@@ -1,5 +1,5 @@
 <%
-  import com.foursquare.recordv2.codegen.runtime.{ProgramSource, ScalaProgram}
+  import com.foursquare.spindle.codegen.runtime.{ProgramSource, ScalaProgram}
   import java.net.InetAddress
   import org.joda.time.DateTime
 %>

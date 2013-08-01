@@ -1,2 +1,2 @@
-<%@ val cls: com.foursquare.recordv2.codegen.runtime.StructLike %>
+<%@ val cls: com.foursquare.spindle.codegen.runtime.StructLike %>
   def mergeCopy(that: ${cls.name}): ${cls.name}

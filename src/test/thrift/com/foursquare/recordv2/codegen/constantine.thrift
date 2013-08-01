@@ -1,4 +1,4 @@
-namespace java com.foursquare.recordv2.test.gen
+namespace java com.foursquare.spindle.test.gen
 
 const string SIMPLE = "hello"
 const bool BOOL = true

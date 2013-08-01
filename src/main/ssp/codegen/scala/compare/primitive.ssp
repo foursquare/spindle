@@ -1,5 +1,5 @@
 <%
-  import com.foursquare.recordv2.codegen.runtime.ScalaField
+  import com.foursquare.spindle.codegen.runtime.ScalaField
 %>
 <%@ val field: ScalaField %>
 this.${field.escapedName}.compareTo(that.${field.escapedName})

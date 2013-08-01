@@ -1,6 +1,6 @@
 // Copyright 2011 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2.parser
+package com.foursquare.spindle.parser
 
 import java.io.{ByteArrayOutputStream, InputStream, OutputStream}
 import java.lang.{ProcessBuilder => JProcessBuilder}

@@ -1,6 +1,6 @@
 // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2.codegen.runtime
+package com.foursquare.spindle.codegen.runtime
 
 import com.twitter.thrift.descriptors.{Enum, EnumElement, EnumElementProxy, EnumProxy}
 

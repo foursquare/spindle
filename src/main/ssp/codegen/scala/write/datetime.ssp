@@ -1,4 +1,4 @@
-<%@ val renderType: com.foursquare.recordv2.codegen.runtime.DateTimeRenderType %>
+<%@ val renderType: com.foursquare.spindle.codegen.runtime.DateTimeRenderType %>
 <%@ val valueExpr: String %>
 <%@ val indent: String %>
 ${indent}com.foursquare.common.thrift.base.ThriftDateTimeHelper.write(oprot, ${valueExpr})

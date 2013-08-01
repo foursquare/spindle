@@ -1,5 +1,5 @@
 <%
-  import com.foursquare.recordv2.codegen.runtime.{PrimitiveRenderType, ProgramSource, ScalaTypedef}
+  import com.foursquare.spindle.codegen.runtime.{PrimitiveRenderType, ProgramSource, ScalaTypedef}
 %>
 <%@ val typedefs: Seq[ScalaTypedef] %>
 <%@ val baseName: String %>

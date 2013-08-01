@@ -1,6 +1,6 @@
 // Copyright 2012 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2
+package com.foursquare.spindle
 
 class Annotations(val toSeq: Seq[(String, String)]) {
   def contains(key: String): Boolean = toSeq.exists(_._1 == key)

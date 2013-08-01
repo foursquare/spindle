@@ -1,6 +1,6 @@
 // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2.codegen.runtime
+package com.foursquare.spindle.codegen.runtime
 
 /**
  * Utilities for dealing with scopes in Thrift.

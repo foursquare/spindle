@@ -1,6 +1,6 @@
 // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2.parser2
+package com.foursquare.spindle.parser2
 
 import com.twitter.thrift.descriptors
 import java.io.File

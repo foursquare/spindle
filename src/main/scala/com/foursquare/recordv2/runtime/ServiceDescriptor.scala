@@ -1,6 +1,6 @@
 // Copyright 2012 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2
+package com.foursquare.spindle
 
 trait FunctionDescriptor[RequestType <: Record[RequestType], ResponseType <: Record[ResponseType]] {
   /**
@@ -9,12 +9,12 @@ trait FunctionDescriptor[RequestType <: Record[RequestType], ResponseType <: Rec
   def functionName: String
 
   /**
-   * Return the [[com.foursquare.recordv2.MetaRecord]] for this method's arguments.
+   * Return the [[com.foursquare.spindle.MetaRecord]] for this method's arguments.
    */
   def requestMetaRecord: MetaRecord[RequestType]
 
   /**
-   * Return the [[com.foursquare.recordv2.MetaRecord]] for this method's response.
+   * Return the [[com.foursquare.spindle.MetaRecord]] for this method's response.
    */
   def responseMetaRecord: MetaRecord[ResponseType]
 }
@@ -27,7 +27,7 @@ trait ServiceDescriptor {
 
   /**
    * Returns descriptors for the methods implemented by this service.
-   * @return a sequence of [[com.foursquare.recordv2.ServiceMethodDescriptor]]
+   * @return a sequence of [[com.foursquare.spindle.ServiceMethodDescriptor]]
    */
   def functionDescriptors: Seq[FunctionDescriptor[_,_]]
 }

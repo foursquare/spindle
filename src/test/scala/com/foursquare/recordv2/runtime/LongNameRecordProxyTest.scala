@@ -1,8 +1,8 @@
 // Copyright 2012 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2
+package com.foursquare.spindle
 
-import com.foursquare.recordv2.test.gen.{LongNameInnerStruct, LongNameTestEnum, LongNameTestStruct}
+import com.foursquare.spindle.test.gen.{LongNameInnerStruct, LongNameTestEnum, LongNameTestStruct}
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import org.apache.thrift.transport.TIOStreamTransport

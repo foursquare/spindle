@@ -1,5 +1,5 @@
 <%
-import com.foursquare.recordv2.codegen.runtime.{RenderType, ScalaFunction, TypeReferenceResolver}
+import com.foursquare.spindle.codegen.runtime.{RenderType, ScalaFunction, TypeReferenceResolver}
 %>
 <%@ val function: ScalaFunction %>
 <%@ val resolver: TypeReferenceResolver %>

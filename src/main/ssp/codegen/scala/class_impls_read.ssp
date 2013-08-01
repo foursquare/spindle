@@ -1,4 +1,4 @@
-<%@ val cls: com.foursquare.recordv2.codegen.runtime.StructLike %>
+<%@ val cls: com.foursquare.spindle.codegen.runtime.StructLike %>
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()

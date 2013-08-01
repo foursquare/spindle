@@ -2,7 +2,7 @@
 
 package com.foursquare
 
-package object recordv2 {
+package object spindle {
   trait Tagged[U]
   type Id[T, U] = T with Tagged[U]
 }

@@ -1,6 +1,6 @@
 // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2.parser2
+package com.foursquare.spindle.parser2
 
 import com.twitter.thrift.descriptors.{Annotation, Program, SimpleBaseType, SimpleContainerType}
 import org.junit.Assert.{assertEquals, assertTrue}
@@ -22,9 +22,9 @@ class ThriftParserTest {
     val program = ThriftParser2.parseProgram(base + "/parse_header.thrift")
 
     assertEquals(program.includes.size, 2)
-    assertTrue(program.includes.forall(_.path == "com/foursquare/recordv2/parser2/parse_program.thrift"))
+    assertTrue(program.includes.forall(_.path == "com/foursquare/spindle/parser2/parse_program.thrift"))
     assertEquals(program.namespaces.size, 15)
-    assertTrue(program.namespaces.forall(_.name == "com.foursquare.recordv2.parser2"))
+    assertTrue(program.namespaces.forall(_.name == "com.foursquare.spindle.parser2"))
   }
 
   @Test

@@ -1,6 +1,6 @@
 // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2.codegen.runtime
+package com.foursquare.spindle.codegen.runtime
 
 import scalaj.collection.Imports._
 
@@ -332,10 +332,10 @@ case class BitfieldStructRenderType(
   override def hasOrdering: Boolean = false
 
   val bitfieldRead = (hasSetBits, ref.ttype) match {
-    case (true, TType.I32) => "com.foursquare.recordv2.BitFieldHelpers.bitFieldToStruct"
-    case (true, TType.I64) => "com.foursquare.recordv2.BitFieldHelpers.longBitFieldToStruct"
-    case (false, TType.I32) => "com.foursquare.recordv2.BitFieldHelpers.bitFieldToStructNoSetBits"
-    case (false, TType.I64) => "com.foursquare.recordv2.BitFieldHelpers.longBitFieldToStructNoSetBits"
+    case (true, TType.I32) => "com.foursquare.spindle.BitFieldHelpers.bitFieldToStruct"
+    case (true, TType.I64) => "com.foursquare.spindle.BitFieldHelpers.longBitFieldToStruct"
+    case (false, TType.I32) => "com.foursquare.spindle.BitFieldHelpers.bitFieldToStructNoSetBits"
+    case (false, TType.I64) => "com.foursquare.spindle.BitFieldHelpers.longBitFieldToStructNoSetBits"
     case _ => throw new IllegalArgumentException("Unsupported bitfield type: " + ref.ttype + " with hasSetBits: " + hasSetBits)
   }
 }

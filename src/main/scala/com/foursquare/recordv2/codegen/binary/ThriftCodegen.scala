@@ -1,11 +1,11 @@
 // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2.codegen.binary
+package com.foursquare.spindle.codegen.binary
 
-import com.foursquare.recordv2.Annotations
-import com.foursquare.recordv2.codegen.runtime.{BitfieldRef, CodegenException, EnhancedTypeRef, ProgramSource,
+import com.foursquare.spindle.Annotations
+import com.foursquare.spindle.codegen.runtime.{BitfieldRef, CodegenException, EnhancedTypeRef, ProgramSource,
     ScalaProgram, Scope, TypeDeclarationResolver, TypeReference}
-import com.foursquare.recordv2.parser2.{ParserException, ThriftParser2}
+import com.foursquare.spindle.parser2.{ParserException, ThriftParser2}
 import java.io.{File, PrintWriter}
 import org.clapper.argot.ArgotConverters._
 import org.clapper.argot.ArgotParser

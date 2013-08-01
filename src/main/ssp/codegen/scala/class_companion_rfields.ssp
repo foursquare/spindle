@@ -1,5 +1,5 @@
 <%
-  import com.foursquare.recordv2.codegen.runtime.StructLike 
+  import com.foursquare.spindle.codegen.runtime.StructLike 
 %>
 <%@ val cls: StructLike %>
   // Record v2 Descriptors.
@@ -12,8 +12,8 @@
   val ${field.escapedName} =
 #if (field.isForeignKey)
     new com.foursquare.spindle.ForeignKeyFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type](
-#elseif (field.renderType.isInstanceOf[com.foursquare.recordv2.codegen.runtime.BitfieldStructRenderType])
-<% val structName = field.renderType.asInstanceOf[com.foursquare.recordv2.codegen.runtime.BitfieldStructRenderType].className %>
+#elseif (field.renderType.isInstanceOf[com.foursquare.spindle.codegen.runtime.BitfieldStructRenderType])
+<% val structName = field.renderType.asInstanceOf[com.foursquare.spindle.codegen.runtime.BitfieldStructRenderType].className %>
     new com.foursquare.spindle.BitfieldFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type, ${structName}, ${structName}.type]( 
 #else
     new com.foursquare.spindle.OptionalFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type](
@@ -30,8 +30,8 @@
       objGetter = (r: ${cls.name}, m: com.foursquare.spindle.UntypedMetaRecord) => { r.${field.name}UntypedFk(m) },
       alternateObjSetter = (r: ${cls.name}, obj: AnyRef) => { r.${field.name}SetAlternateObj(obj) },
       alternateObjGetter = (r: ${cls.name}) => { r.${field.name}AlternateFk },
-#elseif (field.renderType.isInstanceOf[com.foursquare.recordv2.codegen.runtime.BitfieldStructRenderType])
-<% val structName = field.renderType.asInstanceOf[com.foursquare.recordv2.codegen.runtime.BitfieldStructRenderType].className %>
+#elseif (field.renderType.isInstanceOf[com.foursquare.spindle.codegen.runtime.BitfieldStructRenderType])
+<% val structName = field.renderType.asInstanceOf[com.foursquare.spindle.codegen.runtime.BitfieldStructRenderType].className %>
       structMeta = ${structName},
 #end
       manifest = manifest[${field.renderType.text}]

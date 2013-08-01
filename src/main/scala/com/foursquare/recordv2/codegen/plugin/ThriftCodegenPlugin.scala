@@ -1,4 +1,4 @@
-package com.foursquare.recordv2.codegen.plugin
+package com.foursquare.spindle.codegen.plugin
 
 import sbt._
 import sbt.Fork.ForkJava
@@ -15,6 +15,7 @@ object ThriftCodegenPlugin extends Plugin {
   val thriftCodegenIncludes = SettingKey[Seq[File]]("thrift-codegen-includes", "Directories to include in Thrift dependency resolution.")
   val thriftCodegenTemplate = SettingKey[String]("thrift-codegen-template", "Template to use for generating code.")
   val thriftCodegenAllowReload = SettingKey[Boolean]("thrift-codegen-allow-reload", "Allow reloading of codegen templates.")
+  val thriftCodegenWorkingDir = SettingKey[File]("thrift-codegen-working-dir", "Directory to use for caching compiled Scalate templates.")
 
   val thriftSettings     = Seq[Project.Setting[_]](
     Keys.ivyConfigurations += Thrift,
@@ -43,11 +44,14 @@ object ThriftCodegenPlugin extends Plugin {
     )
 
   private def thriftSettings0 = Seq[Project.Setting[_]](
+    thriftCodegenWorkingDir <<= (Keys.crossTarget, Keys.configuration) { (outDir, conf) => 
+      outDir / (Defaults.prefix(conf.name) + "scalate.d")
+    },
     Keys.sourceManaged in thrift ~= (_ / "thrift"), // e.g. /target/scala-2.8.1.final/src_managed/main/thrift
     thrift                       <<= (Keys.javaHome, Keys.classpathTypes in thrift, Keys.update,
                                   Keys.sources in thrift, thriftCodegenTemplate, Keys.sourceManaged in thrift,
-                                  thriftCodegenIncludes, thriftCodegenAllowReload, Keys.resolvedScoped, Keys.streams
-                                  ).map(thriftCompile),
+                                  thriftCodegenIncludes, thriftCodegenAllowReload, thriftCodegenWorkingDir,
+                                  Keys.resolvedScoped, Keys.streams).map(thriftCompile),
     Keys.sourceGenerators        <+= thrift,
     Keys.clean in thrift         <<= (Keys.sourceManaged in thrift, Keys.resolvedScoped, Keys.streams).map(thriftClean)
   )
@@ -64,6 +68,7 @@ object ThriftCodegenPlugin extends Plugin {
       sourceManaged: File,
       includes: Seq[File],
       allowReload: Boolean,
+      workingDir: File,
       resolvedScoped: Project.ScopedKey[_],
       streams: TaskStreams
   ): Seq[File] = {
@@ -86,12 +91,13 @@ object ThriftCodegenPlugin extends Plugin {
       val mainJars        = jars(Thrift)
       val jvmCpOptions    = Seq("-classpath", mainJars.mkString(pathSeparator))
       val thriftSourcePaths  = thriftSources.map(_.absolutePath)
-      val mainClass  = "com.foursquare.recordv2.codegen.binary.ThriftCodegen"
+      val mainClass  = "com.foursquare.spindle.codegen.binary.ThriftCodegen"
       val appOptions = Seq(
         "--template", template,
         "--extension", "scala",
         "--namespace_out", sourceManaged.absolutePath,
-        "--thrift_include", includes.map(_.absolutePath).mkString(":")
+        "--thrift_include", includes.map(_.absolutePath).mkString(":"),
+        "--working_dir", workingDir.absolutePath
       ) ++ (
         if (allowReload) Seq("--allow_reload") else Nil
       )

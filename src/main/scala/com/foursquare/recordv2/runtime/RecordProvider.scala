@@ -1,6 +1,6 @@
 // Copyright 2012 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2
+package com.foursquare.spindle
 
 import org.apache.thrift.{TBase, TFieldIdEnum}
 

@@ -1,5 +1,5 @@
 <%
-  import com.foursquare.recordv2.codegen.runtime.{ScalaConst}
+  import com.foursquare.spindle.codegen.runtime.{ScalaConst}
 %>
 <%@ val constants: Seq[ScalaConst] %>
 <%@ val pkg: Option[String] %>

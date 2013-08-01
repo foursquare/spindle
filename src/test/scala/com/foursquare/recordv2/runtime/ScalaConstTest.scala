@@ -1,8 +1,8 @@
 // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2
+package com.foursquare.spindle
 
-import com.foursquare.recordv2.test.gen.{ConstantineConstants, Foo}
+import com.foursquare.spindle.test.gen.{ConstantineConstants, Foo}
 import org.junit.Assert.{assertEquals, assertFalse, assertTrue}
 import org.junit.Test
 import org.specs.SpecsMatchers

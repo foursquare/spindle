@@ -1,4 +1,4 @@
-<%@ val renderType: com.foursquare.recordv2.codegen.runtime.DollarAmountRenderType %>
+<%@ val renderType: com.foursquare.spindle.codegen.runtime.DollarAmountRenderType %>
 <%@ val valueExpr: String %>
 <%@ val indent: String %>
 ${indent}oprot.writeI64(${valueExpr}.asMicros)

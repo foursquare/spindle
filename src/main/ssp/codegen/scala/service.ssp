@@ -1,5 +1,5 @@
 <%
-import com.foursquare.recordv2.codegen.runtime.{RenderType, ScalaClass, ScalaFunction, ScalaService, TypeReferenceResolver}
+import com.foursquare.spindle.codegen.runtime.{RenderType, ScalaClass, ScalaFunction, ScalaService, TypeReferenceResolver}
 import com.twitter.thrift.descriptors.{Annotation, Field, Requiredness, Struct}
 %>
 <%@ val service: ScalaService %>

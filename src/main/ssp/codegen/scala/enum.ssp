@@ -1,5 +1,5 @@
 <%
-  import com.foursquare.recordv2.codegen.runtime.ScalaEnum
+  import com.foursquare.spindle.codegen.runtime.ScalaEnum
 %>
 <%@ val enum: ScalaEnum %>
 <%--

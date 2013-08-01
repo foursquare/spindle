@@ -12,7 +12,7 @@ sourceGenerators in Compile <+= (fullClasspath in (codegenBinary, Runtime), runn
   out.mkdirs()
   val thriftSources: Seq[File] = ((in ** "*.thrift").get)
   r.run(
-    "com.foursquare.recordv2.codegen.binary.ThriftCodegen",
+    "com.foursquare.spindle.codegen.binary.ThriftCodegen",
     cp.files,
     Seq(
       "--template", template.absolutePath,

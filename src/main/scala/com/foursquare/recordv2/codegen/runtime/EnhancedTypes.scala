@@ -1,4 +1,4 @@
-package com.foursquare.recordv2.codegen.runtime
+package com.foursquare.spindle.codegen.runtime
 
 /**
  * From package.scala:

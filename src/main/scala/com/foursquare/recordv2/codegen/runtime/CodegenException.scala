@@ -1,3 +1,3 @@
-package com.foursquare.recordv2.codegen.runtime
+package com.foursquare.spindle.codegen.runtime
 
 class CodegenException(reason: String) extends RuntimeException(reason)

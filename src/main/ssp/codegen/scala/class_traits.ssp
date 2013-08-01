@@ -1,5 +1,5 @@
 <%
-  import com.foursquare.recordv2.codegen.runtime.StructLike 
+  import com.foursquare.spindle.codegen.runtime.StructLike 
 %>
 <%@ val cls: StructLike %>
 

@@ -1,5 +1,5 @@
 <%
-  import com.foursquare.recordv2.codegen.runtime.ScalaField
+  import com.foursquare.spindle.codegen.runtime.ScalaField
 %>
 <%@ val field: ScalaField %>
   override def ${field.escapedName}_=(x: ${field.renderType.text}): Unit = { underlying.${field.escapedName}_=(x) }

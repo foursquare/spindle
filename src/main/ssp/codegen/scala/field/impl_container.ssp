@@ -1,5 +1,5 @@
 <%
-  import com.foursquare.recordv2.codegen.runtime.{ContainerRenderType, RenderType, ScalaField, TypedefRenderType}
+  import com.foursquare.spindle.codegen.runtime.{ContainerRenderType, RenderType, ScalaField, TypedefRenderType}
 %>
 <%@ val field: ScalaField %>
 <% val container: String = field.renderType.underlying.asInstanceOf[ContainerRenderType].container %>

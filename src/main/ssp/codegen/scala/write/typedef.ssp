@@ -1,4 +1,4 @@
-<%@ val renderType: com.foursquare.recordv2.codegen.runtime.TypedefRenderType %>
+<%@ val renderType: com.foursquare.spindle.codegen.runtime.TypedefRenderType %>
 <%@ val valueExpr: String %>
 <%@ val indent: String %>
 <% import renderType.ref %>

@@ -1,4 +1,4 @@
-<%@ val cls: com.foursquare.recordv2.codegen.runtime.StructLike %>
+<%@ val cls: com.foursquare.spindle.codegen.runtime.StructLike %>
   override def merge(that: ${cls.name}): Unit = {
 #for (field <- cls.fields)
     if (that.${field.isSetName} && !this.${field.isSetName}) {

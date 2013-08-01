@@ -1,5 +1,5 @@
 <%
-  import com.foursquare.recordv2.codegen.runtime.ScalaField
+  import com.foursquare.spindle.codegen.runtime.ScalaField
 %>
 <%@ val field: ScalaField %>
 org.apache.thrift.TBaseHelper.compareTo(this.${field.escapedName}.asJava, that.${field.escapedName}.asJava)

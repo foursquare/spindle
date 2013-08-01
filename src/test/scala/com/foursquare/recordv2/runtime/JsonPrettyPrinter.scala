@@ -1,6 +1,6 @@
 // Copyright 2012 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.recordv2.test
+package com.foursquare.spindle.test
 
 import java.io.{StringWriter, Writer}
 import org.codehaus.jackson.{JsonFactory, JsonGenerator, JsonParser}
