@@ -28,7 +28,7 @@ object ThriftCodegenPlugin extends Plugin {
     thriftCodegenBinaryLibs <<= (thriftCodegenVersion)(v => Seq("com.foursquare.common" %% "thrift-codegen-binary" % v)),
     thriftCodegenRuntimeLibs <<= (thriftCodegenVersion)(v => Seq(
       "com.twitter" % "finagle-thrift" % "6.3.0",
-      "com.foursquare.common" %% "recordv2-runtime" % v,
+      "com.foursquare.common" %% "spindle-runtime" % v,
       "com.foursquare.common" %% "common-thrift-base" % v,
       "com.foursquare.common" %% "common-thrift-json" % v,
       "org.scalaj" %% "scalaj-collection" % "1.5"

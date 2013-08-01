@@ -5,7 +5,7 @@ package com.foursquare.spindle.codegen.binary
 import com.foursquare.spindle.Annotations
 import com.foursquare.spindle.codegen.runtime.{BitfieldRef, CodegenException, EnhancedTypeRef, ProgramSource,
     ScalaProgram, Scope, TypeDeclarationResolver, TypeReference}
-import com.foursquare.spindle.parser2.{ParserException, ThriftParser2}
+import com.foursquare.spindle.codegen.parser.{ParserException, ThriftParser}
 import java.io.{File, PrintWriter}
 import org.clapper.argot.ArgotConverters._
 import org.clapper.argot.ArgotParser
@@ -155,7 +155,7 @@ object ThriftCodegen {
       parsed
     } else {
       val toParse = _toParse.distinct
-      val programs = ThriftParser2.parsePrograms(toParse)
+      val programs = ThriftParser.parsePrograms(toParse)
 
       // Sanity check
       if (toParse.size != programs.size) {

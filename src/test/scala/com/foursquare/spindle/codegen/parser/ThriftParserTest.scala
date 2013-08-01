@@ -1,17 +1,17 @@
 // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.spindle.parser2
+package com.foursquare.spindle.codegen.parser
 
 import com.twitter.thrift.descriptors.{Annotation, Program, SimpleBaseType, SimpleContainerType}
 import org.junit.Assert.{assertEquals, assertTrue}
 import org.junit.Test
 
 class ThriftParserTest {
-  val base = "src/test/thrift/com/foursquare/recordv2/parser2"
+  val base = "src/test/thrift/com/foursquare/spindle/parser"
 
   @Test
   def testParseProgram(): Unit = {
-    val program = ThriftParser2.parseProgram(base + "/parse_program.thrift")
+    val program = ThriftParser.parseProgram(base + "/parse_program.thrift")
 
     assertEquals(program.namespaces.size, 2)
     assertEquals(program.constants.size, 3)
@@ -19,17 +19,17 @@ class ThriftParserTest {
 
   @Test
   def testParseHeader(): Unit = {
-    val program = ThriftParser2.parseProgram(base + "/parse_header.thrift")
+    val program = ThriftParser.parseProgram(base + "/parse_header.thrift")
 
     assertEquals(program.includes.size, 2)
-    assertTrue(program.includes.forall(_.path == "com/foursquare/spindle/parser2/parse_program.thrift"))
+    assertTrue(program.includes.forall(_.path == "com/foursquare/spindle/parser/parse_program.thrift"))
     assertEquals(program.namespaces.size, 15)
-    assertTrue(program.namespaces.forall(_.name == "com.foursquare.spindle.parser2"))
+    assertTrue(program.namespaces.forall(_.name == "com.foursquare.spindle.codegen.parser"))
   }
 
   @Test
   def testParseConstants(): Unit = {
-    val program = ThriftParser2.parseProgram(base + "/parse_const.thrift")
+    val program = ThriftParser.parseProgram(base + "/parse_const.thrift")
 
     assertEquals(program.constants.size, 31)
     assertTrue(program.constants.slice(0, 4).forall(const => {
@@ -64,7 +64,7 @@ class ThriftParserTest {
 
   @Test
   def testParseStructs(): Unit = {
-    val program = ThriftParser2.parseProgram(base + "/parse_struct.thrift")
+    val program = ThriftParser.parseProgram(base + "/parse_struct.thrift")
 
     assertEquals(program.structs.size, 24)
     assertTrue(program.structs.slice(0, 7).forall(struct => struct.__fields.size == 0))
@@ -77,7 +77,7 @@ class ThriftParserTest {
 
   @Test
   def testParseDefinitions(): Unit = {
-    val program = ThriftParser2.parseProgram(base + "/parse_definition.thrift")
+    val program = ThriftParser.parseProgram(base + "/parse_definition.thrift")
 
     assertEquals(program.typedefs.size, 4)
     assertEquals(program.enums.size, 13)
@@ -87,7 +87,7 @@ class ThriftParserTest {
 
   @Test
   def testParseServices(): Unit = {
-    val program = ThriftParser2.parseProgram(base + "/parse_service.thrift")
+    val program = ThriftParser.parseProgram(base + "/parse_service.thrift")
 
     assertEquals(program.services.size, 15)
   }

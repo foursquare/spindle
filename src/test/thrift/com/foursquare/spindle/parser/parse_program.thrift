@@ -6,10 +6,10 @@
 comments;
    that span multiple lines */
 
-namespace java com.foursquare.spindle.parser2
+namespace java com.foursquare.spindle.parser
 		    /* sldkfjsldkfj; */ // lskdjflskdjf;
 
-namespace cpp com.foursquare.spindle.parser2; /* more comments */ // and more comments
+namespace cpp com.foursquare.spindle.parser; /* more comments */ // and more comments
 
 	  	  const i32 a = 1  	  ;  	
 

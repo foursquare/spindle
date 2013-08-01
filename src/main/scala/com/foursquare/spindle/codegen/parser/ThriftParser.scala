@@ -1,6 +1,6 @@
 // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.spindle.parser2
+package com.foursquare.spindle.codegen.parser
 
 import com.twitter.thrift.descriptors
 import java.io.File
@@ -12,7 +12,7 @@ import scala.collection.mutable
 import scala.util.DynamicVariable
 import scalax.file.Path
 
-class ThriftParser2 extends Parser {
+class ThriftParser extends Parser {
   lazy val Letter = rule("Letter")("a" - "z" | "A" - "Z")
   lazy val Sign: Rule0 = rule("Sign") { optional(anyOf("+-")) }
   lazy val Digit: Rule0 = rule("Digit") { "0" - "9" }
@@ -446,7 +446,7 @@ class ThriftParser2 extends Parser {
           val proxy = new ProxyMatcher
           // protect block from infinite recursion by immediately caching a new Rule of type T wrapping the proxy creator
           cache += key -> creator(proxy)
-          var rule = ThriftParser2.withCurrentRuleLabel(label) { block.label(label) } // evaluate rule definition block
+          var rule = ThriftParser.withCurrentRuleLabel(label) { block.label(label) } // evaluate rule definition block
           if (!buildParseTree || options.contains(SuppressNode)) rule = rule.suppressNode
           if (options.contains(SuppressSubnodes)) rule = rule.suppressSubnodes
           if (options.contains(SkipNode)) rule = rule.skipNode
@@ -461,7 +461,7 @@ class ThriftParser2 extends Parser {
 
 class ParserException(val message: String, val file: File) extends RuntimeException(message)
 
-object ThriftParser2 {
+object ThriftParser {
   private val currentRuleLabel = new DynamicVariable[String](null)
   private val currentActionIndex = new DynamicVariable[Int](0)
 
@@ -481,7 +481,7 @@ object ThriftParser2 {
   }
 
   def parseProgram(file: File, trace: Boolean = false): descriptors.Program = {
-    val parser = new ThriftParser2
+    val parser = new ThriftParser
     val runner: ParseRunner[descriptors.Program] =
       if (trace) TracingParseRunner(parser.Program) else ReportingParseRunner(parser.Program)
     val thrift = Path(file).slurpString
