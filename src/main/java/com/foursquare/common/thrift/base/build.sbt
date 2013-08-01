@@ -1,4 +1,4 @@
-seq(Default.scala: _*)
+seq(Default.commonJava: _*)
 
 libraryDependencies ++= (
   ThirdParty.thrift ++

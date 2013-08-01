@@ -7,10 +7,15 @@ object Default {
   val all: Seq[Setting[_]] = Seq(
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
     Keys.version := "0.17-SNAPSHOT",
-    Keys.organization := "com.foursquare.common",
+    Keys.organization := "com.foursquare.spindle",
     Keys.scalaVersion := "2.9.1",
     Keys.crossScalaVersions := Seq("2.9.1", "2.9.2")
   ) ++ net.virtualvoid.sbt.graph.Plugin.graphSettings
+
+  val commonJava: Seq[Setting[_]] = Default.all ++ Seq(
+    Keys.organization := "com.foursquare.common",
+    Keys.crossPaths := false
+  )
 
   val scala: Seq[Setting[_]] = Default.all ++ Seq(
     Keys.scalacOptions ++= Seq(
@@ -39,11 +44,13 @@ object Default {
   val thrift = Default.scala ++ ThriftCodegenPlugin.thriftSettings ++ Seq(
     Keys.sourceDirectory in ThriftCodegenPlugin.thrift in Compile <<= (Keys.baseDirectory)(identity),
     ThriftCodegenPlugin.thriftCodegenRuntimeLibs := ThirdParty.scalajCollection,
-    ThriftCodegenPlugin.thriftCodegenBinaryLibs ++= ThirdParty.scalajCollection,
-    ThriftCodegenPlugin.thriftCodegenBinaryLibs <++= (ThriftCodegenPlugin.thriftCodegenVersion)(v => Seq(
-      "com.foursquare.common" %% "common-thrift-base" % v,
-      "com.foursquare.common" %% "common-thrift-json" % v
-    ))
+    ThriftCodegenPlugin.thriftCodegenBinaryLibs <<= (ThriftCodegenPlugin.thriftCodegenVersion)(v =>
+      Seq(
+        "com.foursquare.common" % "common-thrift-base_2.9.1" % v,
+        "com.foursquare.common" % "common-thrift-json_2.9.1" % v,
+        "com.foursquare.common" % "thrift-codegen-binary_2.9.1" % v
+      ) ++ ThirdParty.scalajCollection
+    )
   )
 
   val test = Default.scala ++ Seq(

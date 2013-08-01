@@ -40,7 +40,7 @@ object ThirdParty {
   val slf4jNoLogging = Seq(
     "org.slf4j" % "slf4j-nop" % "1.6.4")
   val specs = Seq(
-    "org.scala-tools.testing" %% "specs" % "1.6.9" withSources())
+    "org.scala-tools.testing" % "specs_2.9.1" % "1.6.9" withSources())
   val thrift = Seq(
     "org.apache.thrift" % "libthrift" % "0.9.0")
 }
