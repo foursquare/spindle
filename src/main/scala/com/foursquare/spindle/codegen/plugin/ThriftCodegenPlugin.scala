@@ -6,7 +6,7 @@ import sbt.Keys.TaskStreams
 import java.io.File
 
 object ThriftCodegenPlugin extends Plugin {
-  val Thrift   = config("thrift").hide
+  val Thrift = config("thrift").hide
 
   val thrift = TaskKey[Seq[File]]("thrift", "Generate Scala sources from Thrift files(s)")
   val thriftCodegenVersion = SettingKey[String]("thrift-codegen-version", "Version of Thrift codegen to use.")
@@ -17,7 +17,7 @@ object ThriftCodegenPlugin extends Plugin {
   val thriftCodegenAllowReload = SettingKey[Boolean]("thrift-codegen-allow-reload", "Allow reloading of codegen templates.")
   val thriftCodegenWorkingDir = SettingKey[File]("thrift-codegen-working-dir", "Directory to use for caching compiled Scalate templates.")
 
-  val thriftSettings     = Seq[Project.Setting[_]](
+  val thriftSettings = Seq[Project.Setting[_]](
     Keys.ivyConfigurations += Thrift,
     Keys.libraryDependencies <++= (thriftCodegenBinaryLibs, thriftCodegenRuntimeLibs)((binary, runtime) => {
       runtime ++ binary.map(_ % "thrift")
@@ -28,9 +28,9 @@ object ThriftCodegenPlugin extends Plugin {
     thriftCodegenBinaryLibs <<= (thriftCodegenVersion)(v => Seq("com.foursquare.common" %% "thrift-codegen-binary" % v)),
     thriftCodegenRuntimeLibs <<= (thriftCodegenVersion)(v => Seq(
       "com.twitter" % "finagle-thrift" % "6.3.0",
-      "com.foursquare.spindle" %% "spindle-runtime" % v,
-      "com.foursquare.common" %% "common-thrift-base" % v,
-      "com.foursquare.common" %% "common-thrift-json" % v,
+      "com.foursquare" %% "spindle-runtime" % v,
+      "com.foursquare" %% "common-thrift-base" % v,
+      "com.foursquare" %% "common-thrift-json" % v,
       "org.scalaj" %% "scalaj-collection" % "1.5"
     ))
   ) ++ thriftSettingsIn(Compile) ++ thriftSettingsIn(Test)
@@ -77,8 +77,8 @@ object ThriftCodegenPlugin extends Plugin {
     def generated = (sourceManaged ** "*.scala").get
 
     val shouldProcess = (thriftSources, generated) match {
-      case (Seq(), _)  => log.debug("No sources, skipping."); false
-      case (_, Seq())  => log.debug("No products, generating."); true
+      case (Seq(), _) => log.debug("No sources, skipping."); false
+      case (_, Seq()) => log.debug("No products, generating."); true
       case (ins, outs) =>
         val inLastMod = ins.map(_.lastModified()).max
         val outLasMod = outs.map(_.lastModified()).min
@@ -89,10 +89,10 @@ object ThriftCodegenPlugin extends Plugin {
     lazy val options: Seq[String] = {
       import File.pathSeparator
       def jars(config: Configuration): Seq[File] = Classpaths.managedJars(config, classpathTypes, updateReport).map(_.data)
-      val mainJars        = jars(Thrift)
-      val jvmCpOptions    = Seq("-classpath", mainJars.mkString(pathSeparator))
-      val thriftSourcePaths  = thriftSources.map(_.absolutePath)
-      val mainClass  = "com.foursquare.spindle.codegen.binary.ThriftCodegen"
+      val mainJars = jars(Thrift)
+      val jvmCpOptions = Seq("-classpath", mainJars.mkString(pathSeparator))
+      val thriftSourcePaths = thriftSources.map(_.absolutePath)
+      val mainClass = "com.foursquare.spindle.codegen.binary.ThriftCodegen"
       val appOptions = Seq(
         "--template", template,
         "--extension", "scala",

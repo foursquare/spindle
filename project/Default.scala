@@ -7,13 +7,12 @@ object Default {
   val all: Seq[Setting[_]] = Seq(
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
     Keys.version := "0.17-SNAPSHOT",
-    Keys.organization := "com.foursquare.spindle",
+    Keys.organization := "com.foursquare",
     Keys.scalaVersion := "2.9.1",
     Keys.crossScalaVersions := Seq("2.9.1", "2.9.2")
   ) ++ net.virtualvoid.sbt.graph.Plugin.graphSettings
 
   val commonJava: Seq[Setting[_]] = Default.all ++ Seq(
-    Keys.organization := "com.foursquare.common",
     Keys.crossPaths := false
   )
 
