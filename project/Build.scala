@@ -5,12 +5,21 @@ object SpindleBuild extends Build {
   lazy val all =
     Project(
       id = "all",
-      base = file("all"),
+      base = file("p/all"),
       settings = Defaults.defaultSettings ++ Default.scala
     ).aggregate(
       thriftBase, thriftBson, thriftJson, runtime, thriftDescriptors, parser, codegenRuntime, codegenTemplates,
       codegenBinary, codegenSbtPlugin, testCodegen, testThriftExample, testParser, testRuntime
     )
+
+  lazy val publishable =
+    Project(
+      id = "publishable",
+      base = file("p/publishable"),
+      settings = Defaults.defaultSettings ++ Default.scala
+    ).aggregate(
+      thriftBase, thriftBson, thriftJson, runtime, thriftDescriptors, parser, codegenRuntime, codegenTemplates,
+      codegenBinary, codegenSbtPlugin)
 
   lazy val thriftBase =
     Project(
@@ -34,38 +43,38 @@ object SpindleBuild extends Build {
       base = file("src/main/thrift/com/twitter/thrift/descriptors")) dependsOn(runtime, thriftBase, thriftJson)
   lazy val parser =
     Project(
-      id = "thrift-parser-2",
+      id = "thrift-parser",
       base = file("src/main/scala/com/foursquare/spindle/codegen/parser")) dependsOn(thriftDescriptors)
   lazy val codegenRuntime =
     Project(
-      id = "thrift-codegen-runtime",
+      id = "spindle-codegen-runtime",
       base = file("src/main/scala/com/foursquare/spindle/codegen/runtime")) dependsOn(thriftDescriptors)
   lazy val codegenTemplates =
     Project(
-      id = "thrift-codegen-templates",
+      id = "spindle-codegen-templates",
       base = file("src/main/ssp/codegen")) dependsOn(runtime, codegenRuntime)
   lazy val codegenBinary =
     Project(
-      id = "thrift-codegen-binary",
+      id = "spindle-codegen-binary",
       base = file("src/main/scala/com/foursquare/spindle/codegen/binary")) dependsOn(codegenRuntime, codegenTemplates, parser)
   lazy val codegenSbtPlugin =
     Project(
-      id = "thrift-codegen-plugin",
+      id = "spindle-codegen-plugin",
       base = file("src/main/scala/com/foursquare/spindle/codegen/plugin"))
   lazy val testCodegen =
     Project(
-      id = "test-codegen",
+      id = "spindle-test-codegen",
       base = file("src/test/thrift/com/foursquare/spindle/codegen")) dependsOn(runtime, thriftBase, thriftJson)
   lazy val testThriftExample =
     Project(
-      id = "test-thriftexample",
+      id = "spindle-test-thriftexample",
       base = file("src/test/thrift/com/foursquare/thriftexample")) dependsOn(runtime, thriftBase, thriftJson)
   lazy val testParser =
     Project(
-      id = "test-parser",
+      id = "spindle-test-parser",
       base = file("src/test/scala/com/foursquare/spindle/codegen/parser")) dependsOn(parser)
   lazy val testRuntime =
     Project(
-      id = "test-runtime",
+      id = "spindle-test-runtime",
       base = file("src/test/scala/com/foursquare/spindle/runtime")) dependsOn(runtime, thriftJson, thriftBson, testThriftExample, testCodegen)
 }
