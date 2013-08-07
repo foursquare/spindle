@@ -14,7 +14,7 @@ object ThirdParty {
     "org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.8",
     "org.codehaus.jackson" % "jackson-xc" % "1.9.8")
   val jodaTime = Seq(
-    "joda-time" % "joda-time" % "2.0_2012b",
+    "joda-time" % "joda-time" % "2.1",
     "org.joda" % "joda-convert" % "1.2")
   val junit = Seq(
     "junit" % "junit" % "4.10" withSources(),
