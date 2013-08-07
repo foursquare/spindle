@@ -1,4 +1,6 @@
 <%
+  // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
+
   import com.foursquare.spindle.codegen.runtime.StructLike 
 %>
 <%@ val cls: StructLike %>

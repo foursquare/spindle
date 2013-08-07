@@ -1,3 +1,5 @@
+// Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
+
 // Test typedef
 typedef i32 t00
 typedef i32 t01()

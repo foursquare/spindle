@@ -1,3 +1,5 @@
+// Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
+
 typedef i32 myint
 
 // Test optional spacing

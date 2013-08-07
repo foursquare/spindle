@@ -1,3 +1,5 @@
+// Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
+
 service s00{}
 service s01{}()
 service s02{}(a="b")

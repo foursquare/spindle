@@ -1,3 +1,5 @@
+// Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
+
 namespace java com.foursquare.spindle.test.gen
 
 enum LongNameTestEnum {

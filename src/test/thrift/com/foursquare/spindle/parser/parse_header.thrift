@@ -1,3 +1,5 @@
+// Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
+
 namespace		   		java com.foursquare.spindle.codegen.parser
 include  		  "com/foursquare/spindle/parser/parse_program.thrift"
 namespace cpp com.foursquare.spindle.codegen.parser

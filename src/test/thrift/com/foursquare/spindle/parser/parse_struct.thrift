@@ -1,3 +1,5 @@
+// Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
+
 // Test spacing
 struct S00{}
 struct S01 {}
