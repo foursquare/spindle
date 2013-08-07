@@ -8,7 +8,7 @@ import sbt._
 object Default {
   val all: Seq[Setting[_]] = Seq(
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
-    Keys.version := "1.0.0-SNAPSHOT",
+    Keys.version := "1.0.0",
     Keys.organization := "com.foursquare",
     Keys.scalaVersion := "2.9.1",
     Keys.crossScalaVersions := Seq("2.9.1", "2.9.2"),
@@ -41,7 +41,24 @@ object Default {
           <name>Jorge Ortiz</name>
           <url>http://github.com/jorgeortiz85</url>
         </developer>
-      </developers>)
+      </developers>),
+    Keys.credentials ++= {
+      val sonatype = ("Sonatype Nexus Repository Manager", "oss.sonatype.org")
+      def loadMavenCredentials(file: java.io.File) : Seq[Credentials] = {
+        xml.XML.loadFile(file) \ "servers" \ "server" map (s => {
+          val host = (s \ "id").text
+          val realm = if (host == sonatype._2) sonatype._1 else "Unknown"
+          Credentials(realm, host, (s \ "username").text, (s \ "password").text)
+        })
+      }
+      val ivyCredentials   = Path.userHome / ".ivy2" / ".credentials"
+      val mavenCredentials = Path.userHome / ".m2"   / "settings.xml"
+      (ivyCredentials.asFile, mavenCredentials.asFile) match {
+        case (ivy, _) if ivy.canRead => Credentials(ivy) :: Nil
+        case (_, mvn) if mvn.canRead => loadMavenCredentials(mvn)
+        case _ => Nil
+      }
+    }
   ) ++ net.virtualvoid.sbt.graph.Plugin.graphSettings
 
   val commonJava: Seq[Setting[_]] = Default.all ++ Seq(

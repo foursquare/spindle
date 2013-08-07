@@ -16,7 +16,9 @@ object SpindleBuild extends Build {
     Project(
       id = "publishable",
       base = file("p/publishable"),
-      settings = Defaults.defaultSettings ++ Default.scala
+      settings = Defaults.defaultSettings ++ Default.scala ++ Seq(
+        Keys.publishArtifact := false
+      )
     ).aggregate(
       thriftBase, thriftBson, thriftJson, runtime, thriftDescriptors, parser, codegenRuntime, codegenTemplates,
       codegenBinary, codegenSbtPlugin)
