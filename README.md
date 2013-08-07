@@ -9,7 +9,7 @@ Because Spindle is a code generator, it needs to plug into your build system.
 If you're using sbt 0.12, you can use Spindle's thrift-codegen-plugin. In your project/plugins.sbt,
 add the following line:
 
-    addSbtPlugin("com.foursquare" % "spindle-codegen-plugin" % "1.0.0")
+    addSbtPlugin("com.foursquare" % "spindle-codegen-plugin" % "1.0.1")
 
 Then, in the build.sbt for the project with the *.thrift files to compile, add the following line:
 
@@ -25,9 +25,9 @@ configured to use those.
 
 ## Releases
 
-The latest release is 1.0.0. See the [changelog](https://github.com/foursquare/spindle/blob/master/CHANGELOG.md) for more details.
+The latest release is 1.0.1. See the [changelog](https://github.com/foursquare/spindle/blob/master/CHANGELOG.md) for more details.
 
-Major changes in 1.0.0:
+Major changes in 1.0.x:
 
 - Initial release
 
