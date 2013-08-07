@@ -26,7 +26,7 @@ object ThriftCodegenPlugin extends Plugin {
     }),
     thriftCodegenTemplate := "scala/record.ssp",
     thriftCodegenAllowReload := false,
-    thriftCodegenVersion := "1.0.0",
+    thriftCodegenVersion := "1.1.0-SNAPSHOT",
     thriftCodegenBinaryLibs <<= (thriftCodegenVersion)(v => Seq("com.foursquare" %% "spindle-codegen-binary" % v)),
     thriftCodegenRuntimeLibs <<= (thriftCodegenVersion)(v => Seq(
       "com.twitter" % "finagle-thrift" % "6.3.0",
