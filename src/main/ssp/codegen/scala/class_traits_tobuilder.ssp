@@ -4,7 +4,7 @@
   import com.foursquare.spindle.codegen.runtime.StructLike 
 %>
 <%@ val cls: StructLike %>
-  def toBuilder() = {
+  def toBuilder(): ${cls.name}.Builder.AllSpecified = {
     val ret = new ${cls.name}.Builder(${cls.name}.createRawRecord)
 #for (field <- cls.fields)
 #if (field.renderType.isNullable)
