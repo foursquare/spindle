@@ -28,7 +28,7 @@ object BitFieldHelpers {
 
     meta.fields.foreach((field: FieldDescriptor[_, _, meta.type]) => {
       val setter = field.setterRaw.asInstanceOf[(meta.type#Raw, Boolean) => Unit]
-      if (getIsSet(bitfield, field.id)) {
+      if (getIsSet(bitfield, field.id - 1)) {
         setter(result, getValue(bitfield, field.id - 1))
       }
     })
