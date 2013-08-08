@@ -338,6 +338,14 @@ case class BitfieldStructRenderType(
     case (false, TType.I64) => "com.foursquare.spindle.BitFieldHelpers.longBitFieldToStructNoSetBits"
     case _ => throw new IllegalArgumentException("Unsupported bitfield type: " + ref.ttype + " with hasSetBits: " + hasSetBits)
   }
+
+  val bitfieldWrite = (hasSetBits, ref.ttype) match {
+    case (true, TType.I32) => "com.foursquare.spindle.BitFieldHelpers.structToBitField"
+    case (true, TType.I64) => "com.foursquare.spindle.BitFieldHelpers.structToLongBitField"
+    case (false, TType.I32) => "com.foursquare.spindle.BitFieldHelpers.structToBitFieldNoSetBits"
+    case (false, TType.I64) => "com.foursquare.spindle.BitFieldHelpers.structToLongBitFieldNoSetBits"
+    case _ => throw new IllegalArgumentException("Unsupported bitfield type: " + ref.ttype + " with hasSetBits: " + hasSetBits)
+  }
 }
 
 object RenderType {
