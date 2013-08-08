@@ -3,7 +3,7 @@
 package com.foursquare.spindle.test
 
 import com.foursquare.spindle.BitFieldHelpers
-import com.foursquare.spindle.test.gen.{ChildStruct7, ChildStruct16, ChildStruct32, ChildStruct64}
+import com.foursquare.spindle.test.gen.{ChildStruct7, ChildStruct16, ChildStruct32, ChildStruct64, ParentStruct}
 import org.junit.Test
 import org.specs.SpecsMatchers
 
@@ -51,6 +51,27 @@ class BitFieldHelpersTest extends SpecsMatchers {
 
     long must_== BitFieldHelpers.structToLongBitFieldNoSetBits(
       BitFieldHelpers.longBitFieldToStructNoSetBits(long, s64.meta))
+  }
+
+  @Test
+  def testBuilder() {
+    ParentStruct.newBuilder.s7As32Struct(s7).result() must_==
+      ParentStruct.newBuilder.s7As32(BitFieldHelpers.structToBitField(s7)).result()
+    ParentStruct.newBuilder.s16As32Struct(s16).result() must_==
+      ParentStruct.newBuilder.s16As32(BitFieldHelpers.structToBitField(s16)).result()
+
+    ParentStruct.newBuilder.s7As64Struct(s7).result() must_==
+      ParentStruct.newBuilder.s7As64(BitFieldHelpers.structToLongBitField(s7)).result()
+
+    ParentStruct.newBuilder.s7As32NoSetStruct(s7).result() must_==
+      ParentStruct.newBuilder.s7As32NoSet(BitFieldHelpers.structToBitFieldNoSetBits(s7)).result()
+    ParentStruct.newBuilder.s32As32NoSetStruct(s32).result() must_==
+      ParentStruct.newBuilder.s32As32NoSet(BitFieldHelpers.structToBitFieldNoSetBits(s32)).result()
+
+    ParentStruct.newBuilder.s7As64NoSetStruct(s7).result() must_==
+      ParentStruct.newBuilder.s7As64NoSet(BitFieldHelpers.structToLongBitFieldNoSetBits(s7)).result()
+    ParentStruct.newBuilder.s64As64NoSetStruct(s64).result() must_==
+      ParentStruct.newBuilder.s64As64NoSet(BitFieldHelpers.structToLongBitFieldNoSetBits(s64)).result()
   }
 
   val s7 = ChildStruct7.newBuilder
