@@ -3,6 +3,7 @@
 package com.foursquare.spindle.test
 
 import com.foursquare.spindle.BitFieldHelpers
+import com.foursquare.spindle.test.gen.{ChildStruct7, ChildStruct16, ChildStruct32, ChildStruct64}
 import org.junit.Test
 import org.specs.SpecsMatchers
 
@@ -19,4 +20,174 @@ class BitFieldHelpersTest extends SpecsMatchers {
     BitFieldHelpers.getLongIsSet(sanityFlags, 0) must_== true
     BitFieldHelpers.getLongValue(sanityFlags, 0) must_== false
   }
+
+  @Test
+  def toLong() {
+    s7 must_== BitFieldHelpers.bitFieldToStruct(BitFieldHelpers.structToBitField(s7), s7.meta)
+    s7 must_== BitFieldHelpers.longBitFieldToStruct(BitFieldHelpers.structToLongBitField(s7), s7.meta)
+
+    s7WithUnset must_== BitFieldHelpers.bitFieldToStruct(
+      BitFieldHelpers.structToBitField(s7WithUnset), s7WithUnset.meta)
+    s7WithUnset must_== BitFieldHelpers.longBitFieldToStruct(
+      BitFieldHelpers.structToLongBitField(s7WithUnset), s7WithUnset.meta)
+
+    s16 must_== BitFieldHelpers.bitFieldToStruct(BitFieldHelpers.structToBitField(s16), s16.meta)
+    s16 must_== BitFieldHelpers.longBitFieldToStruct(BitFieldHelpers.structToLongBitField(s16), s16.meta)
+
+    s32 must_== BitFieldHelpers.bitFieldToStructNoSetBits(BitFieldHelpers.structToBitFieldNoSetBits(s32), s32.meta)
+
+    s64 must_== BitFieldHelpers.longBitFieldToStructNoSetBits(
+      BitFieldHelpers.structToLongBitFieldNoSetBits(s64), s64.meta)
+  }
+
+  @Test
+  def toStruct() {
+    val int = 0xFFFFAA55
+    val long = 0xFFFFFFFFAAAA5555L
+
+    int must_== BitFieldHelpers.structToBitField(BitFieldHelpers.bitFieldToStruct(int, s16.meta))
+    int must_== BitFieldHelpers.structToBitFieldNoSetBits(
+      BitFieldHelpers.bitFieldToStructNoSetBits(int, s32.meta))
+
+    long must_== BitFieldHelpers.structToLongBitFieldNoSetBits(
+      BitFieldHelpers.longBitFieldToStructNoSetBits(long, s64.meta))
+  }
+
+  val s7 = ChildStruct7.newBuilder
+    .member1(true)
+    .member2(false)
+    .member3(true)
+    .member4(false)
+    .member5(true)
+    .member6(false)
+    .member7(true)
+    .result()
+
+  val s7WithUnset = ChildStruct7.newBuilder
+    .member1(true)
+    .member2(false)
+    .member3(true)
+    .member4(false)
+    .result()
+
+  val s16 = ChildStruct16.newBuilder
+    .member1(true)
+    .member2(false)
+    .member3(true)
+    .member4(false)
+    .member5(true)
+    .member6(false)
+    .member7(true)
+    .member8(false)
+    .member9(true)
+    .member10(false)
+    .member11(true)
+    .member12(false)
+    .member13(true)
+    .member14(false)
+    .member15(true)
+    .member16(false)
+    .result()
+
+  val s32 = ChildStruct32.newBuilder
+    .member1(true)
+    .member2(false)
+    .member3(true)
+    .member4(false)
+    .member5(true)
+    .member6(false)
+    .member7(true)
+    .member8(false)
+    .member9(true)
+    .member10(false)
+    .member11(true)
+    .member12(false)
+    .member13(true)
+    .member14(false)
+    .member15(true)
+    .member16(false)
+    .member17(true)
+    .member18(false)
+    .member19(true)
+    .member20(false)
+    .member21(true)
+    .member22(false)
+    .member23(true)
+    .member24(false)
+    .member25(true)
+    .member26(false)
+    .member27(true)
+    .member28(false)
+    .member29(true)
+    .member30(false)
+    .member31(true)
+    .member32(false)
+    .result()
+
+  val s64 = ChildStruct64.newBuilder
+    .member1(true)
+    .member2(false)
+    .member3(true)
+    .member4(false)
+    .member5(true)
+    .member6(false)
+    .member7(true)
+    .member8(false)
+    .member9(true)
+    .member10(false)
+    .member11(true)
+    .member12(false)
+    .member13(true)
+    .member14(false)
+    .member15(true)
+    .member16(false)
+    .member17(true)
+    .member18(false)
+    .member19(true)
+    .member20(false)
+    .member21(true)
+    .member22(false)
+    .member23(true)
+    .member24(false)
+    .member25(true)
+    .member26(false)
+    .member27(true)
+    .member28(false)
+    .member29(true)
+    .member30(false)
+    .member31(true)
+    .member32(false)
+    .member33(true)
+    .member34(false)
+    .member35(true)
+    .member36(false)
+    .member37(true)
+    .member38(false)
+    .member39(true)
+    .member40(false)
+    .member41(true)
+    .member42(false)
+    .member43(true)
+    .member44(false)
+    .member45(true)
+    .member46(false)
+    .member47(true)
+    .member48(false)
+    .member49(true)
+    .member50(false)
+    .member51(true)
+    .member52(false)
+    .member53(true)
+    .member54(false)
+    .member55(true)
+    .member56(false)
+    .member57(true)
+    .member58(false)
+    .member59(true)
+    .member60(false)
+    .member61(true)
+    .member62(false)
+    .member63(true)
+    .member64(false)
+    .result()
 }
