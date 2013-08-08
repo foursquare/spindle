@@ -10,6 +10,16 @@ class ThriftParserTest {
   val base = "src/test/thrift/com/foursquare/spindle/parser"
 
   @Test
+  def testParseDuplicate(): Unit = {
+    try {
+      ThriftParser.parseProgram(base + "/parse_duplicate.thrift")
+      assertTrue("Parsing duplicate field ids should fail.", false)
+    } catch {
+      case e: ParserException => ()
+    }
+  }
+
+  @Test
   def testParseProgram(): Unit = {
     val program = ThriftParser.parseProgram(base + "/parse_program.thrift")
 

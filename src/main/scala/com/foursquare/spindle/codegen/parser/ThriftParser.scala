@@ -486,6 +486,9 @@ object ThriftParser {
       if (trace) TracingParseRunner(parser.Program) else ReportingParseRunner(parser.Program)
     val thrift = Path(file).slurpString
     val runResult = runner.run(thrift)
-    runResult.result.getOrElse(throw new ParserException(ErrorUtils.printParseErrors(runResult), file))
+    val result = runResult.result.getOrElse(throw new ParserException(ErrorUtils.printParseErrors(runResult), file))
+    val validator = new ThriftValidator(file)
+    validator.validateProgram(result)
+    result
   }
 }
