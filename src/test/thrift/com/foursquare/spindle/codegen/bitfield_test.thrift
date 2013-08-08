@@ -134,3 +134,13 @@ struct ChildStruct64 {
   64: optional bool member64
 }
 
+struct ParentStruct {
+  1: optional i32 s7As32 (bitfield_struct="ChildStruct7")
+  2: optional i64 s7As64 (bitfield_struct="ChildStruct7")
+  3: optional i32 s16As32 (bitfield_struct="ChildStruct16")
+  4: optional i32 s7As32NoSet (bitfield_struct_no_setbits="ChildStruct7")
+  5: optional i64 s7As64NoSet (bitfield_struct_no_setbits="ChildStruct7")
+  6: optional i32 s32As32NoSet (bitfield_struct_no_setbits="ChildStruct32")
+  7: optional i64 s64As64NoSet (bitfield_struct_no_setbits="ChildStruct64")
+}
+
