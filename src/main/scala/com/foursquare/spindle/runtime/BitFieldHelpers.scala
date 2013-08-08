@@ -20,9 +20,7 @@ object BitFieldHelpers {
   }
 
   def bitFieldToStruct(bitfield: Int, meta: MetaRecord[_]): meta.Trait = {
-    assert(meta.fields.forall((f: UntypedFieldDescriptor) => f.unsafeManifest == manifest[Boolean]))
-    assert(meta.fields.forall((f: UntypedFieldDescriptor) => f.id >= 1 && f.id <= 16))
-    assert(meta.fields.size <= 16)
+    verifyMeta(meta, 16)
 
     val result = meta.createRawRecord
 
@@ -53,9 +51,7 @@ object BitFieldHelpers {
   }
 
   def longBitFieldToStruct(bitfield: Long, meta: MetaRecord[_]): meta.Trait = {
-    assert(meta.fields.forall((f: UntypedFieldDescriptor) => f.unsafeManifest == manifest[Boolean]))
-    assert(meta.fields.forall((f: UntypedFieldDescriptor) => f.id >= 1 && f.id <= 31))
-    assert(meta.fields.size <= 31)
+    verifyMeta(meta, 31)
 
     val result = meta.createRawRecord
 
@@ -75,9 +71,7 @@ object BitFieldHelpers {
   }
 
   def bitFieldToStructNoSetBits(bitfield: Int, meta: MetaRecord[_]): meta.Trait = {
-    assert(meta.fields.forall((f: UntypedFieldDescriptor) => f.unsafeManifest == manifest[Boolean]))
-    assert(meta.fields.forall((f: UntypedFieldDescriptor) => f.id >= 1 && f.id <= 32))
-    assert(meta.fields.size <= 32)
+    verifyMeta(meta, 32)
 
     val result = meta.createRawRecord
 
@@ -95,9 +89,7 @@ object BitFieldHelpers {
   }
 
   def longBitFieldToStructNoSetBits(bitfield: Long, meta: MetaRecord[_]): meta.Trait = {
-    assert(meta.fields.forall((f: UntypedFieldDescriptor) => f.unsafeManifest == manifest[Boolean]))
-    assert(meta.fields.forall((f: UntypedFieldDescriptor) => f.id >= 1 && f.id <= 64))
-    assert(meta.fields.size <= 64)
+    verifyMeta(meta, 64)
 
     val result = meta.createRawRecord
 
@@ -107,5 +99,11 @@ object BitFieldHelpers {
     })
 
     result
+  }
+
+  private def verifyMeta(meta: MetaRecord[_], availableBits: Int) = {
+    assert(meta.fields.forall((f: UntypedFieldDescriptor) => f.unsafeManifest == manifest[Boolean]))
+    assert(meta.fields.forall((f: UntypedFieldDescriptor) => f.id >= 1 && f.id <= availableBits))
+    assert(meta.fields.size <= availableBits)
   }
 }
