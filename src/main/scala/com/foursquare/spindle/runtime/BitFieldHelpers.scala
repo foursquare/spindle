@@ -34,6 +34,23 @@ object BitFieldHelpers {
     result
   }
 
+  def structToBitField(struct: Record[_]): Int = {
+    val meta = struct.meta
+    verifyMeta(meta, 16)
+    meta.fields.map((field: FieldDescriptor[_, _, meta.type]) => {
+      val getter = field.getter.asInstanceOf[struct.type => Option[Boolean]]
+      val bitIndex = (field.id - 1)
+      val valueOpt = getter(struct)
+      val (v, isSet) = valueOpt match {
+        case Some(v) => (if (v) 1 else 0, 1)
+        case _ => (0, 0)
+      }
+      val isSetMask: Int = (isSet << (bitIndex + 16))
+      val valueMask: Int = (v << bitIndex)
+      isSetMask | valueMask
+    }).foldLeft(0)(_ | _)
+  }
+
   def getLongValue(bitfield: Long, bitIndex: Int): Boolean = {
     /** We only allow 31 values because half the bits are used for
       * "isSet" semantics and one bit is reserved for a migration flag.
@@ -65,6 +82,23 @@ object BitFieldHelpers {
     result
   }
 
+  def structToLongBitField(struct: Record[_]): Long = {
+    val meta = struct.meta
+    verifyMeta(meta, 31)
+    meta.fields.map((field: FieldDescriptor[_, _, meta.type]) => {
+      val getter = field.getter.asInstanceOf[struct.type => Option[Boolean]]
+      val bitIndex = (field.id - 1)
+      val valueOpt = getter(struct)
+      val (v, isSet) = valueOpt match {
+        case Some(v) => (if (v) 1L else 0L, 1L)
+        case _ => (0L, 0L)
+      }
+      val isSetMask = (isSet << (bitIndex + 32))
+      val valueMask = (v << bitIndex)
+      isSetMask | valueMask
+    }).foldLeft(0L)(_ | _)
+  }
+
   def getValueNoSetBits(bitfield: Int, bitIndex: Int): Boolean = {
     assert(bitIndex < 32)
     ((1 << bitIndex) & bitfield) != 0
@@ -83,6 +117,21 @@ object BitFieldHelpers {
     result
   }
 
+  def structToBitFieldNoSetBits(struct: Record[_]): Int = {
+    val meta = struct.meta
+    verifyMeta(meta, 32)
+    meta.fields.map((field: FieldDescriptor[_, _, meta.type]) => {
+      val getter = field.getter.asInstanceOf[struct.type => Option[Boolean]]
+      val bitIndex = (field.id - 1)
+      val value = getter(struct) match {
+        case Some(true) => 1
+        case _ => 0
+      }
+      val valueMask: Int = (value << bitIndex)
+      valueMask
+    }).foldLeft(0)(_ | _)
+  }
+
   def getLongValueNoSetBits(bitfield: Long, bitIndex: Int): Boolean = {
     assert(bitIndex < 64)
     ((1L << bitIndex) & bitfield) != 0
@@ -99,6 +148,21 @@ object BitFieldHelpers {
     })
 
     result
+  }
+
+  def structToLongBitFieldNoSetBits(struct: Record[_]): Long = {
+    val meta = struct.meta
+    verifyMeta(meta, 64)
+    meta.fields.map((field: FieldDescriptor[_, _, meta.type]) => {
+      val getter = field.getter.asInstanceOf[struct.type => Option[Boolean]]
+      val bitIndex = (field.id - 1)
+      val value = getter(struct) match {
+        case Some(true) => 1L
+        case _ => 0L
+      }
+      val valueMask = (value << bitIndex)
+      valueMask
+    }).foldLeft(0L)(_ | _)
   }
 
   private def verifyMeta(meta: MetaRecord[_], availableBits: Int) = {
