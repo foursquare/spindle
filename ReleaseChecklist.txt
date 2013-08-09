@@ -6,8 +6,8 @@ Pre-release checklist:
      [ ] Update "latest release" sentence in README.md with latest version
      [ ] Update "Major changes in ..." section in README.md
         [ ] Add the features listed in CHANGELOG.md to the "Major changes in ..." section
-  [ ] Remove the "-SNAPSHOT" from the version in Default.scala
-  [ ] Remove the "-SNAPSHOT" from the version in ThriftCodegenPlugin.scala
+  [ ] Remove the "-SNAPSHOT" from the version** in Default.scala
+  [ ] Remove the "-SNAPSHOT" from the version** in ThriftCodegenPlugin.scala
   [ ] Reload sbt
   [ ] Run "; +all/clean; +all/test" in sbt to make sure everything works.
   [ ] Run "+publishable/publish-local"
@@ -23,8 +23,30 @@ Release checklist:
 Post-release checklist:
 
   [ ] Tag the release version (e.g., "git tag v1.0.0")
-  [ ] Bump the version in Default.scala and add "-SNAPSHOT" to it
-  [ ] Bump the version in ThriftCodegenPlugin.scala and add "-SNAPSHOT" to it
+  [ ] Bump the MINOR version** in Default.scala and add "-SNAPSHOT" to it
+  [ ] Bump the MINOR version** in ThriftCodegenPlugin.scala and add "-SNAPSHOT" to it
   [ ] Commit these changes
   [ ] Push both commits to Github
   [ ] Push tags to Github with "git push origin --tags"
+
+
+[** A note about version numbers:
+
+    When choosing version numbers, we should follow the Semantic Versioning 2.0.0 Specification
+    
+    From http://semver.org/
+
+        SUMMARY:
+
+        Given a version number MAJOR.MINOR.PATCH, increment the:
+
+        MAJOR version when you make incompatible API changes,
+        MINOR version when you add functionality in a backwards-compatible manner, and
+        PATCH version when you make backwards-compatible bug fixes.
+        Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
+
+    In general, the "master" branch (that is, most new development) should have a MINOR version
+    increment from the previous released version. Only if incompatible changes are planned should
+    a MAJOR version increment be necessary. PATCH version increments should only be released for
+    bugfixes specifically backported to a previous MINOR version release.
+]
