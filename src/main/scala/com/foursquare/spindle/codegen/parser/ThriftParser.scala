@@ -4,13 +4,14 @@ package com.foursquare.spindle.codegen.parser
 
 import com.twitter.thrift.descriptors
 import java.io.File
+import java.nio.charset.Charset
+import org.apache.commons.io.FileUtils
 import org.parboiled.errors.ErrorUtils
 import org.parboiled.matchers.{Matcher, ProxyMatcher}
 import org.parboiled.scala.{ANY, EOI, MemoMismatches, Parser, ParseRunner, ReportingParseRunner, Rule, Rule0, Rule1,
     Rule2, RuleOption, SkipNode, SuppressNode, SuppressSubnodes, TracingParseRunner}
 import scala.collection.mutable
 import scala.util.DynamicVariable
-import scalax.file.Path
 
 class ThriftParser extends Parser {
   lazy val Letter = rule("Letter")("a" - "z" | "A" - "Z")
@@ -484,7 +485,7 @@ object ThriftParser {
     val parser = new ThriftParser
     val runner: ParseRunner[descriptors.Program] =
       if (trace) TracingParseRunner(parser.Program) else ReportingParseRunner(parser.Program)
-    val thrift = Path(file).slurpString
+    val thrift = FileUtils.readFileToString(file, "UTF-8")
     val runResult = runner.run(thrift)
     val result = runResult.result.getOrElse(throw new ParserException(ErrorUtils.printParseErrors(runResult), file))
     val validator = new ThriftValidator(file)

@@ -1,5 +1,6 @@
 seq(Default.scala: _*)
 
-libraryDependencies ++= (
-  ThirdParty.parboiledScala ++
-  ThirdParty.scalaIo)
+libraryDependencies <++= (scalaVersion)(v => {
+  ThirdParty.commonsIo ++
+  ThirdParty.parboiledScala(v)
+})

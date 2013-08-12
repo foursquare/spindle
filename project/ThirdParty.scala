@@ -3,8 +3,14 @@
 import sbt._
 
 object ThirdParty {
-  val argot = Seq(
+  def argot(v: String) =
+    if (v.startsWith("2.9")) argot29
+    else if (v.startsWith("2.10")) argot210
+    else sys.error("Unsupported Scala version for Argot")
+  val argot29 = Seq(
     "org.clapper" %% "argot" % "0.4")
+  val argot210 = Seq(
+    "org.clapper" %% "argot" % "1.0.1")
   val commonsIo = Seq(
     "commons-io" % "commons-io" % "2.1")
   val finagleThrift = Seq(
@@ -21,28 +27,44 @@ object ThirdParty {
     "com.novocode" % "junit-interface" % "0.7")
   val mongodb = Seq(
     "org.mongodb" % "mongo-java-driver" % "2.9.3")
-  val parboiledScala = Seq(
+  def parboiledScala(v: String) =
+    if (v.startsWith("2.9")) parboiledScala29
+    else if (v.startsWith("2.10")) parboiledScala210
+    else sys.error("Unsupported Scala version for Parboiled")
+  val parboiledScala29 = Seq(
     "org.parboiled" % "parboiled-scala_2.9.2" % "1.1.4")
+  val parboiledScala210 = Seq(
+    "org.parboiled" %% "parboiled-scala" % "1.1.4")
   val phonenumbers = Seq(
     "com.googlecode.libphonenumber" % "libphonenumber" % "5.6")
   val rogueField = Seq(
     "com.foursquare" %% "rogue-field" % "2.2.0")
   val rogueIndex = Seq(
     "com.foursquare" %% "rogue-index" % "2.2.0")
-  val scalaIo = Seq(
-    "com.github.scala-incubator.io" % "scala-io-core_2.9.1" % "0.3.0",
-    "com.github.scala-incubator.io" % "scala-io-file_2.9.1" % "0.3.0")
   val scalajCollection = Seq(
     "org.scalaj" %% "scalaj-collection" % "1.5")
   val scalajTime = Seq(
     "org.scalaj" %% "scalaj-time" % "0.7")
-  val scalate = Seq(
+  def scalate(v: String) =
+    if (v.startsWith("2.9")) scalate29
+    else if (v.startsWith("2.10")) scalate210
+    else sys.error("Unsupported Scala version for Scalate")
+  val scalate29 = Seq(
     "org.fusesource.scalate" % "scalate-core_2.9" % "1.6.1" exclude(
+      "org.scala-lang", "scala-compiler"))
+  val scalate210 = Seq(
+    "org.fusesource.scalate" %% "scalate-core" % "1.6.1" exclude(
       "org.scala-lang", "scala-compiler"))
   val slf4jNoLogging = Seq(
     "org.slf4j" % "slf4j-nop" % "1.6.4")
-  val specs = Seq(
+  def specs(v: String) =
+    if (v.startsWith("2.9")) specs29
+    else if (v.startsWith("2.10")) specs210
+    else sys.error("Unsupported Scala version for Specs")
+  val specs29 = Seq(
     "org.scala-tools.testing" % "specs_2.9.1" % "1.6.9" withSources())
+  val specs210 = Seq(
+    "org.scala-tools.testing" %% "specs" % "1.6.9" withSources())
   val thrift = Seq(
     "org.apache.thrift" % "libthrift" % "0.9.0")
 }

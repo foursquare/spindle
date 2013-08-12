@@ -1,5 +1,3 @@
-Seq(Default.thrift: _*)
-
-thriftCodegenIncludes in Compile += file("src/test/thrift")
+Seq(Default.thriftTestLocal: _*)
 
 libraryDependencies ++= ThirdParty.rogueIndex

@@ -1,1 +1,1 @@
-seq(Default.thrift: _*)
+seq(Default.thriftBootstrap: _*)
