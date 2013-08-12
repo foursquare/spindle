@@ -9,7 +9,7 @@ Because Spindle is a code generator, it needs to plug into your build system.
 If you're using sbt 0.12, you can use Spindle's thrift-codegen-plugin. In your project/plugins.sbt,
 add the following line:
 
-    addSbtPlugin("com.foursquare" % "spindle-codegen-plugin" % "1.1.0")
+    addSbtPlugin("com.foursquare" % "spindle-codegen-plugin" % "1.1.1")
 
 Then, in the build.sbt for the project with the *.thrift files to compile, add the following line:
 
@@ -25,7 +25,7 @@ configured to use those.
 
 ## Releases
 
-The latest release is 1.1.0. See the [changelog](https://github.com/foursquare/spindle/blob/master/CHANGELOG.md) for more details.
+The latest release is 1.1.1. See the [changelog](https://github.com/foursquare/spindle/blob/master/CHANGELOG.md) for more details.
 
 Major changes in 1.1.x:
 
@@ -35,6 +35,7 @@ Major changes in 1.1.x:
 - Annotations for retired_ids and retired_wire_names enforced by codegen
 - toBuilder returns a Builder.AllSpecified
 - Builders can set bitfields via a struct
+- Can configure Scala binary version in codegen plugin
 
 ## Dependencies
 

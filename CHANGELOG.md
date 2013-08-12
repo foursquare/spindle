@@ -16,3 +16,7 @@
 - Annotations for retired_ids and retired_wire_names enforced by codegen
 - toBuilder returns a Builder.AllSpecified
 - Builders can set bitfields via a struct
+
+# 1.1.1
+
+- Can configure Scala binary version in codegen plugin
