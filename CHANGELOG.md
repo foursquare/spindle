@@ -20,3 +20,7 @@
 # 1.1.1
 
 - Can configure Scala binary version in codegen plugin
+
+# 1.2.0
+
+- Cross compile against Scala 2.10.2
