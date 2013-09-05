@@ -31,7 +31,7 @@ object ThriftCodegenPlugin extends Plugin {
         Seq("com.foursquare" % ("spindle-codegen-binary_" + bv) % cv)
     ),
     thriftCodegenRuntimeLibs <<= (thriftCodegenVersion)(v => Seq(
-      "com.twitter" % "finagle-thrift" % "6.3.0",
+      "com.twitter" %% "finagle-thrift" % "6.3.0",
       "com.foursquare" %% "spindle-runtime" % v,
       "com.foursquare" % "common-thrift-base" % v,
       "com.foursquare" % "common-thrift-json" % v,
