@@ -24,3 +24,7 @@
 # 1.2.0
 
 - Cross compile against Scala 2.10.2
+
+# 1.3.0
+
+- Don't pull in unprefixed Scala library
