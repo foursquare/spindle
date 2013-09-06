@@ -1,0 +1,7 @@
+<%
+  // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
+
+  import com.foursquare.spindle.codegen.runtime.ScalaField
+%>
+<%@ val field: ScalaField %>
+org.apache.thrift.TBaseHelper.compareTo(scalaj.collection.Implicits.RichSSeq(this.${field.escapedName}).asJava, scalaj.collection.Implicits.RichSSeq(that.${field.escapedName}).asJava)

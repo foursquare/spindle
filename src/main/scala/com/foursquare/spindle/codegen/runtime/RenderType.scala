@@ -130,7 +130,6 @@ case class ThriftJsonRenderType(ref: RenderType) extends RefRenderType with Enha
 
 trait ContainerRenderType extends RefRenderType {
   def container: String
-  override def compareTemplate: String = "compare/container.ssp"
   override def fieldDefTemplate: String = "field/def_container.ssp"
   override def fieldImplTemplate: String = "field/impl_container.ssp"
   override def fieldProxyTemplate: String = "field/proxy_container.ssp"
@@ -145,6 +144,7 @@ abstract class Container1RenderType(override val container: String, val elem: Re
 // TODO(jorge): Make this immutable.Seq
 case class SeqRenderType(e1: RenderType) extends Container1RenderType("scala.collection.Seq", e1) {
   override def ttype: TType = TType.LIST
+  override def compareTemplate: String = "compare/seq.ssp"
   override def fieldWriteTemplate: String = "write/seq.ssp"
   override def fieldReadTemplate: String = "read/seq.ssp"
   override def underlying: SeqRenderType = SeqRenderType(e1.underlying)
@@ -166,6 +166,7 @@ case class SeqRenderType(e1: RenderType) extends Container1RenderType("scala.col
 
 case class SetRenderType(e1: RenderType) extends Container1RenderType("scala.collection.immutable.Set", e1) {
   override def ttype: TType = TType.SET
+  override def compareTemplate: String = "compare/set.ssp"
   override def fieldWriteTemplate: String = "write/set.ssp"
   override def fieldReadTemplate: String = "read/set.ssp"
   override def underlying: SetRenderType = SetRenderType(e1.underlying)
@@ -177,6 +178,7 @@ abstract class Container2RenderType(override val container: String, val elem1: R
 
 case class MapRenderType(e1: RenderType, e2: RenderType) extends Container2RenderType("scala.collection.immutable.Map", e1, e2) {
   override def ttype: TType = TType.MAP
+  override def compareTemplate: String = "compare/map.ssp"
   override def fieldWriteTemplate: String = "write/map.ssp"
   override def fieldReadTemplate: String = "read/map.ssp"
   override def underlying: MapRenderType = MapRenderType(e1.underlying, e2.underlying)

@@ -14,7 +14,17 @@
       "${field.wireName}",
       org.apache.thrift.protocol.TType.${field.renderType.ttype.name},
       ${field.identifier},
-      Map[String, String](${(for ((k, v) <- field.enhancedTypeAnnotations) yield "\"%s\" -> \"%s\"".format(k, v)).mkString(", ")}).asJava
+      {
+#if (field.enhancedTypeAnnotations.isEmpty)
+        java.util.Collections.emptyMap[String, String]
+#else
+        val rv = new java.util.Map[String, String]
+#for ((k, v) <- field.enhancedTypeAnnotations)
+        rv.put("${k}", "${v}")
+#end
+        rv
+#end
+      }
     )
 #end
 
