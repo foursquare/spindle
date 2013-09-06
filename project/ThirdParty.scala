@@ -14,7 +14,10 @@ object ThirdParty {
   val commonsIo = Seq(
     "commons-io" % "commons-io" % "2.1")
   val finagleThrift = Seq(
-    "com.twitter" % "finagle-thrift" % "6.3.0")
+    "com.twitter" %% "finagle-thrift" % "6.3.0" cross CrossVersion.binaryMapped {
+      case "2.9.1" => "2.9.2"
+      case x => x
+    })
   val jackson = Seq(
     "org.codehaus.jackson" % "jackson-core-asl" % "1.9.8",
     "org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.8",
