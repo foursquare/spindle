@@ -6,17 +6,18 @@ include "com/foursquare/thriftexample/talent/crewmember.thrift"
 
 
 typedef crewmember.CrewMember CrewMember
-
+typedef binary (enhanced_types="bson:ObjectId") ObjectId
 
 struct Movie {
-  5: optional i32 id (wire_name="id", builder_required="true")
+  5: optional ObjectId id (wire_name="id", builder_required="true")
   1: required string name (wire_name="name", builder_required="true")
   2: required i32 lengthMinutes
   3: optional map<string, actor.Actor> cast  // E.g., "Austin Powers" -> Mike Myers
   4: optional list<CrewMember> crew
+  6: optional ObjectId remakeOf
 } (
   primary_key="id"
-
+  foreign_key="remakeOf"
   index="id: asc"
   index="name: asc, lengthMinutes: desc"
   mongo_collection="movies"

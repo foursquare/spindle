@@ -12,7 +12,7 @@
         val foreignOpt = meta.ifInstanceFrom(${field.varName}Obj)
         if (foreignOpt.isDefined) {
           val foreignObj = foreignOpt.get
-          if (foreignObj.primarykey == ${field.name}OrThrow) {
+          if (foreignObj.primaryKey == ${field.name}OrThrow) {
             foreignOpt
           } else {
             com.foursquare.spindle.RuntimeHelpers.fkHooks.mismatchedPrimaryKey(this, this.meta.${field.escapedName}, meta, ${field.name}OrThrow, foreignObj)

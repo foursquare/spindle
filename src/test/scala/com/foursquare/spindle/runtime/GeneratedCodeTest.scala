@@ -3,13 +3,15 @@
 package com.foursquare.spindle.test
 
 import com.foursquare.common.thrift.bson.TBSONProtocol
+import com.foursquare.common.thrift.json.TReadableJSONProtocol
 import com.foursquare.thriftexample.{Content, TvListingEntry}
 import com.foursquare.thriftexample.av.Movie
 import com.foursquare.thriftexample.people.{ContactInfo, Gender, Person, PhoneNumber, PhoneType}
 import com.foursquare.thriftexample.talent.{Actor, CrewMember}
 import com.google.i18n.phonenumbers.PhoneNumberUtil
-import org.apache.thrift.protocol.{TBinaryProtocol, TProtocolFactory, TSimpleJSONProtocol}
+import org.apache.thrift.protocol.{TBinaryProtocol, TProtocolFactory}
 import org.apache.thrift.transport.{TMemoryBuffer, TTransport}
+import org.bson.types.ObjectId
 import org.junit.Assert.{assertEquals, assertFalse, assertTrue}
 import org.junit.Test
 
@@ -63,7 +65,7 @@ class GeneratedCodeTest {
     val movie = 
       (Movie
         .newBuilder
-        .id(5)
+        .id(new ObjectId("522e3e9f4b90871874292b48"))
         .name("Dodgeball: A True Underdog Story")
         .lengthMinutes(92)
         .cast(Map("Peter La Fleur" -> vinceVaughn, "Kate Veatch" -> christineTaylor))
@@ -151,46 +153,43 @@ class GeneratedCodeTest {
   "et" : "2012-01-18 21:59:59",
   "content" : {
     "movie" : {
-      "id" : 5,
+      "id" : "ObjectId(\"522e3e9f4b90871874292b48\")",
       "name" : "Dodgeball: A True Underdog Story",
       "lengthMinutes" : 92,
-      "cast" : {
-        "Peter La Fleur" : {
-          "details" : {
-            "firstName" : "Vince",
-            "lastName" : "Vaughn",
-            "gender" : 1,
-            "contacts" : [ {
-              "email" : "vincevaughn@fake.com"
-            } ]
-          },
-          "agentDetails" : {
-            "firstName" : "Ari",
-            "lastName" : "Gold",
-            "gender" : 1,
-            "contacts" : [ {
-              "phone" : {
-                "countryCode" : 1,
-                "areaCode" : 212,
-                "number" : 5557345,
-                "phoneType" : 2
-              }
-            }, {
-              "email" : "arig@fake.com"
-            } ]
-          }
+      "cast" : [ "Peter La Fleur", {
+        "details" : {
+          "firstName" : "Vince",
+          "lastName" : "Vaughn",
+          "gender" : 1,
+          "contacts" : [ {
+            "email" : "vincevaughn@fake.com"
+          } ]
         },
-        "Kate Veatch" : {
-          "details" : {
-            "firstName" : "Christine",
-            "lastName" : "Taylor",
-            "gender" : 2,
-            "contacts" : [ {
-              "email" : "ctaylor@evenfaker.com"
-            } ]
-          }
+        "agentDetails" : {
+          "firstName" : "Ari",
+          "lastName" : "Gold",
+          "gender" : 1,
+          "contacts" : [ {
+            "phone" : {
+              "countryCode" : 1,
+              "areaCode" : 212,
+              "number" : 5557345,
+              "phoneType" : 2
+            }
+          }, {
+            "email" : "arig@fake.com"
+          } ]
         }
-      },
+      }, "Kate Veatch", {
+        "details" : {
+          "firstName" : "Christine",
+          "lastName" : "Taylor",
+          "gender" : 2,
+          "contacts" : [ {
+            "email" : "ctaylor@evenfaker.com"
+          } ]
+        }
+      } ],
       "crew" : [ {
         "details" : {
           "firstName" : "Rawson",
@@ -205,7 +204,7 @@ class GeneratedCodeTest {
 }"""
 
     val tvListingEntry = makeTvListingEntry()
-    val trans = doWrite(new TSimpleJSONProtocol.Factory(), tvListingEntry)
+    val trans = doWrite(new TReadableJSONProtocol.Factory(), tvListingEntry)
     val actual = JsonPrettyPrinter.prettify(trans.toString("UTF8"))
     assertEquals(expected, actual)
   }

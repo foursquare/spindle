@@ -33,3 +33,7 @@
 
 - No implicit imports in generated code
 - Hooks for controlling FK behavior
+
+# 1.4.1
+
+- Bug fix

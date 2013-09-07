@@ -18,7 +18,7 @@
 #if (field.enhancedTypeAnnotations.isEmpty)
         java.util.Collections.emptyMap[String, String]
 #else
-        val rv = new java.util.Map[String, String]
+        val rv = new java.util.HashMap[String, String]
 #for ((k, v) <- field.enhancedTypeAnnotations)
         rv.put("${k}", "${v}")
 #end
