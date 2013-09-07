@@ -28,3 +28,8 @@
 # 1.3.0
 
 - Don't pull in unprefixed Scala library
+
+# 1.4.0
+
+- No implicit imports in generated code
+- Hooks for controlling FK behavior
