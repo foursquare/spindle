@@ -13,11 +13,14 @@ object ThirdParty {
     "org.clapper" %% "argot" % "1.0.1")
   val commonsIo = Seq(
     "commons-io" % "commons-io" % "2.1")
-  val finagleThrift = Seq(
-    "com.twitter" %% "finagle-thrift" % "6.3.0" cross CrossVersion.binaryMapped {
-      case "2.9.1" => "2.9.2"
-      case x => x
-    })
+  def finagleThrift(v: String) =
+    if (v.startsWith("2.9")) finagleThrift29
+    else if (v.startsWith("2.10")) finagleThrift210
+    else sys.error("Unsupported Scala version for finagle-thrift")
+  val finagleThrift29 = Seq(
+    "com.twitter" % "finagle-thrift_2.9.2" % "6.3.0")
+  val finagleThrift210 = Seq(
+    "com.twitter" %% "finagle-thrift" % "6.3.0")
   val jackson = Seq(
     "org.codehaus.jackson" % "jackson-core-asl" % "1.9.8",
     "org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.8",
