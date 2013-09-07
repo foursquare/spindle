@@ -124,11 +124,11 @@ object Default {
   )
 
   val thriftTestLocal = Default.scala ++ Seq(
-    Keys.libraryDependencies ++= (
+    Keys.libraryDependencies <++= (Keys.scalaVersion) (v =>
       ThirdParty.jackson ++
       ThirdParty.thrift ++
       ThirdParty.scalajCollection ++
-      ThirdParty.finagleThrift),
+      ThirdParty.finagleThrift(v)),
     Keys.sourceGenerators in Compile <+=
       (Keys.fullClasspath in (SpindleBuild.codegenBinary, Runtime), Keys.runner in SpindleBuild.codegenBinary,
           Keys.baseDirectory, Keys.sourceManaged, Keys.crossTarget, Keys.configuration in Compile, Keys.streams) map {
