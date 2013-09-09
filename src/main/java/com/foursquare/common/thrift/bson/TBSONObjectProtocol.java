@@ -414,20 +414,43 @@ public class TBSONObjectProtocol extends TProtocol {
 
   @Override
   public short readI16() throws TException {
-    try {
-      return ((Integer)readState.getNextItem()).shortValue();
-    } catch (ClassCastException e) {
-      throw new TException("Expected Short value.");
+    Object item = readState.getNextItem();
+    Short s = null;
+    if (item instanceof Integer) {
+      Integer i = (Integer)item;
+      s = i.shortValue();
+      if (i - s == 0) return s;
+    } else if (item instanceof Long) {
+      Long l = (Long)item;
+      s = l.shortValue();
+      if (l - s == 0) return s;
+    } else if (item instanceof Double) {
+      Double d = (Double)item;
+      s = ((Double)item).shortValue();
+      if (d - s == 0) return s;
     }
+    
+    throw new TException("Cannot convert item to short: " + item);
   }
 
   @Override
   public int readI32() throws TException {
-    try {
-      return (Integer)readState.getNextItem();
-    } catch (ClassCastException e) {
-      throw new TException("Expected Integer value.");
+    Object item = readState.getNextItem();
+    if (item instanceof Integer) {
+      return (Integer)item;
     }
+    Integer i = null;
+    if (item instanceof Long) {
+      Long l = (Long)item;
+      i = l.intValue();
+      if (l - i == 0) return i;
+    } else if (item instanceof Double) {
+      Double d = (Double)item;
+      i = d.intValue();
+      if (d - i == 0) return i;
+    }
+    
+    throw new TException("Cannot convert item to integer: " + item);
   }
 
   @Override
@@ -441,18 +464,27 @@ public class TBSONObjectProtocol extends TProtocol {
       return ((Integer)item).longValue();
     } else if (item instanceof Date) {
       return ((Date)item).getTime();
-    } else {
-      throw new TException("Cannot convert item to long: " + item);
+    } else if (item instanceof Double) {
+      Double d = (Double)item;
+      Long l = d.longValue();
+      if (d - l == 0) return l;
     }
+
+    throw new TException("Cannot convert item to long: " + item);
   }
 
   @Override
   public double readDouble() throws TException {
-    try {
-      return (Double)readState.getNextItem();
-    } catch (ClassCastException e) {
-      throw new TException("Expected Double value.");
+    Object item = readState.getNextItem();
+    if (item instanceof Double) {
+      return (Double)item;
+    } else if (item instanceof Long) {
+      return ((Long)item).doubleValue();
+    } else if (item instanceof Integer) {
+      return ((Integer)item).doubleValue();
     }
+
+    throw new TException("Cannot convert item to double: " + item);
   }
 
   @Override
