@@ -62,7 +62,11 @@ object Default {
   ) ++ net.virtualvoid.sbt.graph.Plugin.graphSettings
 
   val commonJava: Seq[Setting[_]] = Default.all ++ Seq(
-    Keys.crossPaths := false
+    Keys.crossPaths := false,
+    Keys.javacOptions := Seq(
+      "-source", "1.6",
+      "-target", "1.6"),
+    Keys.javacOptions in Keys.doc := Nil
   )
 
   val scala: Seq[Setting[_]] = Default.all ++ Seq(
