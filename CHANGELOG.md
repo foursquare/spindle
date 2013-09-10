@@ -37,3 +37,8 @@
 # 1.4.1
 
 - Bug fix
+
+# 1.4.2
+
+- Target JVM 1.6 bytecode
+
