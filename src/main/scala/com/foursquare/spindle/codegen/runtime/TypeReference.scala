@@ -22,6 +22,7 @@ case class EnumRef(name: String) extends TypeReference
 case class StructRef(name: String) extends TypeReference
 case class UnionRef(name: String) extends TypeReference
 case class ExceptionRef(name: String) extends TypeReference
+case class ServiceRef(name: String) extends TypeReference
 case class TypedefRef(name: String, tpe: TypeReference) extends TypeReference
 case class NewtypeRef(name: String, tpe: TypeReference) extends TypeReference
 case class EnhancedTypeRef(name: String, tpe: TypeReference) extends TypeReference

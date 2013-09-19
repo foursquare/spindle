@@ -87,15 +87,20 @@ class TypeReferenceResolver(
   }
 
   def resolveTyperef(typeref: Typeref): Either[TypeNotFound, TypeReference] = {
-    val option = scope.get(typeref.typeAlias).map({
+    resolveTypeAlias(typeref.typeAlias)
+  }
+
+  def resolveTypeAlias(name: String): Either[TypeNotFound, TypeReference] = {
+    val option = scope.get(name).map({
       case EnumDecl(name, _) => EnumRef(name)
       case StructDecl(name, _) => StructRef(name)
       case UnionDecl(name, _) => UnionRef(name)
       case ExceptionDecl(name, _) => ExceptionRef(name)
+      case ServiceDecl(name, _) => ServiceRef(name)
       case TypedefDecl(name, false, ref, _) => TypedefRef(name, ref)
       case TypedefDecl(name, true, ref, _) => NewtypeRef(name, ref)
     })
-    optionToEither(option, AliasNotFound(typeref.typeAlias))
+    optionToEither(option, AliasNotFound(name))
   }
 
   def annotationsForType(tpe: Type): Annotations = {
