@@ -41,12 +41,15 @@ class ThriftValidator(file: File) {
   def validateFields(fields: Seq[descriptors.Field], where: String): Unit = {
     validateDistinct(fields.map(_.identifier), "field identifier(s)", Some(where))
     validateDistinct(fields.map(_.name), "field name(s)", Some(where))
+    validateDistinct(
+      fields.map(f => f.annotationsOption.flatMap(_.find(_.key == "wire_name").map(_.value)).getOrElse(f.name)),
+      "wire_name(s)", Some(where))
   }
 
   def validateDistinct[A](xs: Seq[A], what: String, where: Option[String] = None): Unit = {
     if (xs.size != xs.distinct.size) {
       val repeats = xs.diff(xs.distinct)
-      val message = 
+      val message =
         where match {
           case Some(w) =>
             "Repeated %s in %s: %s".format(what, w, repeats.mkString(", "))

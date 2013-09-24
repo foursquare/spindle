@@ -20,6 +20,16 @@ class ThriftParserTest {
   }
 
   @Test
+  def testParseDuplicateWireName(): Unit = {
+    try {
+      ThriftParser.parseProgram(base + "/parse_duplicate_wire_name.thrift")
+      assertTrue("Parsing duplicate field wire_names should fail.", false)
+    } catch {
+      case e: ParserException => ()
+    }
+  }
+
+  @Test
   def testParseProgram(): Unit = {
     val program = ThriftParser.parseProgram(base + "/parse_program.thrift")
 
