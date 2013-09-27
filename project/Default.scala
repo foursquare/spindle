@@ -10,8 +10,6 @@ object Default {
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
     Keys.version := "1.5.0-SNAPSHOT",
     Keys.organization := "com.foursquare",
-    Keys.scalaVersion := "2.9.1",
-    Keys.crossScalaVersions := Seq("2.9.1", "2.9.2", "2.10.2"),
     Keys.publishMavenStyle := true,
     Keys.publishArtifact in Test := false,
     Keys.pomIncludeRepository := { _ => false },
@@ -66,10 +64,13 @@ object Default {
     Keys.javacOptions := Seq(
       "-source", "1.6",
       "-target", "1.6"),
-    Keys.javacOptions in Keys.doc := Nil
+    Keys.javacOptions in Keys.doc := Nil,
+    Keys.autoScalaLibrary := false
   )
 
   val scala: Seq[Setting[_]] = Default.all ++ Seq(
+    Keys.scalaVersion := "2.9.1",
+    Keys.crossScalaVersions := Seq("2.9.1", "2.9.2", "2.10.2"),
     Keys.scalacOptions <++= (Keys.scalaVersion).map(v => {
       val opts =
         Seq(
