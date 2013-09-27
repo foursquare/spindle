@@ -215,11 +215,10 @@ class GeneratedCodeTest {
 
     TvListingEntry.startTime.setterRaw(e, "2012-01-18 20:00:01")
     assertEquals(e.startTimeOption, Some("2012-01-18 20:00:01"))
-    assertEquals(TvListingEntry.getter(e), Some("2012-01-18 20:00:01"))
+    assertEquals(TvListingEntry.startTime.getter(e), Some("2012-01-18 20:00:01"))
 
-    TvListingEntry.startTime.unsetterRaw(e, "2012-01-18 20:00:01")
+    TvListingEntry.startTime.unsetterRaw(e)
     assertEquals(e.startTimeOption, None)
-    assertEquals(TvListingEntry.getter(e), None)
+    assertEquals(TvListingEntry.startTime.getter(e), None)
   }
-
 }
