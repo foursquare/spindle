@@ -42,3 +42,9 @@
 
 - Target JVM 1.6 bytecode
 
+# 1.5.0
+
+- Require unique wire_names
+- Point bootstrapped codegen at local templates
+- FieldDescriptors have unsetterRaw
+- Remove scala-library deps from Java projects
