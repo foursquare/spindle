@@ -79,14 +79,14 @@ object Default {
         opts ++ Seq(
           "-Ydependent-method-types",
           "-Xfatal-warnings")
-      } else { 
+      } else {
         opts
       }
     })
   )
 
   val scalate: Seq[Setting[_]] = Default.scala ++ ScalatePlugin.scalateSettings ++ Seq(
-    ScalateKeys.scalateTemplateConfig in Compile <<= (Keys.baseDirectory in Compile) { base => 
+    ScalateKeys.scalateTemplateConfig in Compile <<= (Keys.baseDirectory in Compile) { base =>
       Seq(
         TemplateConfig(
           scalateTemplateDirectory = base,
@@ -104,8 +104,9 @@ object Default {
   val thriftBootstrap = Default.scala ++ ThriftCodegenPlugin.thriftSettings ++ Seq(
     Keys.sourceDirectory in ThriftCodegenPlugin.thrift in Compile <<= (Keys.baseDirectory)(identity),
     Keys.scalaBinaryVersion in ThriftCodegenPlugin.thrift := "2.9.2",
-    ThriftCodegenPlugin.thriftCodegenVersion := "1.1.0",
+    ThriftCodegenPlugin.thriftCodegenVersion := "1.4.2",
     ThriftCodegenPlugin.thriftCodegenRuntimeLibs := ThirdParty.scalajCollection,
+    ThriftCodegenPlugin.thriftCodegenTemplate := file("src/main/ssp/codegen/scala/record.ssp").absolutePath,
     Keys.ivyScala <<= (Keys.ivyScala)(_.map(_.copy(checkExplicit = false, filterImplicit = false, overrideScalaVersion =false))),
     Keys.update <<= (Keys.ivyModule, Keys.thisProjectRef, Keys.updateConfiguration, Keys.cacheDirectory, Keys.transitiveUpdate,
         Keys.executionRoots, Keys.resolvedScoped, Keys.skip in Keys.update, Keys.streams) map {
@@ -116,9 +117,10 @@ object Default {
     } tag(Tags.Update, Tags.Network),
     ThriftCodegenPlugin.thriftCodegenBinaryLibs <<=
       (ThriftCodegenPlugin.thriftCodegenVersion, Keys.scalaBinaryVersion in ThriftCodegenPlugin.thrift)((cv, bv) =>
+        ThirdParty.jackson ++
         Seq(
-          "com.foursquare" % "common-thrift-base" % cv,
-          "com.foursquare" % "common-thrift-json" % cv,
+          "com.foursquare" % "common-thrift-base" % cv intransitive(),
+          "com.foursquare" % "common-thrift-json" % cv intransitive(),
           "com.foursquare" % ("spindle-codegen-binary_" + bv) % cv,
           "org.scalaj" % ("scalaj-collection_" + bv) % "1.5",
           "org.scala-lang" % "scala-library" % bv,
