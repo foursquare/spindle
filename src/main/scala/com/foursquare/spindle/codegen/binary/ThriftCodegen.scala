@@ -3,8 +3,8 @@
 package com.foursquare.spindle.codegen.binary
 
 import com.foursquare.spindle.Annotations
-import com.foursquare.spindle.codegen.runtime.{BitfieldRef, CodegenException, EnhancedTypeRef, ProgramSource,
-    ScalaProgram, Scope, TypeDeclarationResolver, TypeReference}
+import com.foursquare.spindle.codegen.runtime.{BitfieldRef, CodegenException, EnhancedTypeRef, EnhancedTypes,
+    ProgramSource, ScalaProgram, Scope, TypeDeclaration, TypeDeclarationResolver, TypeReference}
 import com.foursquare.spindle.codegen.parser.{ParserException, ThriftParser}
 import java.io.{File, PrintWriter}
 import org.clapper.argot.ArgotConverters._
@@ -42,30 +42,7 @@ object ThriftCodegen {
       extension: String,
       allowReload: Boolean
   ): Unit = {
-    val enhancedTypes = (ref: TypeReference, annots: Annotations, scope: Scope) => {
-      if (annots.contains("enhanced_types")) {
-        annots.get("enhanced_types").map(value => EnhancedTypeRef(value, ref))
-      } else if (annots.contains("bitfield_struct")) {
-        for (structName <- annots.get("bitfield_struct")) yield {
-          val typeDeclaration = scope.getOrElse(structName,
-            throw new CodegenException("Could not find struct referenced in bitfield annotation with name: %s".format(structName)))
-          BitfieldRef(typeDeclaration.name, ref, true)
-        }
-      } else if (annots.contains("bitfield_struct_no_setbits")) {
-        for (structName <- annots.get("bitfield_struct_no_setbits")) yield {
-          val typeDeclaration = scope.getOrElse(structName,
-            throw new CodegenException("Could not find struct referenced in bitfield annotation with name: %s".format(structName)))
-          BitfieldRef(typeDeclaration.name, ref, false)
-        }
-      } else {
-        Some(ref)
-      }
-    }
-
-    val declarationResolver = new TypeDeclarationResolver(enhancedTypes)
-    val sources = parsePrograms(inputFiles, includePaths)
-    val typeDeclarations = declarationResolver.resolveAllTypeDeclarations(sources)
-    val sourcesToCompile = sources.filter(source => inputFiles.contains(source.file))
+    val (sourcesToCompile, typeDeclarations, enhancedTypes) = inputInfoForCompiler(inputFiles, includePaths)
 
     val engine = new TemplateEngine(Nil, "") {
       override protected def createRenderContext(uri: String, out: PrintWriter): RenderContext = {
@@ -80,7 +57,7 @@ object ThriftCodegen {
 
     try {
       for (source <- sourcesToCompile) {
-        val program = 
+        val program =
           try {
             ScalaProgram(source, typeDeclarations, enhancedTypes)
           } catch {
@@ -89,10 +66,10 @@ object ThriftCodegen {
           }
 
         extension match {
-          
+
           case _ => {}
         }
-        
+
         //val extraPath = pkg.map(_.split('.').mkString(File.separator, File.separator, "")).getOrElse("")
         val out = (extension, namespaceOutputPath) match {
           case ("js", _) if (program.jsPackage.isEmpty) => {
@@ -135,6 +112,34 @@ object ThriftCodegen {
       engine.shutdown()
     }
   }
+
+  def inputInfoForCompiler(inputFiles: Seq[File], includePaths: Seq[File]):
+      (Seq[ProgramSource], Map[ProgramSource, Map[String, TypeDeclaration]], EnhancedTypes) = {
+    val enhancedTypes = (ref: TypeReference, annots: Annotations, scope: Scope) => {
+      if (annots.contains("enhanced_types")) {
+        annots.get("enhanced_types").map(value => EnhancedTypeRef(value, ref))
+      } else if (annots.contains("bitfield_struct")) {
+        for (structName <- annots.get("bitfield_struct")) yield {
+          val typeDeclaration = scope.getOrElse(structName,
+            throw new CodegenException("Could not find struct referenced in bitfield annotation with name: %s".format(structName)))
+          BitfieldRef(typeDeclaration.name, ref, true)
+        }
+      } else if (annots.contains("bitfield_struct_no_setbits")) {
+        for (structName <- annots.get("bitfield_struct_no_setbits")) yield {
+          val typeDeclaration = scope.getOrElse(structName,
+            throw new CodegenException("Could not find struct referenced in bitfield annotation with name: %s".format(structName)))
+          BitfieldRef(typeDeclaration.name, ref, false)
+        }
+      } else {
+        Some(ref)
+      }
+    }
+
+    val declarationResolver = new TypeDeclarationResolver(enhancedTypes)
+    val sources = parsePrograms(inputFiles, includePaths)
+    val typeDeclarations = declarationResolver.resolveAllTypeDeclarations(sources)
+    (sources, typeDeclarations, enhancedTypes)
+ }
 
   def parsePrograms(toParse: Seq[File], includePaths: Seq[File]): Seq[ProgramSource] = {
     try {

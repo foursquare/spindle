@@ -46,7 +46,7 @@ class ThriftValidator(file: File) {
   def validateDistinct[A](xs: Seq[A], what: String, where: Option[String] = None): Unit = {
     if (xs.size != xs.distinct.size) {
       val repeats = xs.diff(xs.distinct)
-      val message = 
+      val message =
         where match {
           case Some(w) =>
             "Repeated %s in %s: %s".format(what, w, repeats.mkString(", "))

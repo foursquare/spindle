@@ -75,6 +75,10 @@ object SpindleBuild extends Build {
     Project(
       id = "spindle-test-parser",
       base = file("src/test/scala/com/foursquare/spindle/codegen/parser")) dependsOn(parser)
+  lazy val testCodegenBinary =
+    Project(
+      id = "spindle-test-codegen-binary",
+      base = file("src/test/scala/com/foursquare/spindle/codegen/binary")) dependsOn(codegenBinary)
   lazy val testRuntime =
     Project(
       id = "spindle-test-runtime",
