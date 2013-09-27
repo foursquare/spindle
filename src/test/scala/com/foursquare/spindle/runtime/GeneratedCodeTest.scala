@@ -19,7 +19,7 @@ import org.junit.Test
 class GeneratedCodeTest {
   private def makePhone(phoneNumberStr: String, phoneType: PhoneType): ContactInfo = {
     val phoneNumberMatch = PhoneNumberUtil.getInstance().findNumbers(phoneNumberStr, "US").iterator().next()
-    val phoneNumber = 
+    val phoneNumber =
       (PhoneNumber
         .newBuilder
         .countryCode(phoneNumberMatch.number.getCountryCode.toShort)
@@ -62,7 +62,7 @@ class GeneratedCodeTest {
         .credits(List("Director", "Writer"))
         .result())
 
-    val movie = 
+    val movie =
       (Movie
         .newBuilder
         .id(new ObjectId("522e3e9f4b90871874292b48"))
