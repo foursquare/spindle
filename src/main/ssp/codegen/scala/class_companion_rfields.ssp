@@ -1,7 +1,7 @@
 <%
   // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-  import com.foursquare.spindle.codegen.runtime.StructLike 
+  import com.foursquare.spindle.codegen.runtime.StructLike
 %>
 <%@ val cls: StructLike %>
   // Record v2 Descriptors.
@@ -16,7 +16,7 @@
     new com.foursquare.spindle.ForeignKeyFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type](
 #elseif (field.renderType.isInstanceOf[com.foursquare.spindle.codegen.runtime.BitfieldStructRenderType])
 <% val structName = field.renderType.asInstanceOf[com.foursquare.spindle.codegen.runtime.BitfieldStructRenderType].className %>
-    new com.foursquare.spindle.BitfieldFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type, ${structName}, ${structName}.type]( 
+    new com.foursquare.spindle.BitfieldFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type, ${structName}, ${structName}.type](
 #else
     new com.foursquare.spindle.OptionalFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type](
 #end
@@ -27,6 +27,7 @@
       owner = ${cls.name},
       getter = _.${field.name}Option,
       setterRaw = (r: ${cls.name}.Raw, v: ${field.renderType.text}) => { r.${field.escapedName}_=(v) },
+      unsetterRaw = (r: ${cls.name}.Raw) => { r.${field.name}Unset() },
 #if (field.isForeignKey)
       objSetter = (r: ${cls.name}, obj: com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]) => { r.${field.name}SetObj(obj) },
       objGetter = (r: ${cls.name}, m: com.foursquare.spindle.UntypedMetaRecord) => { r.${field.name}UntypedFk(m) },

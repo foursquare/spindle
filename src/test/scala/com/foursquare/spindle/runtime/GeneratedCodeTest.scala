@@ -19,7 +19,7 @@ import org.junit.Test
 class GeneratedCodeTest {
   private def makePhone(phoneNumberStr: String, phoneType: PhoneType): ContactInfo = {
     val phoneNumberMatch = PhoneNumberUtil.getInstance().findNumbers(phoneNumberStr, "US").iterator().next()
-    val phoneNumber = 
+    val phoneNumber =
       (PhoneNumber
         .newBuilder
         .countryCode(phoneNumberMatch.number.getCountryCode.toShort)
@@ -62,7 +62,7 @@ class GeneratedCodeTest {
         .credits(List("Director", "Writer"))
         .result())
 
-    val movie = 
+    val movie =
       (Movie
         .newBuilder
         .id(new ObjectId("522e3e9f4b90871874292b48"))
@@ -207,6 +207,19 @@ class GeneratedCodeTest {
     val trans = doWrite(new TReadableJSONProtocol.Factory(), tvListingEntry)
     val actual = JsonPrettyPrinter.prettify(trans.toString("UTF8"))
     assertEquals(expected, actual)
+  }
+
+  @Test
+  def testFieldSettersAndGetters() {
+    val e = TvListingEntry.createRawRecord
+
+    TvListingEntry.startTime.setterRaw(e, "2012-01-18 20:00:01")
+    assertEquals(e.startTimeOption, Some("2012-01-18 20:00:01"))
+    assertEquals(TvListingEntry.getter(e), Some("2012-01-18 20:00:01"))
+
+    TvListingEntry.startTime.unsetterRaw(e, "2012-01-18 20:00:01")
+    assertEquals(e.startTimeOption, None)
+    assertEquals(TvListingEntry.getter(e), None)
   }
 
 }

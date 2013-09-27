@@ -21,6 +21,7 @@ trait FieldDescriptor[F, R <: Record[R], M <: MetaRecord[R]] extends Field[F, M]
   def getterOption: R => Option[F] = getter
   def manifest: Manifest[F]
   def setterRaw: (M#Raw, F) => Unit
+  def unsetterRaw: M#Raw => Unit
 
   override def unsafeGetterOption: Function1[Any, Option[Any]] = getterOption.asInstanceOf[Function1[Any, Option[Any]]]
   override def unsafeManifest: Manifest[_] = manifest
@@ -50,6 +51,7 @@ case class OptionalFieldDescriptor[F, R <: Record[R], M <: MetaRecord[R]](
     override val owner: M,
     override val getter: R => Option[F],
     override val setterRaw: (M#Raw, F) => Unit,
+    override val unsetterRaw: M#Raw => Unit,
     override val manifest: Manifest[F]
 ) extends OptionalField[F, M] with FieldDescriptor[F, R, M]
 
@@ -61,6 +63,7 @@ case class ForeignKeyFieldDescriptor[F, R <: Record[R], M <: MetaRecord[R]](
     override val owner: M,
     override val getter: R => Option[F],
     override val setterRaw: (M#Raw, F) => Unit,
+    override val unsetterRaw: M#Raw => Unit,
     override val objSetter: (R, SemitypedHasPrimaryKey[F]) => Unit,
     override val objGetter: (R, UntypedMetaRecord) => Option[UntypedRecord with SemitypedHasPrimaryKey[F]],
     override val alternateObjSetter: (R, AnyRef) => Unit,
@@ -76,6 +79,7 @@ case class BitfieldFieldDescriptor[F, R <: Record[R], M <: MetaRecord[R], FR <: 
     override val owner: M,
     override val getter: R => Option[F],
     override val setterRaw: (M#Raw, F) => Unit,
+    override val unsetterRaw: M#Raw => Unit,
     override val structMeta: FM,
     override val manifest: Manifest[F]
 ) extends OptionalField[F, M] with FieldDescriptor[F, R, M] with BitfieldField[FR, FM]
