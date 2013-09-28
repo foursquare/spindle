@@ -118,10 +118,9 @@ object Default {
     } tag(Tags.Update, Tags.Network),
     ThriftCodegenPlugin.thriftCodegenBinaryLibs <<=
       (ThriftCodegenPlugin.thriftCodegenVersion, Keys.scalaBinaryVersion in ThriftCodegenPlugin.thrift)((cv, bv) =>
-        ThirdParty.jackson ++
         Seq(
-          "com.foursquare" % "common-thrift-base" % cv intransitive(),
-          "com.foursquare" % "common-thrift-json" % cv intransitive(),
+          "com.foursquare" % "common-thrift-base" % cv,
+          "com.foursquare" % "common-thrift-json" % cv,
           "com.foursquare" % ("spindle-codegen-binary_" + bv) % cv,
           "org.scalaj" % ("scalaj-collection_" + bv) % "1.5",
           "org.scala-lang" % "scala-library" % bv,
