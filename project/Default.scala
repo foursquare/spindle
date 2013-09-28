@@ -105,7 +105,7 @@ object Default {
   val thriftBootstrap = Default.scala ++ ThriftCodegenPlugin.thriftSettings ++ Seq(
     Keys.sourceDirectory in ThriftCodegenPlugin.thrift in Compile <<= (Keys.baseDirectory)(identity),
     Keys.scalaBinaryVersion in ThriftCodegenPlugin.thrift := "2.9.2",
-    ThriftCodegenPlugin.thriftCodegenVersion := "1.4.2",
+    ThriftCodegenPlugin.thriftCodegenVersion := "1.5.0",
     ThriftCodegenPlugin.thriftCodegenRuntimeLibs := ThirdParty.scalajCollection,
     ThriftCodegenPlugin.thriftCodegenTemplate := file("src/main/ssp/codegen/scala/record.ssp").absolutePath,
     Keys.ivyScala <<= (Keys.ivyScala)(_.map(_.copy(checkExplicit = false, filterImplicit = false, overrideScalaVersion =false))),
