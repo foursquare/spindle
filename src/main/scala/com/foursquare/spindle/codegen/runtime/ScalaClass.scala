@@ -2,6 +2,7 @@
 
 package com.foursquare.spindle.codegen.runtime
 
+import com.foursquare.spindle.{IndexParser, InvalidField, InvalidIndex}
 import com.twitter.thrift.descriptors.{Struct, StructProxy}
 
 class ScalaClass(
@@ -49,6 +50,38 @@ class ScalaClass(
     }
     if (badWireNames.nonEmpty) {
       throw new CodegenException("Error: illegal use of retired wire names: %s".format(badWireNames.mkString(", ")))
+    }
+  }
+
+  // Check that index annotations parse and indexed fields actually exist
+  {
+    IndexParser.parse(this.annotations) match {
+      case Left(errs) => errs.foreach {
+        case InvalidField(fieldSpecifier) =>
+          throw new CodegenException(
+            "Invalid index specifier '%s' for class %s -- must be FIELD_NAME:INDEX_TYPE".format(
+              fieldSpecifier, this.name))
+        case InvalidIndex(indexSpecifier) =>
+          throw new CodegenException(
+            "Unknown index type specifier '%s' for class %s".format(indexSpecifier, this.name))
+      }
+      case Right(indexes) =>
+        for (index <- indexes) {
+          for (indexEntry <- index) {
+            val fieldNames = indexEntry.fieldName.split('.')
+            if (fieldNames.size < 1) {
+              throw new CodegenException(
+                "Unknown field name '' in index specifier for class %s".format(this.name))
+            }
+
+            // TODO(jorge): verify subfields exist
+            val fieldName = fieldNames.head
+            if (!this.fields.exists(field => field.name == fieldName)) {
+              throw new CodegenException(
+                "Unknown field name '%s' in index specifier for class %s".format(fieldName, this.name))
+            }
+          }
+        }
     }
   }
 

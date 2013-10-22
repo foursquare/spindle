@@ -24,8 +24,8 @@ object IndexParser {
     if (data.size != 2) {
       Left(InvalidField(fieldSpec))
     } else {
-      val fieldName = data(0)
-      val indexTypeEither = data(1).toLowerCase match {
+      val fieldName = data(0).trim
+      val indexTypeEither = data(1).trim.toLowerCase match {
         case "1" | "asc" | "ascending" => Right("1")
         case "-1" | "desc" | "descending" => Right("-1")
         case "2d" | "twod" => Right("2d")

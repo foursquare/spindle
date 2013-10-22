@@ -48,8 +48,6 @@ object ${cls.name}
 #end
 \
 
-<% render("class_companion_indexlist.ssp", Map("cls" -> cls)) %>
-
   def apply(
       ${cls.fields.map(field => "%s: %s".format(field.escapedName, field.renderType.text)).mkString(",\n      ")}
   ): ${cls.name} = {
