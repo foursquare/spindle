@@ -48,3 +48,7 @@
 - Point bootstrapped codegen at local templates
 - FieldDescriptors have unsetterRaw
 - Remove scala-library deps from Java projects
+
+# 1.6.0
+
+- Add IndexParser to parse the Thrift index format
