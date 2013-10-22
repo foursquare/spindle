@@ -56,24 +56,4 @@ val indices = (for (indexSpec <- cls.annotations.getAll("index")) yield {
 
   indexEntries
 })
-
-var outerCount = 0
 %>\
-\
-  override val mongoIndexList: List[com.foursquare.index.MongoIndex[_]] = {
-    val indexBuilder = com.foursquare.index.IndexBuilder(this)
-    List[com.foursquare.index.MongoIndex[_]](
-#for (indexedFields <- indices)
-      indexBuilder.index(\
-<% var innerCount = 0 %>\
-#for (indexedField <- indexedFields)
-{ x => (x.${indexedField.field.name}${indexedField.remainder}).asInstanceOf[com.foursquare.field.Field[_, ${cls.name}.type]] }, \
-${indexedField.indexType}#if (innerCount < indexedFields.size - 1), #(else))#(end)\
-<% innerCount += 1 %>\
-#end
-#if (outerCount < (indices.size - 1)),
-      #(end)\
-<% outerCount += 1 %>\
-#end
-    )
-  }

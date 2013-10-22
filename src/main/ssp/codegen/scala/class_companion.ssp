@@ -5,8 +5,6 @@
 %>
 <%@ val cls: StructLike %>
 <%
-val isIndexed = cls.annotations.contains("index")
-
 def escapeQuotes(str: String): String = str.replace("\"", "\\\"")
 %>\
 
@@ -16,9 +14,6 @@ object ${cls.name}
     with com.foursquare.spindle.HasMetaPrimaryKey[${pkField.renderType.text}, ${cls.name}]
 #end
     with com.foursquare.spindle.RecordProvider[${cls.name}] \
-#if (isIndexed)\
-with com.foursquare.index.IndexedRecord[${cls.name}] \
-#end
 {
   override def recordName: String = "${cls.name}"
 
@@ -52,10 +47,8 @@ with com.foursquare.index.IndexedRecord[${cls.name}] \
   override def primaryKey: com.foursquare.spindle.FieldDescriptor[${pkField.renderType.text}, ${cls.name}, ${cls.name}.type] = this.${pkField.name}
 #end
 \
-#if (isIndexed)
 
 <% render("class_companion_indexlist.ssp", Map("cls" -> cls)) %>
-#end
 
   def apply(
       ${cls.fields.map(field => "%s: %s".format(field.escapedName, field.renderType.text)).mkString(",\n      ")}

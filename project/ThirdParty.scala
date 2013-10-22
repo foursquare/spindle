@@ -44,9 +44,7 @@ object ThirdParty {
   val phonenumbers = Seq(
     "com.googlecode.libphonenumber" % "libphonenumber" % "5.6")
   val rogueField = Seq(
-    "com.foursquare" %% "rogue-field" % "2.2.0")
-  val rogueIndex = Seq(
-    "com.foursquare" %% "rogue-index" % "2.2.0")
+    "com.foursquare" %% "rogue-field" % "2.2.1")
   val scalajCollection = Seq(
     "org.scalaj" %% "scalaj-collection" % "1.5")
   val scalajTime = Seq(
