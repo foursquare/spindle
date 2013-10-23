@@ -66,20 +66,21 @@ class ScalaClass(
             "Unknown index type specifier '%s' for class %s".format(indexSpecifier, this.name))
       }
       case Right(indexes) =>
-        for (index <- indexes) {
-          for (indexEntry <- index) {
-            val fieldNames = indexEntry.fieldName.split('.')
-            if (fieldNames.size < 1) {
-              throw new CodegenException(
-                "Unknown field name '' in index specifier for class %s".format(this.name))
-            }
+        for {
+          index <- indexes
+          indexEntry <- index
+        } {
+          val fieldNames = indexEntry.fieldName.split('.')
+          if (fieldNames.size < 1) {
+            throw new CodegenException(
+              "Unknown field name '' in index specifier for class %s".format(this.name))
+          }
 
-            // TODO(jorge): verify subfields exist
-            val fieldName = fieldNames.head
-            if (!this.fields.exists(field => field.name == fieldName)) {
-              throw new CodegenException(
-                "Unknown field name '%s' in index specifier for class %s".format(fieldName, this.name))
-            }
+          // TODO(jorge): verify subfields exist
+          val fieldName = fieldNames.head
+          if (!this.fields.exists(field => field.name == fieldName)) {
+            throw new CodegenException(
+              "Unknown field name '%s' in index specifier for class %s".format(fieldName, this.name))
           }
         }
     }

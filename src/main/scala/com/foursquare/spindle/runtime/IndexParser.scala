@@ -21,7 +21,7 @@ object IndexParser {
 
   def parseField(fieldSpec: String): Either[IndexParseError, IndexDescriptorEntry] = {
     val data = fieldSpec.split(':')
-    if (data.size != 2) {
+    if (data.length != 2) {
       Left(InvalidField(fieldSpec))
     } else {
       val fieldName = data(0).trim
