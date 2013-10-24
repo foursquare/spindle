@@ -52,3 +52,9 @@
 # 1.6.0
 
 - Add IndexParser to parse the Thrift index format
+
+# 1.7.0
+
+- Remove dependency on IndexedRecord
+- Fix bug in finagle-thrift dependency resolution
+
