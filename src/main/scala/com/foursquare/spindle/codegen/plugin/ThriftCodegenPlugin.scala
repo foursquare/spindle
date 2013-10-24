@@ -30,13 +30,24 @@ object ThriftCodegenPlugin extends Plugin {
     thriftCodegenBinaryLibs <<= (thriftCodegenVersion, Keys.scalaBinaryVersion in thrift)((cv, bv) =>
         Seq("com.foursquare" % ("spindle-codegen-binary_" + bv) % cv)
     ),
-    thriftCodegenRuntimeLibs <<= (thriftCodegenVersion)(v => Seq(
-      "com.twitter" %% "finagle-thrift" % "6.3.0",
-      "com.foursquare" %% "spindle-runtime" % v,
-      "com.foursquare" % "common-thrift-base" % v,
-      "com.foursquare" % "common-thrift-json" % v,
-      "org.scalaj" %% "scalaj-collection" % "1.5"
-    ))
+    thriftCodegenRuntimeLibs <<= (thriftCodegenVersion, Keys.scalaVersion)((v, sv) => {
+      def finagleThrift(v: String): ModuleID = {
+        if (v.startsWith("2.9")) {
+          "com.twitter" % "finagle-thrift_2.9.2" % "6.3.0"
+        } else if (v.startsWith("2.10")) {
+          "com.twitter" %% "finagle-thrift" % "6.3.0"
+        } else {
+          sys.error("Unsupported Scala version for finagle-thrift")
+        }
+      }
+
+      Seq(
+        "com.foursquare" %% "spindle-runtime"    % v,
+        "com.foursquare" %  "common-thrift-base" % v,
+        "com.foursquare" %  "common-thrift-json" % v,
+        "org.scalaj"     %% "scalaj-collection"  % "1.5"
+      ) :+ finagleThrift(sv)
+    })
   ) ++ thriftSettingsIn(Compile) ++ thriftSettingsIn(Test)
 
   def thriftSettingsIn(conf: Configuration): Seq[Project.Setting[_]] =
