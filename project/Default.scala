@@ -8,7 +8,7 @@ import sbt._
 object Default {
   val all: Seq[Setting[_]] = Seq(
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
-    Keys.version := "1.5.1-SNAPSHOT",
+    Keys.version := "1.5.1",
     Keys.organization := "com.foursquare",
     Keys.publishMavenStyle := true,
     Keys.publishArtifact in Test := false,
