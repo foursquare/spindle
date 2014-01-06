@@ -8,7 +8,7 @@ import sbt._
 object Default {
   val all: Seq[Setting[_]] = Seq(
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
-    Keys.version := "1.5.0",
+    Keys.version := "1.5.1-SNAPSHOT",
     Keys.organization := "com.foursquare",
     Keys.publishMavenStyle := true,
     Keys.publishArtifact in Test := false,
@@ -69,8 +69,7 @@ object Default {
   )
 
   val scala: Seq[Setting[_]] = Default.all ++ Seq(
-    Keys.scalaVersion := "2.9.1",
-    Keys.crossScalaVersions := Seq("2.9.1", "2.9.2", "2.10.2"),
+    Keys.scalaVersion := "2.10.3",
     Keys.scalacOptions <++= (Keys.scalaVersion).map(v => {
       val opts =
         Seq(
