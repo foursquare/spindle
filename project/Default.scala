@@ -69,20 +69,10 @@ object Default {
   )
 
   val scala: Seq[Setting[_]] = Default.all ++ Seq(
-    Keys.scalaVersion := "2.9.1",
-    Keys.crossScalaVersions := Seq("2.9.1", "2.9.2", "2.10.2"),
+    Keys.scalaVersion := "2.10.2",
+    Keys.crossScalaVersions := Seq("2.10.2"),
     Keys.scalacOptions <++= (Keys.scalaVersion).map(v => {
-      val opts =
-        Seq(
-          "-deprecation",
-          "-unchecked")
-      if (v.startsWith("2.9.")) {
-        opts ++ Seq(
-          "-Ydependent-method-types",
-          "-Xfatal-warnings")
-      } else {
-        opts
-      }
+      Seq("-deprecation", "-unchecked", "-Xfatal-warnings", "-feature")
     })
   )
 
