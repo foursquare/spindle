@@ -1,13 +1,17 @@
 <%
   // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-  import com.foursquare.spindle.codegen.runtime.StructLike 
+  import com.foursquare.spindle.codegen.runtime.StructLike
 %>
 <%@ val cls: StructLike %>
   override def hashCode(): Int = {
-    val hasher = new scala.util.MurmurHash[AnyRef](0)  // We use a fixed seed, for consistency.
+    var hash: Int = 0   // We use a fixed seed, for consistency
+    var length: Int = 0
 #for (field <- cls.fields)
-    if (${field.isSetName}) hasher.append(${field.varName}.##)
+    if (${field.isSetName}) {
+      hash = scala.util.hashing.MurmurHash3.mix(hash, ${field.varName}.##)
+      length += 1
+    }
 #end
-    hasher.hash
+    scala.util.hashing.MurmurHash3.finalizeHash(hash, length)
   }

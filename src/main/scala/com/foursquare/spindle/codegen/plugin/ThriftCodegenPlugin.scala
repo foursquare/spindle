@@ -59,7 +59,7 @@ object ThriftCodegenPlugin extends Plugin {
     )
 
   private def thriftSettings0 = Seq[Project.Setting[_]](
-    thriftCodegenWorkingDir <<= (Keys.crossTarget, Keys.configuration) { (outDir, conf) => 
+    thriftCodegenWorkingDir <<= (Keys.crossTarget, Keys.configuration) { (outDir, conf) =>
       outDir / (Defaults.prefix(conf.name) + "scalate.d")
     },
     Keys.sourceManaged in thrift ~= (_ / "thrift"), // e.g. /target/scala-2.8.1.final/src_managed/main/thrift
@@ -142,7 +142,7 @@ object ThriftCodegenPlugin extends Plugin {
   ): Unit = {
     import streams.log
     val scalaFilesToDelete = (sourceManaged ** "*.scala").get
-    val scalateFilesToDelete = (workingDir ***).get
+    val scalateFilesToDelete = (workingDir.***).get
     val filesToDelete = scalaFilesToDelete ++ scalateFilesToDelete
     log.debug("Cleaning Files:\n%s".format(filesToDelete.mkString("\n")))
     if (scalaFilesToDelete.nonEmpty) {

@@ -22,7 +22,7 @@ object TTypeIntrepreter {
   val ByteBufferClass = classOf[ByteBuffer]
 
   def apply(m: Manifest[_]): (Byte, (TProtocol, Any) => Unit) = {
-    m.erasure match {
+    m.runtimeClass match {
       case BooleanClass => (
         JavaTType.BOOL,
         (o: TProtocol, x: Any) => o.writeBool(x.asInstanceOf[Boolean])
@@ -86,13 +86,13 @@ object TTypeIntrepreter {
           o.writeSetEnd
         })
       }
-      case _ if manifest[Enum[_]].erasure.isAssignableFrom(m.erasure) => (
+      case _ if manifest[Enum[_]].runtimeClass.isAssignableFrom(m.runtimeClass) => (
         JavaTType.ENUM,
         (o: TProtocol, x: Any) => {
           o.writeString(x.asInstanceOf[Enum[_]].name)
         }
       )
-      case _ if manifest[TBase[_, _]].erasure.isAssignableFrom(m.erasure) => (
+      case _ if manifest[TBase[_, _]].runtimeClass.isAssignableFrom(m.runtimeClass) => (
         JavaTType.STRUCT,
         (o: TProtocol, x: Any) => {
           val tbase = x.asInstanceOf[TBase[_, _] with Record[_]]
@@ -102,7 +102,7 @@ object TTypeIntrepreter {
       // TODO(dan): ObjectId, DateTime and all the other enhanced fields.
       case _ => (
         JavaTType.VOID,
-        (o: TProtocol, x: Any) => throw new TException("Unsupported type: " + m.erasure.getName)
+        (o: TProtocol, x: Any) => throw new TException("Unsupported type: " + m.runtimeClass.getName)
       )
     }
   }
