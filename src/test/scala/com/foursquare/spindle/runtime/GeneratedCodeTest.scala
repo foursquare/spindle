@@ -119,21 +119,29 @@ class GeneratedCodeTest {
     assertFalse(tvListingEntry1.equals(null))
     assertFalse(tvListingEntry1.equals(new Object()))
     assertTrue(tvListingEntry1.equals(tvListingEntry2))
+    assertTrue(tvListingEntry1.hashCode == tvListingEntry2.hashCode)
+    assertTrue(tvListingEntry1.## == tvListingEntry2.##)
 
     tvListingEntry1.startTime = "2012-01-18 20:00:01"
     assertFalse(tvListingEntry1.equals(tvListingEntry2))
     tvListingEntry2.startTime = "2012-01-18 20:00:01"
     assertTrue(tvListingEntry1.equals(tvListingEntry2))
+    assertTrue(tvListingEntry1.hashCode == tvListingEntry2.hashCode)
+    assertTrue(tvListingEntry1.## == tvListingEntry2.##)
 
     tvListingEntry1.endTimeUnset()
     assertFalse(tvListingEntry1.equals(tvListingEntry2))
     tvListingEntry2.endTimeUnset()
     assertTrue(tvListingEntry1.equals(tvListingEntry2))
+    assertTrue(tvListingEntry1.hashCode == tvListingEntry2.hashCode)
+    assertTrue(tvListingEntry1.## == tvListingEntry2.##)
 
     tvListingEntry2.content = null
     assertFalse(tvListingEntry1.equals(tvListingEntry2))
     tvListingEntry1.content = null
     assertTrue(tvListingEntry1.equals(tvListingEntry2))
+    assertTrue(tvListingEntry1.hashCode == tvListingEntry2.hashCode)
+    assertTrue(tvListingEntry1.## == tvListingEntry2.##)
   }
 
   @Test
@@ -207,6 +215,8 @@ class GeneratedCodeTest {
     val trans = doWrite(new TReadableJSONProtocol.Factory(), tvListingEntry)
     val actual = JsonPrettyPrinter.prettify(trans.toString("UTF8"))
     assertEquals(expected, actual)
+    assertEquals(expected.hashCode, actual.hashCode)
+    assertEquals(expected.##, actual.##)
   }
 
   @Test
