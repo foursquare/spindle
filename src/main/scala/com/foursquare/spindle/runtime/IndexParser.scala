@@ -29,6 +29,7 @@ object IndexParser {
         case "1" | "asc" | "ascending" => Right("1")
         case "-1" | "desc" | "descending" => Right("-1")
         case "2d" | "twod" => Right("2d")
+        case "hashed" => Right("hashed")
         case indexSpecifier => Left(InvalidIndex(indexSpecifier))
       }
 
