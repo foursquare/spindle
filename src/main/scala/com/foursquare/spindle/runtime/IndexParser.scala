@@ -29,7 +29,9 @@ object IndexParser {
         case "1" | "asc" | "ascending" => Right("1")
         case "-1" | "desc" | "descending" => Right("-1")
         case "2d" | "twod" => Right("2d")
+        case "2dsphere" => Right("2dsphere")
         case "hashed" => Right("hashed")
+        case "text" => Right("text")
         case indexSpecifier => Left(InvalidIndex(indexSpecifier))
       }
 
