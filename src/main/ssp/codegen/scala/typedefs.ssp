@@ -24,3 +24,22 @@ object ${baseName}Typedefs {
 #end
 #end
 }
+
+object ${baseName}TypedefImplicits {
+#for (typedef <- typedefs)
+#if (typedef.newType)
+#if (typedef.renderType.boxedText == "org.bson.types.ObjectId")
+  implicit def stringTo${typedef.typeAlias}(x: String): ${baseName}Typedefs.${typedef.typeAlias} =
+    ${baseName}Typedefs.${typedef.typeAlias}(new org.bson.types.ObjectId(x))
+#elseif (typedef.renderType.boxedText == "String")
+  implicit def stringTo${typedef.typeAlias}(x: String): ${baseName}Typedefs.${typedef.typeAlias} =
+    ${baseName}Typedefs.${typedef.typeAlias}(x)
+#elseif (typedef.renderType.boxedText == "java.lang.Long")
+  implicit def intTo${typedef.typeAlias}(x: Int): ${baseName}Typedefs.${typedef.typeAlias} =
+    ${baseName}Typedefs.${typedef.typeAlias}(new java.lang.Long(x))
+  implicit def longTo${typedef.typeAlias}(x: Long): ${baseName}Typedefs.${typedef.typeAlias} =
+    ${baseName}Typedefs.${typedef.typeAlias}(long2Long(x))
+#end
+#end
+#end
+}

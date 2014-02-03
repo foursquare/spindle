@@ -8,6 +8,7 @@ import com.foursquare.thriftexample.{Content, TvListingEntry}
 import com.foursquare.thriftexample.av.Movie
 import com.foursquare.thriftexample.people.{ContactInfo, Gender, Person, PhoneNumber, PhoneType}
 import com.foursquare.thriftexample.talent.{Actor, CrewMember}
+import com.foursquare.thriftexample.TvlistingTypedefs.{MyLong, MyObjectId, MyString}
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import org.apache.thrift.protocol.{TBinaryProtocol, TProtocolFactory}
 import org.apache.thrift.transport.{TMemoryBuffer, TTransport}
@@ -233,5 +234,54 @@ class GeneratedCodeTest {
     TvListingEntry.startTime.unsetterRaw(e)
     assertEquals(e.startTimeOption, None)
     assertEquals(TvListingEntry.startTime.getter(e), None)
+  }
+
+  /* this test should just compile */
+  @Test
+  def testIds {
+    def takesObjectId(x: ObjectId) {}
+    def takesString(x: String) {}
+    def takesLong(x: Long) {}
+    def takesMyObjectId(x: MyObjectId) {}
+    def takesMyString(x: MyString) {}
+    def takesMyLong(x: MyLong) {}
+
+    val oid = new ObjectId
+    val oidStr = oid.toString
+    val sid = "1"
+    val lid = 1L
+
+    takesObjectId(MyObjectId(oid))
+    takesString(MyString(sid))
+    takesLong(MyLong(lid))
+
+    takesMyObjectId(MyObjectId(oid))
+    takesMyString(MyString(sid))
+    takesMyLong(MyLong(lid))
+
+    assertTrue(true)
+  }
+
+  /* this test should just compile */
+  @Test
+  def testIdImplicits {
+    import com.foursquare.thriftexample.TvlistingTypedefImplicits._
+
+    def takesMyObjectId(x: MyObjectId) {}
+    def takesMyString(x: MyString) {}
+    def takesMyLong(x: MyLong) {}
+
+    val oid = new ObjectId
+    val oidStr = oid.toString
+    val sid = "1"
+    val lid = 1L
+    val iid = 1
+
+    takesMyObjectId(oidStr)
+    takesMyString(sid)
+    takesMyLong(lid)
+    takesMyLong(iid)
+
+    assertTrue(true)
   }
 }

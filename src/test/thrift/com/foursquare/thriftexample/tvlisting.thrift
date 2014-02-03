@@ -5,6 +5,12 @@ include "com/foursquare/thriftexample/av/movie.thrift"
 
 typedef string DateTime // String in the format YYYY-MM-DD HH:MM:SS
 
+// newtype test
+typedef binary (enhanced_types="bson:ObjectId") ObjectId
+typedef ObjectId MyObjectId (new_type="true")
+typedef string MyString (new_type="true")
+typedef i64 MyLong (new_type="true")
+
 union Content {
   1: optional tv.TvShowEpisode show
   2: optional movie.Movie movie
@@ -17,5 +23,3 @@ struct TvListingEntry {
 }
 
 typedef list<TvListingEntry> TvListing
-
-
