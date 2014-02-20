@@ -58,3 +58,6 @@
 - Remove dependency on IndexedRecord
 - Fix bug in finagle-thrift dependency resolution
 
+# 1.7.1
+
+- local copy of MurmurHash
