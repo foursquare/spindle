@@ -47,9 +47,10 @@ trait ${cls.name}
 #end
 }
 
-
-<% render("class_traits_proxyt.ssp", Map("cls" -> cls)) %>
-
 <% render("class_traits_mutablet.ssp", Map("cls" -> cls)) %>
 
+#if (cls.generateProxy)
+<% render("class_traits_proxyt.ssp", Map("cls" -> cls)) %>
 <% render("class_traits_mutable_proxyt.ssp", Map("cls" -> cls)) %>
+#end
+

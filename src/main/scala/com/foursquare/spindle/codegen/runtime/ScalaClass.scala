@@ -32,6 +32,8 @@ class ScalaClass(
       new ScalaField(field, resolver, isPrimaryKey, isForeignKey)
     }
 
+  override val generateProxy = annotations.contains("generate_proxy")
+
   // Check that no retired_ids or retired_wire_names are being used in
   {
     // In an extra scope to prevent these vals from being public on the class
