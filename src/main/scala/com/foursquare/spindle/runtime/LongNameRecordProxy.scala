@@ -83,7 +83,7 @@ object TTypeIntrepreter {
           val xs = x.asInstanceOf[Map[_, _]]
           o.writeMapBegin(new TMap(ttypeKey, ttypeValue, xs.size))
           xs.foreach(x => {fnKey(o, x._1); fnValue(o, x._2)} )
-          o.writeSetEnd
+          o.writeMapEnd
         })
       }
       case _ if manifest[Enum[_]].erasure.isAssignableFrom(m.erasure) => (

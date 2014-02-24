@@ -164,40 +164,43 @@ class GeneratedCodeTest {
       "id" : "ObjectId(\"522e3e9f4b90871874292b48\")",
       "name" : "Dodgeball: A True Underdog Story",
       "lengthMinutes" : 92,
-      "cast" : [ "Peter La Fleur", {
-        "details" : {
-          "firstName" : "Vince",
-          "lastName" : "Vaughn",
-          "gender" : 1,
-          "contacts" : [ {
-            "email" : "vincevaughn@fake.com"
-          } ]
+      "cast" : {
+        "Peter La Fleur" : {
+          "details" : {
+            "firstName" : "Vince",
+            "lastName" : "Vaughn",
+            "gender" : 1,
+            "contacts" : [ {
+              "email" : "vincevaughn@fake.com"
+            } ]
+          },
+          "agentDetails" : {
+            "firstName" : "Ari",
+            "lastName" : "Gold",
+            "gender" : 1,
+            "contacts" : [ {
+              "phone" : {
+                "countryCode" : 1,
+                "areaCode" : 212,
+                "number" : 5557345,
+                "phoneType" : 2
+              }
+            }, {
+              "email" : "arig@fake.com"
+            } ]
+          }
         },
-        "agentDetails" : {
-          "firstName" : "Ari",
-          "lastName" : "Gold",
-          "gender" : 1,
-          "contacts" : [ {
-            "phone" : {
-              "countryCode" : 1,
-              "areaCode" : 212,
-              "number" : 5557345,
-              "phoneType" : 2
-            }
-          }, {
-            "email" : "arig@fake.com"
-          } ]
+        "Kate Veatch" : {
+          "details" : {
+            "firstName" : "Christine",
+            "lastName" : "Taylor",
+            "gender" : 2,
+            "contacts" : [ {
+              "email" : "ctaylor@evenfaker.com"
+            } ]
+          }
         }
-      }, "Kate Veatch", {
-        "details" : {
-          "firstName" : "Christine",
-          "lastName" : "Taylor",
-          "gender" : 2,
-          "contacts" : [ {
-            "email" : "ctaylor@evenfaker.com"
-          } ]
-        }
-      } ],
+      },
       "crew" : [ {
         "details" : {
           "firstName" : "Rawson",

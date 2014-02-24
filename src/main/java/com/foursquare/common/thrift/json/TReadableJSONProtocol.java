@@ -240,7 +240,7 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   @Override
   public void writeMapBegin(TMap tMap) throws TException {
     try {
-      jg.writeStartArray();
+      jg.writeStartObject();
     } catch (IOException e) {
       wrapIOException(e);
     }
@@ -249,7 +249,7 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   @Override
   public void writeMapEnd() throws TException {
     try {
-      jg.writeEndArray();
+      jg.writeEndObject();
     } catch (IOException e) {
       wrapIOException(e);
     }
@@ -348,7 +348,17 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   @Override
   public void writeString(String s) throws TException {
     try {
-      jg.writeString(s);
+      // Jackson's JsonGenerator requires that we know the difference between
+      // outputting a string value and outputting a string that's the key in a
+      // thrift map, but TProtocol uses writeString for both of these.
+      //
+      // VOODOO MAGIC: We're about to write a map field's key iff we're in an
+      // object context and the current "name" (aka key) isn't set.
+      if (jg.getOutputContext().inObject() && jg.getOutputContext().getCurrentName() == null) {
+        jg.writeFieldName(s);
+      } else {
+        jg.writeString(s);
+      }
     } catch (IOException e) {
       wrapIOException(e);
     }
