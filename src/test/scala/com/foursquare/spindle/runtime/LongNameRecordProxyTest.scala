@@ -35,7 +35,7 @@ class LongNameRecordProxyText {
     proxy.write(protocol.getProtocol(transport))
     val bytes = baos.toByteArray
 
-    val expected = """{"aBool":true,"aByte":120,"anI16":30000,"anI32":7654321,"anI64":987654321,"aDouble":0.57,"aString":"hello, world","aBinary":"AQIDBAU=","aStruct":{"aString":"hi","anInt":5},"aSet":["foo","bar","baz"],"aList":[4,8,15,16,23,42],"aMap":["uno",{"aString":"one","anInt":1},"dos",{"aString":"two","anInt":2}],"anEnum":"One"}"""
+    val expected = """{"aBool":true,"aByte":120,"anI16":30000,"anI32":7654321,"anI64":987654321,"aDouble":0.57,"aString":"hello, world","aBinary":"AQIDBAU=","aStruct":{"aString":"hi","anInt":5},"aSet":["foo","bar","baz"],"aList":[4,8,15,16,23,42],"aMap":{"uno":{"aString":"one","anInt":1},"dos":{"aString":"two","anInt":2}},"anEnum":"One"}"""
     assertEquals(new String(bytes, "UTF-8"), expected)
   }
 }
