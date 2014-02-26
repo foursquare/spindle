@@ -43,6 +43,7 @@
     if (${field.isSetName} && ${field.varName}AlternateObj != null) {
       Some(${field.varName}AlternateObj)
     } else {
+      com.foursquare.spindle.RuntimeHelpers.fkHooks.missingAlternateObj(this, this.meta.${field.escapedName}, meta, ${field.name}OrThrow)
       ${field.varName}AlternateObj = null
       None
     }

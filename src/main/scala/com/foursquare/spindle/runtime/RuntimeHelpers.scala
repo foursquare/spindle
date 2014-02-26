@@ -27,6 +27,17 @@ object RuntimeHelpers {
         fieldValue: F
     ): Option[FR]
 
+    def missingAlternateObj[
+        F,
+        R <: Record[R],
+        M <: MetaRecord[R]
+    ](
+        record: R,
+        field: ForeignKeyFieldDescriptor[F, R, M],
+        foreignMeta: AnyRef,
+        fieldValue: F
+    ): Option[AnyRef]
+
     def mismatchedInstanceType[
         F,
         R <: Record[R],
@@ -54,7 +65,7 @@ object RuntimeHelpers {
     ): Option[FR]
   }
 
-  object NoopForeignKeyHooks extends ForeignKeyHooks {
+  class DefaultForeignKeyHooks extends ForeignKeyHooks {
     override def missingKey[
         F,
         R <: Record[R],
@@ -77,6 +88,17 @@ object RuntimeHelpers {
         foreignMeta: MetaRecord[FR],
         fieldValue: F
     ): Option[FR] = None
+
+    def missingAlternateObj[
+        F,
+        R <: Record[R],
+        M <: MetaRecord[R]
+    ](
+        record: R,
+        field: ForeignKeyFieldDescriptor[F, R, M],
+        foreignMeta: AnyRef,
+        fieldValue: F
+    ): Option[AnyRef] = None
 
     override def mismatchedInstanceType[
         F,
@@ -104,6 +126,8 @@ object RuntimeHelpers {
         foreignRecord: FR
     ): Option[FR] = None
   }
+
+  object NoopForeignKeyHooks extends DefaultForeignKeyHooks
 
   var fkHooks: ForeignKeyHooks = NoopForeignKeyHooks
 }
