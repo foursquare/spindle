@@ -11,4 +11,5 @@ trait StructLike extends HasAnnotations {
   val tstructName = name.toUpperCase + "_DESC"
   def primaryKeyField: Option[ScalaField] = None
   def isException: Boolean = false
+  def generateProxy: Boolean = true
 }
