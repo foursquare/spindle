@@ -8,6 +8,7 @@ Pre-release checklist:
         [ ] Add the features listed in CHANGELOG.md to the "Major changes in ..." section
   [ ] Remove the "-SNAPSHOT" from the version** in Default.scala
   [ ] Remove the "-SNAPSHOT" from the version** in ThriftCodegenPlugin.scala
+  [ ] Bump thriftCodegenVersion in Default.thriftBootstrap to the LAST released version
   [ ] Reload sbt
   [ ] Run "; +all/clean; +all/test" in sbt to make sure everything works.
   [ ] Run "+publishable/publish-local"

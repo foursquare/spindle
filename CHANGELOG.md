@@ -61,3 +61,13 @@
 # 1.7.1
 
 - local copy of MurmurHash
+
+# 1.8.0
+
+- Support for hashed, 2dsphere and text indices (leothekim)
+- Map support in TReadableJSONProtocol (paperstreet)
+- TBSONProtocol improvements (benjyw)
+- Unknown field handling for forwards-compatibility (benjyw)
+- Codegen newtype implicits (jliszka)
+- Groundwork for optional proxy generation (jliszka)
+- Hooks for alternateFk (jliszka)

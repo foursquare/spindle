@@ -25,12 +25,17 @@ configured to use those.
 
 ## Releases
 
-The latest release is 1.7.1. See the [changelog](https://github.com/foursquare/spindle/blob/master/CHANGELOG.md) for more details.
+The latest release is 1.8.0. See the [changelog](https://github.com/foursquare/spindle/blob/master/CHANGELOG.md) for more details.
 
-Major changes in 1.7.x:
+Major changes in 1.8.x:
 
-- Remove dependency on IndexedRecord
-- Fix bug in finagle-thrift dependency resolution
+- Support for hashed, 2dsphere and text indices
+- Map support in TReadableJSONProtocol
+- TBSONProtocol improvements
+- Unknown field handling for forwards-compatibility
+- Codegen newtype implicits
+- Groundwork for optional proxy generation
+- Hooks for alternateFk
 
 ## Dependencies
 
