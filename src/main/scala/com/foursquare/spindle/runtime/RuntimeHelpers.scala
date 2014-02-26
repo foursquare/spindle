@@ -34,7 +34,6 @@ object RuntimeHelpers {
     ](
         record: R,
         field: ForeignKeyFieldDescriptor[F, R, M],
-        foreignMeta: AnyRef,
         fieldValue: F
     ): Option[AnyRef]
 
@@ -89,14 +88,13 @@ object RuntimeHelpers {
         fieldValue: F
     ): Option[FR] = None
 
-    def missingAlternateObj[
+    override def missingAlternateObj[
         F,
         R <: Record[R],
         M <: MetaRecord[R]
     ](
         record: R,
         field: ForeignKeyFieldDescriptor[F, R, M],
-        foreignMeta: AnyRef,
         fieldValue: F
     ): Option[AnyRef] = None
 
