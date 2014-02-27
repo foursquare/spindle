@@ -18,7 +18,7 @@ object CodegenUtil {
     // from HasPrimaryKey.scala
     "primaryKey",
     // from class.mk
-    "_Fields", "idToTFieldIdEnum", "apply", "Builder", "newBuilder", "copy", "mutableCopy", "validate",
+    "_Fields", "idToTFieldIdEnum", "apply", "Builder", "newBuilder", "copy", "mutableCopy", 
     "getSetFields", "Id", "result", "resultMutable",
     // from Ordered.scala/Comparable.java
     "compare", "compareTo",
