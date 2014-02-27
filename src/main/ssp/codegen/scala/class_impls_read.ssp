@@ -39,5 +39,4 @@
       wire_field_header = iprot.readFieldBegin()
     } // end while
     iprot.readStructEnd()
-    validate()
   }
