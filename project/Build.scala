@@ -38,7 +38,7 @@ object SpindleBuild extends Build {
   lazy val runtime =
     Project(
       id = "spindle-runtime",
-      base = file("src/main/scala/com/foursquare/spindle/runtime"))
+      base = file("src/main/scala/com/foursquare/spindle/runtime")) dependsOn(thriftBase, thriftBson, thriftJson)
   lazy val thriftDescriptors =
     Project(
       id = "thrift-descriptors",
