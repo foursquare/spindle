@@ -4,3 +4,5 @@ BUILD
 .scalate.d/
 project/sbt-launch-*.jar
 target/
+.idea
+*.iml
