@@ -291,7 +291,7 @@ public class TBSONObjectProtocol extends TProtocol {
 
   @Override
   public void writeI16(short i) throws TException {
-    writeState.putValue((int)i);  // BSON has no native byte type, so we use an int32.
+    writeState.putValue((int)i);  // BSON has no native short type, so we use an int32.
   }
 
   @Override
@@ -458,7 +458,19 @@ public class TBSONObjectProtocol extends TProtocol {
   @Override
   public String readString() throws TException {
     try {
-      return (String)readState.getNextItem();
+      Object item = readState.getNextItem();
+      if (item instanceof String) {
+        return (String)item;
+      } else if (item instanceof byte[]) {
+        // A string field unknown to an older version of a struct will be serialized as binary.
+        try {
+          return new String((byte[])item, "UTF8");
+        } catch (UnsupportedEncodingException e) {
+          throw new TException(e);
+        }
+      } else {
+        throw new TException("Can't convert type to String: " + item.getClass().getName());
+      }
     } catch (ClassCastException e) {
       throw new TException("Expected String value.");
     }
@@ -474,7 +486,7 @@ public class TBSONObjectProtocol extends TProtocol {
       bin = (byte[])item;
     } else if (item instanceof String) {
       // Thrift implicitly expects to be able to read strings as binary where needed. This capability is used
-      // in TProtocolUtil.skip() when skipping over string fields.
+      // in TProtocolUtil.skip() and when reading unknown string fields.
       try {
         bin = ((String)item).getBytes("UTF8");
       } catch (UnsupportedEncodingException e) {
