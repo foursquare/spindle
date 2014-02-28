@@ -3,7 +3,6 @@
 package com.foursquare.common.thrift.json;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.ByteBuffer;
@@ -11,10 +10,6 @@ import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
-import com.foursquare.common.thrift.base.SerializeDatesAsSeconds;
-import com.foursquare.common.thrift.base.EnhancedTField;
-import com.foursquare.common.thrift.base.TTransportInputStream;
-import com.foursquare.common.thrift.base.TTransportOutputStream;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TField;
 import org.apache.thrift.protocol.TList;
@@ -38,6 +33,11 @@ import org.codehaus.jackson.io.SerializedString;
 import org.codehaus.jackson.util.DefaultPrettyPrinter;
 import org.codehaus.jackson.util.TokenBuffer;
 
+import com.foursquare.common.thrift.base.EnhancedTField;
+import com.foursquare.common.thrift.base.SerializeDatesAsSeconds;
+import com.foursquare.common.thrift.base.TTransportInputStream;
+import com.foursquare.common.thrift.base.TTransportOutputStream;
+
 
 /**
  * Thrift protocol to read and write (optionally pretty) JSON.
@@ -51,8 +51,6 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   private static final short UNKNOWN_FIELD_ID = (short)-1;
   private static final byte UNKNOWN_TTYPE = TType.VOID;
   private static final TField NO_MORE_FIELDS = new TField("", TType.STOP, (short)0);
-
-  private static final String UNSUPPORTED_READ = "Read not supported";
 
   // Needed for writing and reading.
   private final JsonFactory jsonFactory;
@@ -607,30 +605,28 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   @Override
   public ByteBuffer readBinary() throws TException {
     // Read binary is often used during a skip since we didn't provide the type.
-    // Just consume a token
+    // Just consume a token.
     JsonToken value = (JsonToken)currentReadContext().getNextItem();
     if (value != JsonToken.VALUE_STRING) {
-      // Non-ObjectId binary fields are currently unimplemented.
       return null;
     }
     try {
       String strValue = currentReadContext().parser().getText();
-      if (strValue.length() < 36) {
-        // Non-ObjectId binary fields are currently unimplemented.
-        return null;
-      }
-      String objectIdRaw = strValue.substring(10, 34);
-      // Taken from ObjectId.java. (NumberFormatException handling added as a workaround.)
-      byte b[] = new byte[12];
-      for (int i = 0; i < b.length; i++){
-        try {
-          b[i] = (byte)Integer.parseInt(objectIdRaw.substring( i*2 , i*2 + 2), 16);
-        } catch (NumberFormatException e) {
-          return null;
+      if (strValue.length() == 36 && strValue.startsWith("ObjectId(\"") && strValue.endsWith("\")")) {
+        String objectIdRaw = strValue.substring(10, 34);
+        // Taken from ObjectId.java. (NumberFormatException handling added as a workaround.)
+        byte b[] = new byte[12];
+        for (int i = 0; i < b.length; i++){
+          try {
+            b[i] = (byte)Integer.parseInt(objectIdRaw.substring( i*2 , i*2 + 2), 16);
+          } catch (NumberFormatException e) {
+            return null;
+          }
         }
+        return ByteBuffer.wrap(b);
+      } else {
+        return ByteBuffer.wrap(currentReadContext().parser().getBinaryValue(Base64Variants.MIME));
       }
-      ByteBuffer bb = ByteBuffer.wrap(b);
-      return bb;
     } catch (IOException e) {
       throw new TException(e);
     }
@@ -768,7 +764,7 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   }
 
   /**
-   * A ReadContext for reading out of a json /map.
+   * A ReadContext for reading out of a json map.
    *
    */
   private static class MapReadContext extends ReadContext {
