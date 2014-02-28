@@ -4,7 +4,6 @@ package com.foursquare.common.thrift.bson;
 
 import com.mongodb.BasicDBList;
 
-import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Stack;

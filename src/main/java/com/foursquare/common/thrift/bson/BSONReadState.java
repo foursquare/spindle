@@ -2,12 +2,9 @@
 
 package com.foursquare.common.thrift.bson;
 
-import java.util.Date;
 import java.util.EmptyStackException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 
 import org.apache.thrift.TException;
@@ -17,7 +14,6 @@ import org.apache.thrift.protocol.TMap;
 import org.apache.thrift.protocol.TSet;
 import org.apache.thrift.protocol.TType;
 import org.bson.BSONObject;
-import org.bson.types.ObjectId;
 
 
 /** Tracks state while converting a BSON object into a Thrift object.
@@ -34,41 +30,13 @@ public class BSONReadState {
     abstract Object getNextItem() throws TException;
 
     // Our best guess at the ttype of the current value. If the field is unknown, this will provide enough
-    // information in order to skip the value correctly. If the field is known, we may override this with
+    // information in order to handle the value correctly. If the field is known, we may override this with
     // more specific type information (e.g., we may know that an Integer actually represents an i16).
     abstract byte valueTType() throws TException;
   }
 
   // For reading key-value pairs out of a document.
   private static class DocumentReadContext extends ReadContext {
-    // Map from final classes to corresponding TType. We can look these up quickly, without using instanceof,
-    // because we know that if an object is assignable to this class then it must be of this class.
-    private static Map<Class<?>, Byte> finalClassToTTypeMap = new HashMap<Class<?>, Byte>();
-    static {
-      finalClassToTTypeMap.put(Boolean.class, TType.BOOL);
-      finalClassToTTypeMap.put(Integer.class, TType.I32);
-      finalClassToTTypeMap.put(Long.class, TType.I64);
-      finalClassToTTypeMap.put(Double.class, TType.DOUBLE);
-      finalClassToTTypeMap.put(String.class, TType.STRING);
-      finalClassToTTypeMap.put(byte[].class, TType.STRING);
-    }
-
-    // List of non-final classes a value might be of.
-    private static class NonFinalClassToTTypeEntry {
-      public NonFinalClassToTTypeEntry(Class<?> c, byte t) { clazz = c; ttype = t; }
-      public final Class<?> clazz;
-      public final byte ttype;
-    }
-
-    private static NonFinalClassToTTypeEntry[] nonFinalClassToTType = {
-      // Note that order matters, since, e.g., BasicBSONList is a subtype of both List and BSONObject,
-      // and we want to treat it as a List here.
-      new NonFinalClassToTTypeEntry(Date.class, TType.I64),
-      new NonFinalClassToTTypeEntry(List.class, TType.LIST),
-      new NonFinalClassToTTypeEntry(ObjectId.class, TType.STRING),
-      new NonFinalClassToTTypeEntry(BSONObject.class, TType.STRUCT)
-    };
-
     // Note that the keySet is backed by the document's underlying map and will therefore be ordered.
     // Ordering is not required for correctness, but may be useful when testing.
     private Iterator<String> keyIter;
@@ -101,20 +69,7 @@ public class BSONReadState {
     }
 
     byte valueTType() throws TException {
-      Class<?> classOfCurrentValue = currentValue.getClass();
-      Byte ret = finalClassToTTypeMap.get(classOfCurrentValue);
-      if (ret == null) {
-        for (int i = 0; i < nonFinalClassToTType.length; ++i) {
-          if (nonFinalClassToTType[i].clazz.isAssignableFrom(classOfCurrentValue)) {
-            ret = nonFinalClassToTType[i].ttype;
-            break;
-          }
-        }
-      }
-      if (ret == null) {
-        throw new TException("Unknown TType for value of class " + classOfCurrentValue.getName());
-      }
-      return ret;
+      return WireType.valueTType(currentValue);
     }
   }
 
@@ -189,8 +144,20 @@ public class BSONReadState {
       BSONObject obj = (BSONObject)getNextItem();
       readContextStack.push(new DocumentReadContext(obj));
       int size = obj.keySet().size();
-      for (String key : obj.keySet()) { if (obj.get(key) == null) size--; }
-      return new TMap(UNKNOWN_TTYPE, UNKNOWN_TTYPE, size);
+      byte valueTType = UNKNOWN_TTYPE;
+      for (String key : obj.keySet()) {
+        Object value = obj.get(key);
+        if (value == null) {
+          size--;
+        } else if (valueTType == UNKNOWN_TTYPE) {
+          valueTType = WireType.valueTType(value);
+        } else if (WireType.valueTType(value) != valueTType) {
+          throw new TException(String.format("Saw two different value ttypes in a BSON 'map': %d and %d",
+              valueTType, WireType.valueTType(value)));
+        }
+      }
+      // Maps are modeled as BSON objects, which means that, when reading, the keys are always strings.
+      return new TMap(TType.STRING, valueTType, size);
     } catch (ClassCastException e) {
       throw new TException("Expected map value");
     }
@@ -201,25 +168,28 @@ public class BSONReadState {
     try {
       List<Object> list = (List<Object>)getNextItem();
       int size = list.size();
-      for (Object x : list) { if (x == null) size--; }
+      byte elementTType = UNKNOWN_TTYPE;
+      for (Object x : list) {
+        if (x == null) {
+          size--;
+        } else if (elementTType == UNKNOWN_TTYPE) {
+          elementTType = WireType.valueTType(x);
+        } else if (WireType.valueTType(x) != elementTType) {
+          throw new TException(String.format("Saw two different ttypes in a BSON list: %d and %d",
+                                             elementTType, WireType.valueTType(x)));
+        }
+      }
       readContextStack.push(new ArrayReadContext(list));
-      return new TList(UNKNOWN_TTYPE, size);
+      return new TList(elementTType, size);
     } catch (ClassCastException e) {
       throw new TException("Expected list value");
     }
   }
 
-  @SuppressWarnings("unchecked")
   TSet readSetBegin() throws TException {
-    try {
-      List<Object> list = (List<Object>)getNextItem();  // BSON has no set type, so we assume a list instead.
-      int size = list.size();
-      for (Object x : list) { if (x == null) size--; }
-      readContextStack.push(new ArrayReadContext(list));
-      return new TSet(UNKNOWN_TTYPE, size);
-    } catch (ClassCastException e) {
-      throw new TException("Expected set value");
-    }
+    // BSON has no set type, so we assume a list instead.
+    TList list = readListBegin();
+    return new TSet(list.elemType, list.size);
   }
 
   ReadContext readEnd() throws TException {
