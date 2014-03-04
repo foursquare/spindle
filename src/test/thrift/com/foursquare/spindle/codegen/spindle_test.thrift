@@ -4,10 +4,27 @@ namespace java com.foursquare.spindle.test.gen
 
 typedef binary MyBinary
 
-enum TestEnum {
+
+struct StructWithNoFields {
+}
+
+enum OldTestEnum {
+  Zero = 0
+  One = 1
+}
+
+enum NewTestEnum {
   Zero = 0
   One = 1
   Two = 2
+}
+
+struct StructWithOldEnumField {
+  1: optional OldTestEnum anEnum
+}
+
+struct StructWithNewEnumField {
+  1: optional NewTestEnum anEnum
 }
 
 struct InnerStruct {
