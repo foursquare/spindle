@@ -437,6 +437,13 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   public void readFieldEnd() throws TException {
   }
 
+  private boolean areAllElementsEqual(byte[] array) {
+    for (int i = 1; i < array.length; i++) {
+      if (array[i-1] != array[i]) return false;
+    }
+    return true;
+  }
+
   /**
    * IMPORTANT: Only string keyed maps are supported.
    **/
@@ -444,7 +451,10 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   public TMap readMapBegin() throws TException {
     MapReadContext mapContext = new MapReadContext(currentReadContext().parser());
     readContextStack.push(mapContext);
-    return new TMap(TType.STRING, UNKNOWN_TTYPE, mapContext.mapSize());
+
+    byte[] allTypes = mapContext.valueTTypes();
+    byte valueType = (allTypes.length > 0 && areAllElementsEqual(allTypes)) ? allTypes[0] : UNKNOWN_TTYPE;
+    return new TMap(TType.STRING, valueType, mapContext.mapSize());
   }
 
   @Override
@@ -452,20 +462,14 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
     popCurrentReadContext();
   }
 
-  private boolean areAllElementsEqual(byte[] array) {
-    for (int i = 1; i < array.length; i++) {
-      if (array[i-1] != array[i]) return false;
-    }
-    return true;
-  }
   @Override
   public TList readListBegin() throws TException {
     ArrayReadContext readContext = new ArrayReadContext(currentReadContext().parser());
     readContextStack.push(readContext);
 
     byte[] allTypes = readContext.tTypes();
-    byte listType = (allTypes.length > 0 && areAllElementsEqual(allTypes)) ? allTypes[0] : UNKNOWN_TTYPE;
-    return new TList(listType, readContext.listSize());
+    byte elemType = (allTypes.length > 0 && areAllElementsEqual(allTypes)) ? allTypes[0] : UNKNOWN_TTYPE;
+    return new TList(elemType, readContext.listSize());
   }
 
   /**
@@ -490,7 +494,10 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   public TSet readSetBegin() throws TException {
     ArrayReadContext readContext = new ArrayReadContext(currentReadContext().parser());
     readContextStack.push(readContext);
-    return new TSet(UNKNOWN_TTYPE, readContext.listSize());
+
+    byte[] allTypes = readContext.tTypes();
+    byte elemType = (allTypes.length > 0 && areAllElementsEqual(allTypes)) ? allTypes[0] : UNKNOWN_TTYPE;
+    return new TSet(elemType, readContext.listSize());
   }
 
   @Override
@@ -772,12 +779,23 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
     private final JsonParser bufferParser;
     private int fieldCount;
     private int valueCount;
+    private final byte[] valueTypes;
 
     MapReadContext(JsonParser jp) throws TException {
+      ArrayList<Byte> valueTypesArrayList = new ArrayList<Byte>();
       jsonParser = jp;
       JsonToken currentToken = jsonParser.getCurrentToken();
+
       if (currentToken != JsonToken.START_OBJECT) {
-        throw new TException("Map read expecting start map, got: " + currentToken);
+        // Just as in the object context, we move to the next token if it is not a start.
+        try {
+          currentToken = jsonParser.nextToken();
+        } catch (IOException e) {
+          throw new TException(e);
+        }
+        if (currentToken != JsonToken.START_OBJECT) {
+          throw new TException("Map read expecting start map, got: " + currentToken);
+        }
       }
 
       // To read a Map, we read-ahead to the end of the map and
@@ -814,6 +832,11 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
             }
             expectFieldName = false;
           } else {
+            if (level == 0 &&
+                bufferCurrentToken != JsonToken.END_ARRAY &&
+                bufferCurrentToken != JsonToken.END_OBJECT) {
+              valueTypesArrayList.add(getElemTypeFromToken(bufferCurrentToken));
+            }
             switch (bufferCurrentToken) {
               case START_OBJECT:
                 if (level == 0) valueCount++;
@@ -838,6 +861,8 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
           }
         }
 
+        valueTypes = toByteArray(valueTypesArrayList);
+
         // Set up the parser that users of this class will be reading from.
         bufferParser = buffer.asParser();
         bufferParser.nextToken(); // Skip to start array (next call to nextToken will return start)
@@ -857,6 +882,10 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
 
     int mapSize() throws TException {
       return fieldCount;
+    }
+
+    byte[] valueTTypes() {
+      return valueTypes;
     }
 
     @Override
