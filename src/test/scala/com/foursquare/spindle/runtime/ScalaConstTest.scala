@@ -1,6 +1,6 @@
 // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.spindle
+package com.foursquare.spindle.test
 
 import com.foursquare.spindle.test.gen.{ConstantineConstants, Foo}
 import org.junit.Assert.{assertEquals, assertFalse, assertTrue}

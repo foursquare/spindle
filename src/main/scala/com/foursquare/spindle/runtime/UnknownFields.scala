@@ -3,7 +3,7 @@
 package com.foursquare.spindle.runtime
 
 import org.apache.thrift.TBase
-import org.apache.thrift.protocol.{TField, TProtocol}
+import org.apache.thrift.protocol.{TField, TProtocol, TType}
 
 
 // A single unknown field, as read from the wire.
@@ -26,9 +26,13 @@ case class UnknownField(tfield: TField, value: UValue) {
 // enough information to do so. See comments on UnknownFieldsBlob for details.
 //
 // - inputProtocolName: The protocol the unknown fields are being read from.
-case class UnknownFields(inputProtocolName: String) {
-  // Unknown fields are stashed here until we need to write them out.
-  private var stash: List[UnknownField] = Nil
+// - stashList: Unknown fields are stashed here until we need to write them out.
+//
+// Note: UnknownFields don't participate in equality of the records that contain them.
+// However we do require UnknownFields to have well-defined equality for tests, which is
+// why stashList is a parameter of the case class.
+case class UnknownFields(inputProtocolName: String, private var stashList: List[UnknownField] = Nil) {
+  private def stash(uf: UnknownField) { stashList = uf :: stashList }
 
   def write(oprot: TProtocol) {
     val outputProtocolName = TProtocolInfo.getProtocolName(oprot)
@@ -53,8 +57,13 @@ case class UnknownFields(inputProtocolName: String) {
     }
   }
 
+  // A special case for when we see an unknown value in a known enum field.
+  def addUnknownEnumValue(fieldName: String, fieldId: Short, enumValue: Int) {
+    stash(UnknownField(new TField(fieldName, TType.I32, fieldId), I32UValue(enumValue)))
+  }
+
   def writeInline(oprot: TProtocol) {
-    stash.reverse foreach {
+    stashList.reverse foreach {
       field: UnknownField => {
         oprot.writeFieldBegin(field.tfield)
         field.value.write(oprot)
@@ -65,6 +74,6 @@ case class UnknownFields(inputProtocolName: String) {
 
   def readInline(iprot: TProtocol, tfield: TField) {
     val fieldVal: UValue = UValue.read(iprot, tfield.`type`)
-    this.stash = UnknownField(tfield, fieldVal) :: this.stash
+    stash(UnknownField(tfield, fieldVal))
   }
 }
