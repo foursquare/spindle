@@ -25,7 +25,7 @@ object ${baseName}Typedefs {
 #end
 }
 
-object ${baseName}TypedefImplicits {
+trait ${baseName}TypedefImplicits {
 #for (typedef <- typedefs)
 #if (typedef.newType)
 #if (typedef.renderType.boxedText == "org.bson.types.ObjectId")
@@ -43,3 +43,4 @@ object ${baseName}TypedefImplicits {
 #end
 #end
 }
+object ${baseName}TypedefImplicits extends ${baseName}TypedefImplicits
