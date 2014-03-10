@@ -372,6 +372,7 @@ object RenderType {
       case StructRef(name) => StructRenderType(name)
       case UnionRef(name) => StructRenderType(name)
       case ExceptionRef(name) => StructRenderType(name)
+      case ServiceRef(name) => throw new CodegenException("Trying to render unrenderable Service type: " + name)
       case TypedefRef(name, ref) => TypedefRenderType(name, RenderType(ref))
       case NewtypeRef(name, ref) => NewtypeRenderType(name, RenderType(ref))
       case EnhancedTypeRef(name, TypedefRef(_, ref)) => RenderType(EnhancedTypeRef(name, ref))

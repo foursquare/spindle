@@ -1,18 +1,22 @@
 <%
 // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-import com.foursquare.spindle.codegen.runtime.{RenderType, ScalaClass, ScalaFunction, ScalaService, TypeReferenceResolver}
+import com.foursquare.spindle.codegen.runtime.{RenderType, ScalaClass, ScalaFunction, ScalaService,
+  TypeReferenceResolver}
 import com.twitter.thrift.descriptors.{Annotation, Field, Requiredness, Struct}
 %>
 <%@ val service: ScalaService %>
 <%@ val resolver: TypeReferenceResolver %>
+<%
+val parentServiceName = service.parentServiceName.getOrElse("")
+%>\
 trait Has${service.name} {
   def get${service.name}: ${service.name}.ServiceIface
 }
 
 object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
 <%--  Synchronous client interface --%>
-  trait Iface #if (service.extendzIsSet && service.extendzOrThrow != "")extends ${service.extendzOrThrow}.Iface #(end){
+  trait Iface #if (parentServiceName != "")extends ${parentServiceName}.Iface #(end){
 #for (function <- service.functions)
     <% render("service_funcsig.ssp", Map("function" -> function, "resolver" -> resolver)) %>
 
@@ -20,7 +24,7 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
   }
 
 <%-- Asynchronous client interface --%>
-  trait AsyncIface #if (service.extendzIsSet && service.extendzOrThrow != "")extends ${service.extendzOrThrow}.AsyncIface #(end){
+  trait AsyncIface #if (parentServiceName != "")extends ${parentServiceName}.AsyncIface #(end){
 #for (function <- service.functions)
     <% render("service_funcsig.ssp", Map(
          "function" -> function,
@@ -33,7 +37,7 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
   }
 
 <%-- Service interface (uses com.twitter.util.Future). --%>
-  trait ServiceIface #if (service.extendzIsSet && service.extendzOrThrow != "")extends ${service.extendzOrThrow}.ServiceIface #(end){
+  trait ServiceIface #if (parentServiceName != "")extends ${parentServiceName}.ServiceIface #(end){
 #for (function <- service.functions)
     <% render("service_funcsig.ssp", Map(
          "function" -> function,
@@ -44,7 +48,7 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
   }
 
 <%-- Client implementation that can call this service. --%>
-  class Client(iprot: org.apache.thrift.protocol.TProtocol, oprot: org.apache.thrift.protocol.TProtocol) extends #if (service.extendzIsSet && service.extendzOrThrow != "")${service.extendzOrThrow}.Client#(else)org.apache.thrift.TServiceClient#(end)(iprot, oprot) with Iface {
+  class Client(iprot: org.apache.thrift.protocol.TProtocol, oprot: org.apache.thrift.protocol.TProtocol) extends #if (parentServiceName != "")${parentServiceName}.Client#(else)org.apache.thrift.TServiceClient#(end)(iprot, oprot) with Iface {
     def this(prot: org.apache.thrift.protocol.TProtocol) = this(prot, prot)
 #for (function <- service.functions)
     override <% render("service_funcsig.ssp", Map("function" -> function, "resolver" -> resolver)) %> = {
@@ -103,7 +107,7 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
       protocolFactory: org.apache.thrift.protocol.TProtocolFactory,
       clientManager: org.apache.thrift.async.TAsyncClientManager,
       transport: org.apache.thrift.transport.TNonblockingTransport
-  ) extends #if (service.extendzIsSet && service.extendzOrThrow != "")${service.extendzOrThrow}.AsyncClient#(else)org.apache.thrift.async.TAsyncClient#(end)(protocolFactory, clientManager, transport) with AsyncIface {
+  ) extends #if (parentServiceName != "")${parentServiceName}.AsyncClient#(else)org.apache.thrift.async.TAsyncClient#(end)(protocolFactory, clientManager, transport) with AsyncIface {
 #for (function <- service.functions)
 <% val argumentNames = function.argz.map(_.name) ++ Seq("resultHandler", "this", "___protocolFactory", "___transport") %>
 
@@ -172,7 +176,7 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
   class ServiceToClient(
       service: com.twitter.finagle.Service[com.twitter.finagle.thrift.ThriftClientRequest, Array[Byte]],
       protocolFactory: org.apache.thrift.protocol.TProtocolFactory
-  ) extends #if (service.extendzIsSet && service.extendzOrThrow != "")${service.extendzOrThrow}.ServiceToClient(service, protocolFactory) with ServiceIface #(else)ServiceIface#(end) {
+  ) extends #if (parentServiceName != "")${parentServiceName}.ServiceToClient(service, protocolFactory) with ServiceIface #(else)ServiceIface#(end) {
 #for (function <- service.functions)
 
     override <% render("service_funcsig.ssp", Map("function" -> function, "resolver" -> resolver,
@@ -218,7 +222,7 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
   class Processor[I <: Iface] protected (
       iface: I,
       processMap: java.util.Map[java.lang.String, org.apache.thrift.ProcessFunction[I, _ <: org.apache.thrift.TBase[_ <: org.apache.thrift.TBase[_, _], _ <: org.apache.thrift.TFieldIdEnum]]]
-  ) extends #if (service.extendzIsSet && service.extendzOrThrow != "")${service.extendzOrThrow}.Processor[I]#(else)org.apache.thrift.TBaseProcessor[I]#(end)(iface, processMap) with org.apache.thrift.TProcessor {
+  ) extends #if (parentServiceName != "")${parentServiceName}.Processor[I]#(else)org.apache.thrift.TBaseProcessor[I]#(end)(iface, processMap) with org.apache.thrift.TProcessor {
 <%-- NOTE(tdyas): Thrift compiler includes a LOGGER member here, but it appears to be unused. I omitted it. --%>
 
     def this(iface: I) = {
@@ -292,9 +296,9 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
   class Service(
       iface: ServiceIface,
       protocolFactory: org.apache.thrift.protocol.TProtocolFactory
-  ) extends #if (service.extendzIsSet && service.extendzOrThrow != "")${service.extendzOrThrow}.Service(iface, protocolFactory)#(else)com.twitter.finagle.Service[Array[Byte], Array[Byte]]#(end) with com.foursquare.spindle.ServiceDescriptor {
+  ) extends #if (parentServiceName != "")${parentServiceName}.Service(iface, protocolFactory)#(else)com.twitter.finagle.Service[Array[Byte], Array[Byte]]#(end) with com.foursquare.spindle.ServiceDescriptor {
   override def serviceName = ${service.name}.serviceName
-  override def functionDescriptors = ${service.name}.functionDescriptors
+  override def functionDescriptors: Seq[com.foursquare.spindle.FunctionDescriptor[_,_]] = ${service.name}.functionDescriptors
 
 #for (function <- service.functions)
 
@@ -390,7 +394,7 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
     }
 #end
 
-    def apply(request: Array[Byte]): com.twitter.util.Future[Array[Byte]] = {
+    override def apply(request: Array[Byte]): com.twitter.util.Future[Array[Byte]] = {
       try {
         val inputTransport = new org.apache.thrift.transport.TMemoryInputTransport(request)
         val iprot = protocolFactory.getProtocol(inputTransport)
@@ -440,8 +444,8 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
 #end
 
 <%-- Output the ServiceDescriptor and FunctionDescriptors. --%>
-  override val serviceName = "${service.name}"
-  override val functionDescriptors = Seq(
+  override val serviceName: String = "${service.name}"
+  override val functionDescriptors: Seq[com.foursquare.spindle.FunctionDescriptor[_,_]] = #if (parentServiceName != "")${parentServiceName}.functionDescriptors ++ #(end)Seq(
 <% val items = for (function <- service.functions) yield ("""    new com.foursquare.spindle.FunctionDescriptor[%s_args, %s_result] {
       override val functionName = "%s"
       override val requestMetaRecord = %s_args

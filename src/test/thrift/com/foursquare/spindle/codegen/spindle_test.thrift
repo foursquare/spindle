@@ -305,3 +305,7 @@ service TestServices {
   i32 dummy2(1: i32 A) throws (1: TestFirstException ex1, 2: TestSecondException ex2);
   i32 dummy3(1: i32 A) throws (1: TestFirstException ex1, 2: TestSecondException ex2, 3: TestThirdException ex3);
 }
+
+service ChildTestServices extends TestServices {
+  i32 dummy4(1: i32 A);
+}
