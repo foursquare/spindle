@@ -9,7 +9,7 @@
     val indenter = new org.codehaus.jackson.util.DefaultPrettyPrinter.FixedSpaceIndenter
     val pp = new org.codehaus.jackson.util.DefaultPrettyPrinter
     pp.indentObjectsWith(indenter)
-    val oprot = new com.foursquare.common.thrift.json.TReadableJSONProtocol(trans, pp)
+    val oprot = new com.foursquare.common.thrift.json.TReadableJSONProtocol(trans, pp, null, true)
     write(oprot)
     trans.toString("UTF8")
   }
