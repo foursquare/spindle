@@ -2,6 +2,7 @@
 
 package com.foursquare.common.thrift.bson;
 
+import com.foursquare.common.thrift.base.NonStringMapKeyException;
 import com.mongodb.BasicDBList;
 
 import java.util.EmptyStackException;
@@ -42,7 +43,7 @@ class BSONWriteState<B extends BSONObject> {
           currentKey = null;
         }
       } catch (ClassCastException e) {
-        throw new TException("Expected string document key but got a " + item.getClass().getName());
+        throw new NonStringMapKeyException(item);
       }
     }
   }
