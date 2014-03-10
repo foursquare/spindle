@@ -2,7 +2,7 @@
 
 package com.foursquare.spindle.runtime.test
 
-import com.foursquare.spindle.test.gen.MapWithObjectIdKeys
+import com.foursquare.spindle.test.gen.ObjectIdFields
 import org.bson.types.ObjectId
 import org.apache.thrift.TBase
 import org.apache.thrift.transport.{TTransport, TMemoryBuffer}
@@ -16,7 +16,7 @@ import org.junit.Test
 class EnhancedTypesTest {
 
   @Test
-  def testObjectIdMapKeys() {
+  def testObjectIdFields() {
     val protocols =
       KnownTProtocolNames.TBinaryProtocol ::
       KnownTProtocolNames.TCompactProtocol ::
@@ -27,19 +27,22 @@ class EnhancedTypesTest {
 
     for (tproto <- protocols) {
       println("Testing enhanced types for protocol %s".format(tproto))
-      doTestObjectIdMapKeys(tproto)
+      doTestObjectIdFields(tproto)
     }
   }
 
-  private def doTestObjectIdMapKeys(tproto: String) {
-    val m = Map(new ObjectId() -> 4.5, new ObjectId() -> 33.7)
-    val struct = MapWithObjectIdKeys.newBuilder.foo(m).result()
+  private def doTestObjectIdFields(tproto: String) {
+    val struct = ObjectIdFields.newBuilder
+      .foo(new ObjectId())
+      .bar(new ObjectId() :: new ObjectId() :: Nil)
+      .baz(Map("A" -> new ObjectId(), "B" -> new ObjectId()))
+      .result()
 
     // Write the object out.
     val buf = doWrite(tproto, struct)
 
     // Read the new object into an older version of the same struct.
-    val roundtrippedStruct = MapWithObjectIdKeys.createRawRecord.asInstanceOf[TBase[_, _]]
+    val roundtrippedStruct = ObjectIdFields.createRawRecord.asInstanceOf[TBase[_, _]]
     doRead(tproto, buf, roundtrippedStruct)
 
     assertEquals(struct, roundtrippedStruct)

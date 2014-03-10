@@ -34,6 +34,7 @@ import org.codehaus.jackson.util.DefaultPrettyPrinter;
 import org.codehaus.jackson.util.TokenBuffer;
 
 import com.foursquare.common.thrift.base.EnhancedTField;
+import com.foursquare.common.thrift.base.NonStringMapKeyException;
 import com.foursquare.common.thrift.base.SerializeDatesAsSeconds;
 import com.foursquare.common.thrift.base.TTransportInputStream;
 import com.foursquare.common.thrift.base.TTransportOutputStream;
@@ -59,6 +60,13 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   private JsonGenerator jg = null;
   private final PrettyPrinter prettyPrinter;
 
+  // If true, will convert all map keys to strings when writing them.
+  // If false, it will be a runtime error to emit map keys that are not strings.
+  // Usually this should be false. We set it to true only when using this protocol in
+  // the implementation of toString() on a struct, because there's no expectation that
+  // the result of toString() be parseable.
+  private boolean coerceMapKeys = false;
+
   // For reading.
   private JsonParser jp = null;
   private final Stack<ReadContext> readContextStack = new Stack<ReadContext>();
@@ -72,6 +80,9 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   }
 
   public TReadableJSONProtocol(TTransport trans, PrettyPrinter pp, JsonParser jp) {
+    this(trans, pp, jp, false);
+  }
+  public TReadableJSONProtocol(TTransport trans, PrettyPrinter pp, JsonParser jp, boolean coerceMapKeys) {
     super(trans);
 
     prettyPrinter = pp;
@@ -81,6 +92,7 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
     if (jp != null) {
       this.jp = jp;
     }
+    this.coerceMapKeys = coerceMapKeys;
   }
 
   public static byte getElemTypeFromToken(JsonToken token) throws TException {
@@ -157,6 +169,16 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
 
   private void wrapIOException(IOException e) throws TException {
     throw new TException("IOException: " + e.getMessage());
+  }
+
+  private void wrapIOException(IOException e, Object val) throws TException {
+    // This is a slightly hacky way to detect the non-string map key problem, but
+    // alternatives are too heavyweight.
+    if (e.getMessage().endsWith("expecting field name")) {
+      throw new NonStringMapKeyException(val);
+    } else {
+      wrapIOException(e);
+    }
   }
 
   // -----------------------------------
@@ -292,7 +314,15 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   @Override
   public void writeBool(boolean b) throws TException {
     try {
-      jg.writeBoolean(b);
+      if (isMapKey()) {
+        if (coerceMapKeys) {
+          jg.writeFieldName(Boolean.toString(b));
+        } else {
+          throw new NonStringMapKeyException(b);
+        }
+      } else {
+        jg.writeBoolean(b);
+      }
     } catch (IOException e) {
       wrapIOException(e);
     }
@@ -301,45 +331,85 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   @Override
   public void writeByte(byte b) throws TException {
     try {
-      jg.writeNumber((int)b);  // Print an int
+      if (isMapKey()) {
+        if (coerceMapKeys) {
+          jg.writeFieldName(Byte.toString(b));
+        } else {
+          throw new NonStringMapKeyException(b);
+        }
+      } else {
+        jg.writeNumber((int) b);
+      }
     } catch (IOException e) {
-      wrapIOException(e);
+      wrapIOException(e, b);
     }
   }
 
   @Override
   public void writeI16(short i) throws TException {
     try {
-      jg.writeNumber((int)i);
+      if (isMapKey()) {
+        if (coerceMapKeys) {
+          jg.writeFieldName(Short.toString(i));
+        } else {
+          throw new NonStringMapKeyException(i);
+        }
+      } else {
+        jg.writeNumber((int)i);
+      }
     } catch (IOException e) {
-      wrapIOException(e);
+      wrapIOException(e, i);
     }
   }
 
   @Override
   public void writeI32(int i) throws TException {
     try {
-      jg.writeNumber(i);
+      if (isMapKey()) {
+        if (coerceMapKeys) {
+          jg.writeFieldName(Integer.toString(i));
+        } else {
+          throw new NonStringMapKeyException(i);
+        }
+      } else {
+        jg.writeNumber(i);
+      }
     } catch (IOException e) {
-      wrapIOException(e);
+      wrapIOException(e, i);
     }
   }
 
   @Override
   public void writeI64(long l) throws TException {
     try {
-      jg.writeNumber(l);
+      if (isMapKey()) {
+        if (coerceMapKeys) {
+          jg.writeFieldName(Long.toString(l));
+        } else {
+          throw new NonStringMapKeyException(l);
+        }
+      } else {
+        jg.writeNumber(l);
+      }
     } catch (IOException e) {
-      wrapIOException(e);
+      wrapIOException(e, l);
     }
   }
 
   @Override
   public void writeDouble(double v) throws TException {
     try {
-      jg.writeNumber(v);
+      if (isMapKey()) {
+        if (coerceMapKeys) {
+          jg.writeFieldName(Double.toString(v));
+        } else {
+          throw new NonStringMapKeyException(v);
+        }
+      } else {
+        jg.writeNumber(v);
+      }
     } catch (IOException e) {
-      wrapIOException(e);
+      wrapIOException(e, v);
     }
   }
 
@@ -349,10 +419,7 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
       // Jackson's JsonGenerator requires that we know the difference between
       // outputting a string value and outputting a string that's the key in a
       // thrift map, but TProtocol uses writeString for both of these.
-      //
-      // VOODOO MAGIC: We're about to write a map field's key iff we're in an
-      // object context and the current "name" (aka key) isn't set.
-      if (jg.getOutputContext().inObject() && jg.getOutputContext().getCurrentName() == null) {
+      if (isMapKey()) {
         jg.writeFieldName(s);
       } else {
         jg.writeString(s);
@@ -363,26 +430,54 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   }
 
   @Override
-  public void writeBinary(ByteBuffer byteBuffer) throws TException {
+  public void writeBinary(ByteBuffer bb) throws TException {
     try {
-      byte[] arr = byteBuffer.array();
-      if ("ObjectId".equals(enhancedType)) {
-        StringBuilder buf = new StringBuilder(24);
-        for (int i = byteBuffer.position(); i < byteBuffer.limit(); i++) {
-          int x = arr[i] & 0xFF;
-          String s = Integer.toHexString(x);
-          if (s.length() == 1) {
-            buf.append("0");
-          }
-          buf.append(s);
+      if (isMapKey()) {
+        if (coerceMapKeys) {
+          // TODO: We assume that map keys of binary type are object ids, because
+          // those are the only such cases we have, or should ever want to have.
+          // So they will always be written as "ObjectId(...)" even if the ellipsis
+          // doesn't actually represent a 12-byte object id. We may want to
+          // revisit this in the future, but coerced map keys are only for toString()
+          // implementation anyway, so this shouldn't matter too much.
+          // Note that it's not trivial to get the enhancedType of the map keys because
+          // enhancedType is set at the field level, and the type of this field is map,
+          // not ObjectId.
+          jg.writeFieldName(toObjectIdString(bb));
+        } else {
+          throw new NonStringMapKeyException(bb);
         }
-        jg.writeString("ObjectId(\"" +  buf.toString() + "\")");
       } else {
-        jg.writeBinary(Base64Variants.MIME, arr, byteBuffer.position(), byteBuffer.remaining());
+        byte[] arr = bb.array();
+        if ("ObjectId".equals(enhancedType)) {
+          jg.writeString(toObjectIdString(bb));
+        } else {
+          jg.writeBinary(Base64Variants.MIME, arr, bb.position(), bb.remaining());
+        }
       }
     } catch (IOException e) {
-      wrapIOException(e);
+      wrapIOException(e, bb);
     }
+  }
+
+  private boolean isMapKey() {
+    // VOODOO MAGIC: We're about to write a map field's key iff we're in an
+    // object context and the current "name" (aka key) isn't set.
+    return (jg.getOutputContext().inObject() && jg.getOutputContext().getCurrentName() == null);
+  }
+
+  private String toObjectIdString(ByteBuffer bb) {
+    byte[] arr = bb.array();
+    StringBuilder buf = new StringBuilder(24);
+    for (int i = bb.position(); i < bb.limit(); i++) {
+      int x = arr[i] & 0xFF;
+      String s = Integer.toHexString(x);
+      if (s.length() == 1) {
+        buf.append("0");
+      }
+      buf.append(s);
+    }
+    return "ObjectId(\"" +  buf.toString() + "\")";
   }
 
 
