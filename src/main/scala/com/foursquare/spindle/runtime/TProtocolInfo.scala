@@ -16,7 +16,11 @@ object KnownTProtocolNames {
 // Utilities related to known TProtocol implementations.
 object TProtocolInfo {
   // Returns the name of the given protocol.
-  def getProtocolName(prot: TProtocol): String = prot.getClass.getCanonicalName
+  def getProtocolName(prot: TProtocol): String = prot.getClass.getCanonicalName match {
+    // When reading/writing from a BSON object we handle unknown fields as TBSONProtocol.
+    case "com.foursquare.common.thrift.bson.TBSONObjectProtocol" => KnownTProtocolNames.TBSONProtocol
+    case s => s
+  }
 
   // Returns true if the protocol uses precise type information and field ids on the wire.
   //
