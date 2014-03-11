@@ -71,3 +71,8 @@
 - Codegen newtype implicits (jliszka)
 - Groundwork for optional proxy generation (jliszka)
 - Hooks for alternateFk (jliszka)
+
+# 1.8.1
+
+- fix non-string map key issues in BSON/JSON protocols
+- fix for resolving TBSONObjectProtocol by string name
