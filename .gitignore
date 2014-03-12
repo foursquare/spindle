@@ -6,3 +6,4 @@ project/sbt-launch-*.jar
 target/
 .idea
 *.iml
+*.sublime-*
