@@ -12,9 +12,8 @@ trait UntypedMetaRecord {
 
 trait MetaRecord[R <: Record[R]] extends UntypedMetaRecord {
   type Self = this.type
-  type Trait = R
-  type Mutable <: Trait
-  type Raw <: Trait
+  type Mutable <: R
+  type Raw <: R
 
   def recordName: String
   def createRawRecord: Raw

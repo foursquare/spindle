@@ -19,7 +19,7 @@ object BitFieldHelpers {
     ((1 << (bitIndex + 16)) & bitfield) != 0
   }
 
-  def bitFieldToStruct(bitfield: Int, meta: MetaRecord[_]): meta.Trait = {
+  def bitFieldToStruct[R <: Record[R]](bitfield: Int, meta: MetaRecord[R]): R = {
     verifyMeta(meta, 16)
 
     val result = meta.createRawRecord
@@ -67,7 +67,7 @@ object BitFieldHelpers {
     ((1L << (bitIndex + 32)) & bitfield) != 0
   }
 
-  def longBitFieldToStruct(bitfield: Long, meta: MetaRecord[_]): meta.Trait = {
+  def longBitFieldToStruct[R <: Record[R]](bitfield: Long, meta: MetaRecord[R]): R = {
     verifyMeta(meta, 31)
 
     val result = meta.createRawRecord
@@ -104,7 +104,7 @@ object BitFieldHelpers {
     ((1 << bitIndex) & bitfield) != 0
   }
 
-  def bitFieldToStructNoSetBits(bitfield: Int, meta: MetaRecord[_]): meta.Trait = {
+  def bitFieldToStructNoSetBits[R <: Record[R]](bitfield: Int, meta: MetaRecord[R]): R = {
     verifyMeta(meta, 32)
 
     val result = meta.createRawRecord
@@ -137,7 +137,7 @@ object BitFieldHelpers {
     ((1L << bitIndex) & bitfield) != 0
   }
 
-  def longBitFieldToStructNoSetBits(bitfield: Long, meta: MetaRecord[_]): meta.Trait = {
+  def longBitFieldToStructNoSetBits[R <: Record[R]](bitfield: Long, meta: MetaRecord[R]): R = {
     verifyMeta(meta, 64)
 
     val result = meta.createRawRecord

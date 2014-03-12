@@ -21,7 +21,6 @@ object ${cls.name}
 
   // Record v2
   override type Self = ${cls.name}.type
-  override type Trait = ${cls.name}
   override type Mutable = Mutable${cls.name}
   override type Raw = Raw${cls.name}
 
