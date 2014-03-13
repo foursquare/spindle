@@ -162,9 +162,18 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
       this.parser = parser;
     }
 
+    private boolean coerceMapKeys() {
+      // prettyPrint should imply coerceMapKeys
+      return prettyPrint;
+    }
+
+    private PrettyPrinter prettyPrinter() {
+      return (prettyPrint ? new DefaultPrettyPrinter() : null);
+    }
+
     @Override
     public TProtocol getProtocol(TTransport trans) {
-      return new TReadableJSONProtocol(trans, (prettyPrint ? new DefaultPrettyPrinter() : null), parser);
+      return new TReadableJSONProtocol(trans, prettyPrinter(), parser, coerceMapKeys());
     }
   }
 
