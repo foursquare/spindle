@@ -3,4 +3,4 @@
 <%@ val indent: String %>
 <%@ val wrapLeft: String = "" %>
 <%@ val wrapRight: String = "" %>
-${indent}${lhs} ${wrapLeft}${renderType.text}.findByIdOrNull(iprot.readI32())${wrapRight}
+${indent}${lhs} ${wrapLeft}${renderType.text}.findByIdOrUnknown(iprot.readI32())${wrapRight}

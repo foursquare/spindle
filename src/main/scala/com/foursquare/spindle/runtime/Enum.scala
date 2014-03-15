@@ -19,6 +19,8 @@ abstract class EnumMeta[T <: Enum[T]] {
   def findByIdOrNull(id: Int): T
   def findByNameOrNull(name: String): T
 
+  def findByIdOrUnknown(id: Int): T
+
   def findById(id: Int): Option[T] = Option(findByIdOrNull(id))
   def findByName(name: String): Option[T] = Option(findByNameOrNull(name))
 
