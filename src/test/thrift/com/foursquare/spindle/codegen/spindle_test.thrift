@@ -8,25 +8,6 @@ typedef binary MyBinary
 struct StructWithNoFields {
 }
 
-enum OldTestEnum {
-  Zero = 0
-  One = 1
-}
-
-enum NewTestEnum {
-  Zero = 0
-  One = 1
-  Two = 2
-}
-
-struct StructWithOldEnumField {
-  1: optional OldTestEnum anEnum
-}
-
-struct StructWithNewEnumField {
-  1: optional NewTestEnum anEnum
-}
-
 struct InnerStruct {
   1: optional string aString
   2: optional i32 anInt

@@ -1,6 +1,6 @@
 // Copyright 2014 Foursquare Labs Inc. All Rights Reserved.
 
-package com.foursquare.spindle.runtime.test
+package com.foursquare.spindle.test
 
 import com.foursquare.spindle.test.gen.ObjectIdFields
 import org.bson.types.ObjectId
