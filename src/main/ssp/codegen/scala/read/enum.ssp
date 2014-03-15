@@ -1,11 +1,6 @@
 <%@ val renderType: com.foursquare.spindle.codegen.runtime.EnumRenderType %>
-<%@ val wireName: String %>
-<%@ val identifier: Short %>
-<%@ val varName: String %>
 <%@ val lhs: String %>
 <%@ val indent: String %>
 <%@ val wrapLeft: String = "" %>
 <%@ val wrapRight: String = "" %>
-${indent}val _enumVal = iprot.readI32()
-${indent}${lhs} ${wrapLeft}${renderType.text}.findByIdOrNull(_enumVal)${wrapRight}
-${indent}if (${varName} == null) currentUnknownFields().addUnknownEnumValue("${wireName}", ${identifier}, _enumVal)
+${indent}${lhs} ${wrapLeft}${renderType.text}.findByIdOrNull(iprot.readI32())${wrapRight}

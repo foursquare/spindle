@@ -63,8 +63,8 @@ class WireCompatibilityTest {
     testReadingUnknownField(StructWithNoFields, TestStructCollections, testStructCollections())
     testReadingUnknownField(StructWithNoFields, TestStructNestedCollections, testStructNestedCollections())
 
-    // Test that unknown values in known enum fields are preserved.
-    testReadingUnknownField(StructWithOldEnumField, StructWithNewEnumField, testEnumStruct())
+    // TODO(benjy): Test that unknown values in known enum fields are preserved.
+    // testReadingUnknownField(StructWithOldEnumField, StructWithNewEnumField, testEnumStruct())
 
     // "new" vs. "old" here mean "struct with all fields" vs. "struct without some fields".
     def testReadingUnknownField(oldMeta: MetaRecord[_], newMeta: MetaRecord[_], newObj: TBase[_, _]) {
