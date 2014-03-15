@@ -40,7 +40,7 @@ class EnumTest {
 
     // Read it back in at the same version.
     val roundtrippedEnumStruct = StructWithNewEnumField.createRawRecord.asInstanceOf[TBase[_, _]]
-    doRead(dstProtocol, buf, roundtrippedEnumStruct)
+    doRead(srcProtocol, buf, roundtrippedEnumStruct)
 
     // Check that we got what we expect.
     assertEquals(enumStruct, roundtrippedEnumStruct)
@@ -50,7 +50,7 @@ class EnumTest {
     val oldObj = StructWithOldEnumField.createRawRecord.asInstanceOf[TBase[_, _]]
     doRead(srcProtocol, buf2, oldObj)
 
-    // Write the old object back out.
+    // Write the old object back out using the other protocol.
     val oldBuf = doWrite(dstProtocol, oldObj)
 
     // Read it back into a fresh instance of the new version of the struct.
