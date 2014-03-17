@@ -228,20 +228,20 @@ class GeneratedCodeTest {
     val e = TvListingEntry.createRawRecord
 
     TvListingEntry.startTime.setterRaw(e, "2012-01-18 20:00:01")
-    assertEquals(e.startTimeOption, Some("2012-01-18 20:00:01"))
-    assertEquals(TvListingEntry.startTime.getter(e), Some("2012-01-18 20:00:01"))
-    assertEquals(e.startTimeOrThrow, "2012-01-18 20:00:01")
+    assertEquals(Some("2012-01-18 20:00:01"), e.startTimeOption)
+    assertEquals(Some("2012-01-18 20:00:01"), TvListingEntry.startTime.getter(e))
+    assertEquals("2012-01-18 20:00:01", e.startTimeOrThrow)
 
     TvListingEntry.startTime.unsetterRaw(e)
-    assertEquals(e.startTimeOption, None)
-    assertEquals(TvListingEntry.startTime.getter(e), None)
+    assertEquals(None, e.startTimeOption)
+    assertEquals(None, TvListingEntry.startTime.getter(e))
 
     try {
       e.startTimeOrThrow
       fail("OrThrow on unset field should have thrown")
     } catch {
       case ex: NullPointerException => {
-        assertEquals(ex.getMessage, "field startTime of TvListingEntry missing")
+        assertEquals("field startTime of TvListingEntry missing", ex.getMessage)
       }
     }
   }
