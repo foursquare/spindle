@@ -31,7 +31,7 @@
 #else
             if (field_header.`type` == org.apache.thrift.protocol.TType.${field.renderType.ttype.name}) {
 #end
-<% render(field.renderType.fieldReadTemplate, Map("renderType" -> field.renderType, "wireName" -> field.wireName, "identifier" -> field.identifier, "varName" -> field.varName, "lhs" -> (field.varName + " ="), "indent" -> "              ")) %>
+<% render(field.renderType.fieldReadTemplate, Map("renderType" -> field.renderType, "lhs" -> (field.varName + " ="), "indent" -> "              ")) %>
 #if (field.renderType.usesSetVar)
               ${field.isSetVar} = true
 #end

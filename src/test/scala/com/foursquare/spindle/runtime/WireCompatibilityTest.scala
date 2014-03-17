@@ -176,5 +176,8 @@ class WireCompatibilityTest {
     .mapStruct(Map[String, Map[String, InnerStruct]]("foo" -> Map[String, InnerStruct](), "bar" -> Map[String, InnerStruct]("a" -> InnerStruct("hi", 5), "b" -> InnerStruct("bye", 6))))
     .result()
 
-  private def testEnumStruct() = StructWithNewEnumField.newBuilder.anEnum(NewTestEnum.Two).result()
+  private def testEnumStruct() = StructWithNewEnumField.newBuilder
+    .anEnum(NewTestEnum.Two)
+    .anEnumList(NewTestEnum.Zero :: NewTestEnum.Two :: NewTestEnum.One :: Nil)
+    .result()
 }
