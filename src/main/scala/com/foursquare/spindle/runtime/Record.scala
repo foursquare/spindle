@@ -12,6 +12,5 @@ trait UntypedRecord {
 }
 
 trait Record[R <: Record[R]] extends UntypedRecord { self: R =>
-  type MetaT <: MetaRecord[R]
-  def meta: MetaT
+  def meta: MetaRecord[R]
 }

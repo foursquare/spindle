@@ -7,7 +7,7 @@
 trait ${cls.name}Proxy extends ${cls.name} {
   protected def underlying: ${cls.name}
 
-  override def meta: ${cls.name}.type = underlying.meta
+  override def meta = underlying.meta
 
 #for (field <- cls.fields)
 // ${field.renderType.fieldProxyTemplate}

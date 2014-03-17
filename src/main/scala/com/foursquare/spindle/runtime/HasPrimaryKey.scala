@@ -6,9 +6,8 @@ trait SemitypedHasPrimaryKey[F] {
   def primaryKey: F
 }
 
-trait HasPrimaryKey[F, R <: Record[R]] extends SemitypedHasPrimaryKey[F] 
+trait HasPrimaryKey[F, R <: Record[R]] extends SemitypedHasPrimaryKey[F]
 
 trait HasMetaPrimaryKey[F, R <: Record[R]] {
-  type Self <: MetaRecord[R]
-  def primaryKey: FieldDescriptor[F, R, Self]
+  def primaryKey: FieldDescriptor[F, R, _ <: MetaRecord[R]]
 }

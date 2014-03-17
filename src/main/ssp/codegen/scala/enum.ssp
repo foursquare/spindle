@@ -21,7 +21,7 @@ sealed abstract class ${enum.name} private (
 ) extends com.foursquare.spindle.Enum[${enum.name}] with org.apache.thrift.TEnum {
   override def toString: String = name
   override def getValue: Int = id
-  override def meta: ${enum.name}.type = ${enum.name}
+  override def meta = ${enum.name}
 }
 
 object ${enum.name} extends com.foursquare.spindle.EnumMeta[${enum.name}] {

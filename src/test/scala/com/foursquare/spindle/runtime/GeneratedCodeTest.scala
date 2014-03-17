@@ -225,6 +225,8 @@ class GeneratedCodeTest {
 
   @Test
   def testFieldSettersAndGetters() {
+    println("Testing getters and setters")
+
     val e = TvListingEntry.createRawRecord
 
     TvListingEntry.startTime.setterRaw(e, "2012-01-18 20:00:01")

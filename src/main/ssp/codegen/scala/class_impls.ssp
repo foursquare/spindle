@@ -22,7 +22,7 @@ final class Raw${cls.name}(msg: String) extends RuntimeException(msg) with Mutab
 #else
 final class Raw${cls.name} extends Mutable${cls.name} {
 #end
-  override def meta: ${cls.name}.type = ${cls.name}
+  override def meta = ${cls.name}
 
 #for (field <- cls.fields)
 <% render(field.renderType.fieldImplTemplate, Map("field" -> field, "cls" -> cls)) %>
