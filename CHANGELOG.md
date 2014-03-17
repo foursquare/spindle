@@ -76,3 +76,8 @@
 
 - fix non-string map key issues in BSON/JSON protocols
 - fix for resolving TBSONObjectProtocol by string name
+
+# 1.8.2
+
+- revert handling of unknown enum values as it requires a breaking change that we will introduce in a 2.0 release
+- TReadableJSONProtocol: handle non-string map keys when in prettyPrint mode
