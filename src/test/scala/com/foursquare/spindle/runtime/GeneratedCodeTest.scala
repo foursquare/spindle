@@ -13,7 +13,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil
 import org.apache.thrift.protocol.{TBinaryProtocol, TProtocolFactory}
 import org.apache.thrift.transport.{TMemoryBuffer, TTransport}
 import org.bson.types.ObjectId
-import org.junit.Assert.{assertEquals, assertFalse, assertTrue}
+import org.junit.Assert.{assertEquals, assertFalse, assertTrue, fail}
 import org.junit.Test
 
 
@@ -230,10 +230,20 @@ class GeneratedCodeTest {
     TvListingEntry.startTime.setterRaw(e, "2012-01-18 20:00:01")
     assertEquals(e.startTimeOption, Some("2012-01-18 20:00:01"))
     assertEquals(TvListingEntry.startTime.getter(e), Some("2012-01-18 20:00:01"))
+    assertEquals(e.startTimeOrThrow, "2012-01-18 20:00:01")
 
     TvListingEntry.startTime.unsetterRaw(e)
     assertEquals(e.startTimeOption, None)
     assertEquals(TvListingEntry.startTime.getter(e), None)
+
+    try {
+      e.startTimeOrThrow
+      fail("OrThrow on unset field should have thrown")
+    } catch {
+      case ex: NullPointerException => {
+        assertEquals(ex.getMessage, "field startTime of TvListingEntry missing")
+      }
+    }
   }
 
   /* this test should just compile */
