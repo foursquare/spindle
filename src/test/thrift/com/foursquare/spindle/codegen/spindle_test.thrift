@@ -13,6 +13,14 @@ struct InnerStruct {
   2: optional i32 anInt
 }
 
+struct InnerStructNoString {
+  2: optional i32 anInt
+}
+
+struct InnerStructNoI32 {
+  1: optional string aString
+}
+
 // A struct with a field of each type.
 
 struct TestStruct {
@@ -29,10 +37,12 @@ struct TestStruct {
   11: optional list<i32> aList
   12: optional map<string, InnerStruct> aMap
   13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
 }
 
 // Identical structs, with one field missing. Useful for testing forwards wire compatibility, that is that you can
 // read a serialized struct into an out-of-date version that's missing fields, and they are skipped correctly.
+
 struct TestStructNoBool {
   2: optional byte aByte
   3: optional i16 anI16
@@ -45,6 +55,8 @@ struct TestStructNoBool {
   10: optional set<string> aSet
   11: optional list<i32> aList
   12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
 }
 
 struct TestStructNoByte {
@@ -59,6 +71,8 @@ struct TestStructNoByte {
   10: optional set<string> aSet
   11: optional list<i32> aList
   12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
 }
 
 struct TestStructNoI16 {
@@ -73,6 +87,8 @@ struct TestStructNoI16 {
   10: optional set<string> aSet
   11: optional list<i32> aList
   12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
 }
 
 struct TestStructNoI32 {
@@ -87,6 +103,8 @@ struct TestStructNoI32 {
   10: optional set<string> aSet
   11: optional list<i32> aList
   12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
 }
 
 struct TestStructNoI64 {
@@ -101,6 +119,8 @@ struct TestStructNoI64 {
   10: optional set<string> aSet
   11: optional list<i32> aList
   12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
 }
 
 struct TestStructNoDouble {
@@ -115,6 +135,8 @@ struct TestStructNoDouble {
   10: optional set<string> aSet
   11: optional list<i32> aList
   12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
 }
 
 struct TestStructNoString {
@@ -129,6 +151,8 @@ struct TestStructNoString {
   10: optional set<string> aSet
   11: optional list<i32> aList
   12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
 }
 
 struct TestStructNoBinary {
@@ -143,6 +167,8 @@ struct TestStructNoBinary {
   10: optional set<string> aSet
   11: optional list<i32> aList
   12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
 }
 
 struct TestStructNoStruct {
@@ -157,6 +183,8 @@ struct TestStructNoStruct {
   10: optional set<string> aSet
   11: optional list<i32> aList
   12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
 }
 
 struct TestStructNoSet {
@@ -171,6 +199,8 @@ struct TestStructNoSet {
   9: optional InnerStruct aStruct
   11: optional list<i32> aList
   12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
 }
 
 struct TestStructNoList {
@@ -185,6 +215,8 @@ struct TestStructNoList {
   9: optional InnerStruct aStruct
   10: optional set<string> aSet
   12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
 }
 
 struct TestStructNoMap {
@@ -199,6 +231,74 @@ struct TestStructNoMap {
   9: optional InnerStruct aStruct
   10: optional set<string> aSet
   11: optional list<i32> aList
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
+}
+
+struct TestStructNoMyBinary {
+  1: optional bool aBool
+  2: optional byte aByte
+  3: optional i16 anI16
+  4: optional i32 anI32
+  5: optional i64 anI64
+  6: optional double aDouble
+  7: optional string aString
+  8: optional binary aBinary
+  9: optional InnerStruct aStruct
+  10: optional set<string> aSet
+  11: optional list<i32> aList
+  12: optional map<string, InnerStruct> aMap
+  14: optional list<InnerStruct> aStructList
+}
+
+struct TestStructNoStructList {
+  1: optional bool aBool
+  2: optional byte aByte
+  3: optional i16 anI16
+  4: optional i32 anI32
+  5: optional i64 anI64
+  6: optional double aDouble
+  7: optional string aString
+  8: optional binary aBinary
+  9: optional InnerStruct aStruct
+  10: optional set<string> aSet
+  11: optional list<i32> aList
+  12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+}
+
+struct TestStructInnerStructNoString {
+  1: optional bool aBool
+  2: optional byte aByte
+  3: optional i16 anI16
+  4: optional i32 anI32
+  5: optional i64 anI64
+  6: optional double aDouble
+  7: optional string aString
+  8: optional binary aBinary
+  9: optional InnerStructNoString aStruct
+  10: optional set<string> aSet
+  11: optional list<i32> aList
+  12: optional map<string, InnerStructNoString> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStructNoString> aStructList
+}
+
+struct TestStructInnerStructNoI32 {
+  1: optional bool aBool
+  2: optional byte aByte
+  3: optional i16 anI16
+  4: optional i32 anI32
+  5: optional i64 anI64
+  6: optional double aDouble
+  7: optional string aString
+  8: optional binary aBinary
+  9: optional InnerStructNoI32 aStruct
+  10: optional set<string> aSet
+  11: optional list<i32> aList
+  12: optional map<string, InnerStructNoI32> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStructNoI32> aStructList
 }
 
 struct TestStructCollections {
