@@ -34,7 +34,7 @@ object ${enum.name} extends com.foursquare.spindle.EnumMeta[${enum.name}] {
   object ${elem.name} extends ${enum.name}(${elem.value.toString}, "${elem.name}", "${alt}")
 #end
 
-  final class Unknown(id: Int) extends ${enum.name}(id, "", "")
+  final case class Unknown(override val id: Int) extends ${enum.name}(id, "?", "?")
 
   override val values: Vector[${enum.name}] =
     Vector(

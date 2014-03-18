@@ -62,7 +62,7 @@ class TypeReferenceResolver(
       case SimpleBaseType.DOUBLE => DoubleRef
       case SimpleBaseType.STRING => StringRef
       case SimpleBaseType.BINARY => BinaryRef
-      case u: SimpleBaseType.Unknown => throw new IllegalStateException("Invalid SimpleBaseType")
+      case SimpleBaseType.Unknown(id) => throw new IllegalStateException("Invalid SimpleBaseType")
     }
   }
 
