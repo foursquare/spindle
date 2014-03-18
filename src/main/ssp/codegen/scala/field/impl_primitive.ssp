@@ -1,8 +1,9 @@
 <%
   // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-  import com.foursquare.spindle.codegen.runtime.{RenderType, ScalaField}
+  import com.foursquare.spindle.codegen.runtime.{RenderType, ScalaField, StructLike}
 %>
+<%@ val cls: StructLike %>
 <%@ val field: ScalaField %>
 <%@ val renderType: RenderType = field.renderType %>
   // Field #${field.identifier} - ${field.name}
@@ -13,7 +14,7 @@
   override def ${field.name}Option: Option[${renderType.text}] = if (${field.isSetName}) Some(${field.varName}) else None
   override def ${field.name}OrDefault: ${renderType.text} = ${field.varName}
   override def ${field.name}OrNull: ${field.renderType.boxedText} = if (${field.isSetName}) ${field.varName} else null
-  override def ${field.name}OrThrow: ${field.renderType.text} = if (${field.isSetName}) ${field.varName} else throw new java.lang.NullPointerException
+  override def ${field.name}OrThrow: ${field.renderType.text} = if (${field.isSetName}) ${field.varName} else throw new java.lang.NullPointerException("field ${field.escapedName} of ${cls.name} missing")
   override def ${field.isSetName}: Boolean = ${field.isSetVar}
   override def ${field.name}Unset(): Unit = { ${field.isSetVar} = false; ${field.varName} = ${renderType.defaultText} }
 #if (field.isForeignKey)

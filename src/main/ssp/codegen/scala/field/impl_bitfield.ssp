@@ -1,10 +1,11 @@
 <%
   // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-  import com.foursquare.spindle.codegen.runtime.{BitfieldStructRenderType, ScalaField}
+  import com.foursquare.spindle.codegen.runtime.{BitfieldStructRenderType, ScalaField, StructLike}
 %>
 <%@ val field: ScalaField %>
+<%@ val cls: StructLike %>
 <%
   val renderType: BitfieldStructRenderType = field.renderType.asInstanceOf[BitfieldStructRenderType]
-  render("../" + renderType.ref.fieldImplTemplate, Map("field" -> field, "renderType" -> renderType.ref))
+  render("../" + renderType.ref.fieldImplTemplate, Map("field" -> field, "cls" -> cls, "renderType" -> renderType.ref))
 %>

@@ -13,7 +13,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil
 import org.apache.thrift.protocol.{TBinaryProtocol, TProtocolFactory}
 import org.apache.thrift.transport.{TMemoryBuffer, TTransport}
 import org.bson.types.ObjectId
-import org.junit.Assert.{assertEquals, assertFalse, assertTrue}
+import org.junit.Assert.{assertEquals, assertFalse, assertTrue, fail}
 import org.junit.Test
 
 
@@ -228,12 +228,22 @@ class GeneratedCodeTest {
     val e = TvListingEntry.createRawRecord
 
     TvListingEntry.startTime.setterRaw(e, "2012-01-18 20:00:01")
-    assertEquals(e.startTimeOption, Some("2012-01-18 20:00:01"))
-    assertEquals(TvListingEntry.startTime.getter(e), Some("2012-01-18 20:00:01"))
+    assertEquals(Some("2012-01-18 20:00:01"), e.startTimeOption)
+    assertEquals(Some("2012-01-18 20:00:01"), TvListingEntry.startTime.getter(e))
+    assertEquals("2012-01-18 20:00:01", e.startTimeOrThrow)
 
     TvListingEntry.startTime.unsetterRaw(e)
-    assertEquals(e.startTimeOption, None)
-    assertEquals(TvListingEntry.startTime.getter(e), None)
+    assertEquals(None, e.startTimeOption)
+    assertEquals(None, TvListingEntry.startTime.getter(e))
+
+    try {
+      e.startTimeOrThrow
+      fail("OrThrow on unset field should have thrown")
+    } catch {
+      case ex: NullPointerException => {
+        assertEquals("field startTime of TvListingEntry missing", ex.getMessage)
+      }
+    }
   }
 
   /* this test should just compile */

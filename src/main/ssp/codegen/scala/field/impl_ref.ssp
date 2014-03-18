@@ -1,8 +1,9 @@
 <%
   // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-  import com.foursquare.spindle.codegen.runtime.ScalaField
+  import com.foursquare.spindle.codegen.runtime.{ScalaField, StructLike}
 %>
+<%@ val cls: StructLike %>
 <%@ val field: ScalaField %>
   // Field #${field.identifier} - ${field.name}
   private var ${field.varName}: ${field.renderType.text} = ${field.renderType.defaultText}  // Underlying type: ${field.renderType.underlying.text}
@@ -17,7 +18,7 @@
   override def ${field.name}OrDefault: ${field.renderType.text} = if (${field.isSetName}) ${field.varName} else ${defaultValue}
 #end
   override def ${field.name}OrNull: ${field.renderType.text} = ${field.varName}
-  override def ${field.name}OrThrow: ${field.renderType.text} = if (${field.isSetName}) ${field.varName} else throw new java.lang.NullPointerException
+  override def ${field.name}OrThrow: ${field.renderType.text} = if (${field.isSetName}) ${field.varName} else throw new java.lang.NullPointerException("field ${field.escapedName} of ${cls.name} missing")
   override def ${field.isSetName}: Boolean = ${field.varName} != null
   override def ${field.name}Unset(): Unit = { ${field.varName} = null }
 #if (field.isForeignKey)
