@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+import org.apache.thrift.TBaseHelper;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TField;
 import org.apache.thrift.protocol.TList;
@@ -441,6 +442,7 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   @Override
   public void writeBinary(ByteBuffer bb) throws TException {
     try {
+      byte[] arr = TBaseHelper.byteBufferToByteArray(bb);
       if (isMapKey()) {
         if (coerceMapKeys) {
           // TODO: We assume that map keys of binary type are object ids, because
@@ -452,16 +454,15 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
           // Note that it's not trivial to get the enhancedType of the map keys because
           // enhancedType is set at the field level, and the type of this field is map,
           // not ObjectId.
-          jg.writeFieldName(toObjectIdString(bb));
+          jg.writeFieldName(toObjectIdString(arr));
         } else {
-          throw new NonStringMapKeyException(bb);
+          throw new NonStringMapKeyException(arr);
         }
       } else {
-        byte[] arr = bb.array();
         if ("ObjectId".equals(enhancedType)) {
-          jg.writeString(toObjectIdString(bb));
+          jg.writeString(toObjectIdString(arr));
         } else {
-          jg.writeBinary(Base64Variants.MIME, arr, bb.position(), bb.remaining());
+          jg.writeBinary(Base64Variants.MIME, arr, 0, arr.length);
         }
       }
     } catch (IOException e) {
@@ -475,10 +476,9 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
     return (jg.getOutputContext().inObject() && jg.getOutputContext().getCurrentName() == null);
   }
 
-  private String toObjectIdString(ByteBuffer bb) {
-    byte[] arr = bb.array();
+  private String toObjectIdString(byte[] arr) {
     StringBuilder buf = new StringBuilder(24);
-    for (int i = bb.position(); i < bb.limit(); i++) {
+    for (int i = 0; i < arr.length; i++) {
       int x = arr[i] & 0xFF;
       String s = Integer.toHexString(x);
       if (s.length() == 1) {

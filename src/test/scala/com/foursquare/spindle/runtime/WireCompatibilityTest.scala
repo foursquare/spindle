@@ -6,7 +6,7 @@ import com.foursquare.spindle.MetaRecord
 import com.foursquare.spindle.test.gen._
 import java.nio.ByteBuffer
 import org.apache.thrift.TBase
-import org.apache.thrift.transport.{TMemoryBuffer, TTransport}
+import org.apache.thrift.transport.{AutoExpandingBufferReadTransport, TMemoryBuffer}
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import com.foursquare.spindle.runtime.{TProtocolInfo, KnownTProtocolNames}
@@ -108,8 +108,14 @@ class WireCompatibilityTest {
     trans
   }
 
-  private def doRead(protocolName: String, trans: TTransport, thriftObj: TBase[_, _]) {
+  private def doRead(protocolName: String, buf: TMemoryBuffer, thriftObj: TBase[_, _]) {
     val protocolFactory = TProtocolInfo.getReaderFactory(protocolName)
+    // Unlike TMemoryBuffer, AutoExpandingBufferReadTransport exposes its underlying buffer, and
+    // protocols such as TBinaryProtocol take advantage of this, e.g., to return binary values
+    // as ByteBuffer wrappers around a segment of that underlying buffer instead of creating a copy.
+    // We wrap our data in AutoExpandingBufferReadTransport here to test that things work in such cases.
+    val trans = new AutoExpandingBufferReadTransport(1024, 2)
+    trans.fill(buf, buf.length)
     val iprot = protocolFactory.getProtocol(trans)
     thriftObj.read(iprot)
   }
