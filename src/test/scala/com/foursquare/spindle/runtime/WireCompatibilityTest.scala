@@ -57,6 +57,9 @@ class WireCompatibilityTest {
     testReadingUnknownTestStructField(TestStructNoSet)
     testReadingUnknownTestStructField(TestStructNoList)
     testReadingUnknownTestStructField(TestStructNoMap)
+    testReadingUnknownTestStructField(TestStructNoMyBinary)
+    testReadingUnknownTestStructField(TestStructInnerStructNoString)
+    testReadingUnknownTestStructField(TestStructInnerStructNoI32)
 
     // Test reading various structs via a struct with no fields at all, so all fields are unknown.
     testReadingUnknownField(StructWithNoFields, TestStruct, testStruct())
@@ -76,11 +79,21 @@ class WireCompatibilityTest {
       doRead(srcProtocol, newBuf, oldObj)
 
       // Write the old object back out.
-      val oldBuf = doWrite(dstProtocol, oldObj)
+      val oldBuf1 = doWrite(dstProtocol, oldObj)
+
+      // Read it back into a fresh instance of the old version of the struct.
+      val roundtrippedOldObj = oldMeta.createRawRecord.asInstanceOf[TBase[_, _]]
+      doRead(dstProtocol, oldBuf1, roundtrippedOldObj)
+
+      // Check that we got what we expect.
+      assertEquals(oldObj, roundtrippedOldObj)
+
+      // Write the old object back out.
+      val oldBuf2 = doWrite(dstProtocol, oldObj)
 
       // Read it back into a fresh instance of the new version of the struct.
       val roundtrippedNewObj = newMeta.createRawRecord.asInstanceOf[TBase[_, _]]
-      doRead(dstProtocol, oldBuf, roundtrippedNewObj)
+      doRead(dstProtocol, oldBuf2, roundtrippedNewObj)
 
       // Check that we got what we expect.
       assertEquals(newObj, roundtrippedNewObj)
@@ -114,6 +127,8 @@ class WireCompatibilityTest {
     .aSet(Set("foo", "bar", "baz"))
     .aList(List(4, 8, 15, 16, 23, 42))
     .aMap(Map("uno" -> InnerStruct("one", 1), "dos" -> InnerStruct("two", 2)))
+    .aMyBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5, 6)))
+    .aStructList(Seq(InnerStruct("hello", 4), InnerStruct("world", 2)))
     .result()
 
   private def testStructCollections() = TestStructCollections.newBuilder
