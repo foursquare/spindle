@@ -81,3 +81,7 @@
 
 - revert handling of unknown enum values as it requires a breaking change that we will introduce in a 2.0 release
 - TReadableJSONProtocol: handle non-string map keys when in prettyPrint mode
+
+# 1.8.3
+
+- fixed handling of ByteBuffers in UnknownFields read logic
