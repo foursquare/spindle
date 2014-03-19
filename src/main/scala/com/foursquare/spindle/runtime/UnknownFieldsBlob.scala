@@ -54,7 +54,7 @@ object UnknownFieldsBlob {
     unknownFields.writeInline(oprot)
     oprot.writeFieldStop()
     oprot.writeStructEnd()
-    new UnknownFieldsBlob(protocolName, ByteBuffer.wrap(java.util.Arrays.copyOf(trans.getArray, trans.length)))
+    new UnknownFieldsBlob(protocolName, ByteBuffer.wrap(trans.getArray, 0, trans.length))
   }
 
   // Reads the contents of the magic field from the wire.  Assumes the field header has
