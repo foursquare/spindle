@@ -54,7 +54,7 @@ object UnknownFieldsBlob {
     unknownFields.writeInline(oprot)
     oprot.writeFieldStop()
     oprot.writeStructEnd()
-    new UnknownFieldsBlob(protocolName, java.util.Arrays.copyOf(trans.getArray, trans.length))
+    new UnknownFieldsBlob(protocolName, ByteBuffer.wrap(java.util.Arrays.copyOf(trans.getArray, trans.length)))
   }
 
   // Reads the contents of the magic field from the wire.  Assumes the field header has
@@ -70,13 +70,13 @@ object UnknownFieldsBlob {
     iprot.readFieldBegin()  // Consume the field stop.
     iprot.readStructEnd()
 
-    new UnknownFieldsBlob(protocolName, buf.array())
+    new UnknownFieldsBlob(protocolName, buf)
   }
 }
 
 
 // A set of unknown fields, serialized as a blob using some protocol.
-class UnknownFieldsBlob(protocolName: String, contents: Array[Byte]) {
+class UnknownFieldsBlob(protocolName: String, contents: ByteBuffer) {
   // Write this blob out to the magic field.
   // Matches UnknownFieldsBlob.fromMagicField().
   def write(oprot: TProtocol) {
@@ -88,7 +88,7 @@ class UnknownFieldsBlob(protocolName: String, contents: Array[Byte]) {
     oprot.writeString(protocolName)
     oprot.writeFieldEnd()
     oprot.writeFieldBegin(UnknownFieldsBlob.unknownFieldsContents)
-    oprot.writeBinary(ByteBuffer.wrap(contents))
+    oprot.writeBinary(contents)
     oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -100,7 +100,10 @@ class UnknownFieldsBlob(protocolName: String, contents: Array[Byte]) {
   // and the rest will go into rec's unknown fields.  Matches UnknownFieldsBlob.toBlob().
   def read(rec: TBase[_, _]) {
     val iprotFactory = TProtocolInfo.getReaderFactory(protocolName)
-    val iprot = iprotFactory.getProtocol(new TMemoryInputTransport(contents))
+    val buf = contents.array
+    val pos = contents.arrayOffset + contents.position
+    val length = contents.limit - contents.position
+    val iprot = iprotFactory.getProtocol(new TMemoryInputTransport(buf, pos, length))
     // Note that this call will happen inside an outer call to rec's read().
     rec.read(iprot)
   }
