@@ -460,7 +460,7 @@ class ThriftParser extends Parser {
     }
 }
 
-class ParserException(val message: String, val file: File) extends RuntimeException(message)
+class ParserException(val message: String, val file: File) extends RuntimeException(file.getPath + ": " + message)
 
 object ThriftParser {
   private val currentRuleLabel = new DynamicVariable[String](null)
