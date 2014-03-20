@@ -71,3 +71,11 @@
 - Codegen newtype implicits (jliszka)
 - Groundwork for optional proxy generation (jliszka)
 - Hooks for alternateFk (jliszka)
+
+# 2.0.0-M1
+
+- handle unknown enum values
+- add field and record name to *OrThrow accessor exception message
+- include file name in thrift parser error message
+- codegen a trait for typedef implicits
+- scala 2.10.3

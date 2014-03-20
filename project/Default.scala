@@ -8,7 +8,7 @@ import sbt._
 object Default {
   val all: Seq[Setting[_]] = Seq(
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
-    Keys.version := "1.8.0",
+    Keys.version := "2.0.0-M1",
     Keys.organization := "com.foursquare",
     Keys.publishMavenStyle := true,
     Keys.publishArtifact in Test := false,
@@ -105,7 +105,7 @@ object Default {
   val thriftBootstrap = Default.scala ++ ThriftCodegenPlugin.thriftSettings ++ Seq(
     Keys.sourceDirectory in ThriftCodegenPlugin.thrift in Compile <<= (Keys.baseDirectory)(identity),
     Keys.scalaBinaryVersion in ThriftCodegenPlugin.thrift := "2.9.2",
-    ThriftCodegenPlugin.thriftCodegenVersion := "1.7.1",
+    ThriftCodegenPlugin.thriftCodegenVersion := "1.8.3",
     ThriftCodegenPlugin.thriftCodegenRuntimeLibs := ThirdParty.scalajCollection,
     ThriftCodegenPlugin.thriftCodegenTemplate := file("src/main/ssp/codegen/scala/record.ssp").absolutePath,
     Keys.ivyScala <<= (Keys.ivyScala)(_.map(_.copy(checkExplicit = false, filterImplicit = false, overrideScalaVersion =false))),
