@@ -11,14 +11,12 @@ trait UntypedMetaRecord {
 }
 
 trait MetaRecord[R <: Record[R]] extends UntypedMetaRecord {
-  type Self = this.type
-  type Trait = R
-  type Mutable <: Trait
-  type Raw <: Trait
+  type Mutable <: R
+  type Raw <: R
 
   def recordName: String
   def createRawRecord: Raw
-  def fields: Seq[FieldDescriptor[_, R, Self]]
+  def fields: Seq[FieldDescriptor[_, R, this.type]]
   def ifInstanceFrom(x: AnyRef): Option[R]
 }
 
