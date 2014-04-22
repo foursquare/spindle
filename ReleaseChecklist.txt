@@ -1,7 +1,9 @@
 Pre-release checklist:
 
+  [ ] Update the documentation as necessary (in docs/)
   [ ] Update CHANGELOG.md with features included in the new release
   [ ] Update README.md with latest version number
+     [ ] Update the docs URL if the minor version has changed
      [ ] Update sbt example in README.md with latest version
      [ ] Update "latest release" sentence in README.md with latest version
      [ ] Update "Major changes in ..." section in README.md
@@ -29,6 +31,8 @@ Post-release checklist:
   [ ] Commit these changes
   [ ] Push both commits to Github
   [ ] Push tags to Github with "git push origin --tags"
+  [ ] If the minor version has changed, go to Admin > Versions on readthedocs.org/projects/spindle and check the box
+      next to 'Active' for the new version
 
 
 [** A note about version numbers:
