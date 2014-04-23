@@ -19,7 +19,6 @@ object ${cls.name}
 
 <% render("class_companion_tfields.ssp", Map("cls" -> cls)) %>
 
-  // Record v2
   override type Self = ${cls.name}.type
   override type Trait = ${cls.name}
   override type Mutable = Mutable${cls.name}

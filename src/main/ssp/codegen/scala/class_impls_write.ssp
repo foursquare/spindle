@@ -9,7 +9,9 @@
       oprot.writeFieldEnd()
     }
 #end
+#if (cls.annotations.contains("preserve_unknown_fields"))
     unknownFields.reverse foreach { _.write(oprot) }
+#end
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }

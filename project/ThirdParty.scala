@@ -29,8 +29,8 @@ object ThirdParty {
     "joda-time" % "joda-time" % "2.1",
     "org.joda" % "joda-convert" % "1.2")
   val junit = Seq(
-    "junit" % "junit" % "4.10" withSources(),
-    "com.novocode" % "junit-interface" % "0.7")
+    "junit" % "junit" % "4.11" withSources(),
+    "com.novocode" % "junit-interface" % "0.10")
   val mongodb = Seq(
     "org.mongodb" % "mongo-java-driver" % "2.9.3")
   def parboiledScala(v: String) =

@@ -27,6 +27,7 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.PrettyPrinter;
 import org.codehaus.jackson.SerializableString;
 import org.codehaus.jackson.io.CharacterEscapes;
@@ -736,7 +737,14 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
         }
         return ByteBuffer.wrap(b);
       } else {
-        return ByteBuffer.wrap(currentReadContext().parser().getBinaryValue(Base64Variants.MIME));
+        try {
+          return ByteBuffer.wrap(currentReadContext().parser().getBinaryValue(Base64Variants.MIME));
+        } catch (JsonParseException e) {
+          // Read binary is often used during skip, but if we're skipping a string field,
+          // we will end up trying to parse it as a Base64 blob. So of that fails, assume
+          // we're just trying to skip the field.
+          return null;
+        }
       }
     } catch (IOException e) {
       throw new TException(e);

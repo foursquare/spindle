@@ -34,7 +34,7 @@ object UnknownFieldsBlob {
   //  - The magic name is obscure, and so unlikely to collide with a real one.
   //  - Field ids in thrift IDLs are required to be positive, so this magic id won't
   //    collide. We don't use -1 because that's occasionally used as a sentinel value.
-  val magicField = new TField("__spindle_unknown_fields_blob", TType.STRING, -2)
+  val magicField = new TField("__spindle_unknown_fields_blob", TType.STRUCT, -2)
 
   // The value of the magic field is itself a struct containing two fields: the protocol used to
   // serialize the blob, and the blob itself.

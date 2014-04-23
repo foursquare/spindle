@@ -26,13 +26,12 @@ class WireCompatibilityTest {
   @Test
   def testAllCompatibilityCombos() {
     // Test all 25 possible combinations of src and dst protocol.
-    val protocols =
-      KnownTProtocolNames.TBinaryProtocol ::
-      KnownTProtocolNames.TCompactProtocol ::
-      KnownTProtocolNames.TJSONProtocol ::
-      KnownTProtocolNames.TBSONProtocol ::
-      KnownTProtocolNames.TReadableJSONProtocol ::
-      Nil
+    val protocols = List(
+      KnownTProtocolNames.TBinaryProtocol,
+      KnownTProtocolNames.TCompactProtocol,
+      KnownTProtocolNames.TJSONProtocol,
+      KnownTProtocolNames.TBSONProtocol,
+      KnownTProtocolNames.TReadableJSONProtocol)
 
     for (src <- protocols; dst <- protocols) {
       println("Testing unknown field compatibility between: %s -> %s".format(src, dst))
@@ -41,36 +40,113 @@ class WireCompatibilityTest {
   }
 
   private def doTestUnknownFieldCompatibility(srcProtocol: String, dstProtocol: String) {
-    val obj = testStruct()
+    val s = testStruct()
+    val sNoBool = s.toBuilder.aBool(None).result()
+    val sNoUnknownFields = testStructNoUnknownFieldsTracking()
+    val sNoUnknownFieldsExceptInner = testStructNoUnknownFieldsTrackingExceptInner()
+    val sInnerStructNoUnknownFields = testStructInnerStructNoUnknownFieldsTracking()
+    val sInnerStructNoStringNoUnknownFields = testStructInnerStructNoStringNoUnknownFieldsTracking()
+    val sNoUnknownFieldsExceptInnerNoString = testStructNoUnknownFieldsTrackingExceptInnerStructNoString()
+    val sNoUnknownFieldsNoBool = sNoUnknownFields.toBuilder.aBool(None).result()
+    val sInnerStructNoString = testStructInnerStructNoString()
+    val sInnerStructNoI32 = testStructInnerStructNoI32()
+    val sNoUnknownFieldsInnerStructNoString = testStructNoUnknownFieldsTrackingInnerStructNoString()
+    val sCollections = testStructCollections()
+    val sNestedCollections = testStructNestedCollections()
 
     // Test reading via versions of the struct missing one field.
-    def testReadingUnknownTestStructField(oldMeta: MetaRecord[_]) = testReadingUnknownField(oldMeta, TestStruct, obj)
-    testReadingUnknownTestStructField(TestStructNoBool)
-    testReadingUnknownTestStructField(TestStructNoByte)
-    testReadingUnknownTestStructField(TestStructNoI16)
-    testReadingUnknownTestStructField(TestStructNoI32)
-    testReadingUnknownTestStructField(TestStructNoI64)
-    testReadingUnknownTestStructField(TestStructNoDouble)
-    testReadingUnknownTestStructField(TestStructNoString)
-    testReadingUnknownTestStructField(TestStructNoBinary)
-    testReadingUnknownTestStructField(TestStructNoStruct)
-    testReadingUnknownTestStructField(TestStructNoSet)
-    testReadingUnknownTestStructField(TestStructNoList)
-    testReadingUnknownTestStructField(TestStructNoMap)
-    testReadingUnknownTestStructField(TestStructNoMyBinary)
-    testReadingUnknownTestStructField(TestStructInnerStructNoString)
-    testReadingUnknownTestStructField(TestStructInnerStructNoI32)
+    val structsMissingOneField: List[MetaRecord[_]] = List(
+      TestStructNoBool,
+      TestStructNoByte,
+      TestStructNoI16,
+      TestStructNoI32,
+      TestStructNoI64,
+      TestStructNoDouble,
+      TestStructNoString,
+      TestStructNoBinary,
+      TestStructNoStruct,
+      TestStructNoSet,
+      TestStructNoList,
+      TestStructNoMap,
+      TestStructNoMyBinary,
+      TestStructInnerStructNoString,
+      TestStructInnerStructNoI32)
+
+    for (oldMeta <- structsMissingOneField) {
+      testReadingUnknownField(oldMeta, TestStruct, s)
+    }
 
     // Test reading various structs via a struct with no fields at all, so all fields are unknown.
-    testReadingUnknownField(StructWithNoFields, TestStruct, testStruct())
-    testReadingUnknownField(StructWithNoFields, TestStructCollections, testStructCollections())
-    testReadingUnknownField(StructWithNoFields, TestStructNestedCollections, testStructNestedCollections())
+    testReadingUnknownField(StructWithNoFields, TestStruct, s)
+    testReadingUnknownField(StructWithNoFields, TestStructCollections, sCollections)
+    testReadingUnknownField(StructWithNoFields, TestStructNestedCollections, sNestedCollections)
+
+    // Test using versions of the struct with and without unknown fields tracking enabled.
+    testReadingUnknownField(TestStructNoUnknownFieldsTracking, TestStruct, s)
+    testReadingUnknownField(TestStruct, TestStructNoUnknownFieldsTracking, sNoUnknownFields)
+    testReadingUnknownField(TestStructNoBoolNoUnknownFieldsTracking, TestStruct, s,
+      Some(sNoBool), Some(sNoBool))
+    testReadingUnknownField(TestStructNoBool, TestStructNoUnknownFieldsTracking, sNoUnknownFields,
+      Some(sNoUnknownFieldsNoBool), Some(sNoUnknownFields))
+    testReadingUnknownField(TestStructNoBoolNoUnknownFieldsTracking, TestStructNoUnknownFieldsTracking, sNoUnknownFields,
+      Some(sNoUnknownFieldsNoBool), Some(sNoUnknownFieldsNoBool))
+
+    // Test using versions of the struct with retired fields, with and without unknown fields tracking enabled.
+    testReadingUnknownField(TestStructNoBoolRetiredFields, TestStruct, s,
+      Some(sNoBool), Some(sNoBool))
+    testReadingUnknownField(TestStructNoBoolRetiredFieldsNoUnknownFieldsTracking, TestStruct, s,
+      Some(sNoBool), Some(sNoBool))
+    testReadingUnknownField(TestStructNoBoolRetiredFields, TestStructNoUnknownFieldsTracking, sNoUnknownFields,
+      Some(sNoUnknownFieldsNoBool), Some(sNoUnknownFieldsNoBool))
+    testReadingUnknownField(TestStructNoBoolRetiredFieldsNoUnknownFieldsTracking, TestStructNoUnknownFieldsTracking, sNoUnknownFields,
+      Some(sNoUnknownFieldsNoBool), Some(sNoUnknownFieldsNoBool))
+    testReadingUnknownField(TestStructInnerStructNoI32RetiredFields, TestStruct, s,
+      Some(sInnerStructNoI32), Some(sInnerStructNoI32))
+
+    // Test using versions of the struct with and without unknown fields enabled on embedded structs.
+    // 16 cases here. There are 4 independent places to enable or disable unknown fields tracking:
+    //   - new version of the struct
+    //   - inner struct of the new version of the struct
+    //   - old version of the struct
+    //   - inner struct of the old version of the struct
+    testReadingUnknownField(TestStructInnerStructNoString, TestStruct, s)
+    testReadingUnknownField(TestStructNoUnknownFieldsTrackingInnerStructNoString, TestStruct, s)
+    testReadingUnknownField(TestStructInnerStructNoStringNoUnknownFieldsTracking, TestStruct, s,
+      Some(sInnerStructNoString), Some(sInnerStructNoString))
+    testReadingUnknownField(TestStructNoUnknownFieldsTrackingInnerStructNoStringNoUnknownFieldsTracking, TestStruct, s,
+      Some(sInnerStructNoString), Some(sInnerStructNoString))
+
+    testReadingUnknownField(TestStructInnerStructNoString, TestStructNoUnknownFieldsTrackingExceptInnerStruct, sNoUnknownFieldsExceptInner)
+    testReadingUnknownField(TestStructNoUnknownFieldsTrackingInnerStructNoString, TestStructNoUnknownFieldsTrackingExceptInnerStruct, sNoUnknownFieldsExceptInner)
+    testReadingUnknownField(TestStructInnerStructNoStringNoUnknownFieldsTracking, TestStructNoUnknownFieldsTrackingExceptInnerStruct, sNoUnknownFieldsExceptInner,
+      Some(sNoUnknownFieldsExceptInnerNoString), Some(sNoUnknownFieldsExceptInnerNoString))
+    testReadingUnknownField(TestStructNoUnknownFieldsTrackingInnerStructNoStringNoUnknownFieldsTracking, TestStructNoUnknownFieldsTrackingExceptInnerStruct, sNoUnknownFieldsExceptInner,
+      Some(sNoUnknownFieldsExceptInnerNoString), Some(sNoUnknownFieldsExceptInnerNoString))
+
+    testReadingUnknownField(TestStructInnerStructNoString, TestStructInnerStructNoUnknownFieldsTracking, sInnerStructNoUnknownFields,
+      Some(sInnerStructNoStringNoUnknownFields), Some(sInnerStructNoUnknownFields))
+    testReadingUnknownField(TestStructNoUnknownFieldsTrackingInnerStructNoString, TestStructInnerStructNoUnknownFieldsTracking, sInnerStructNoUnknownFields,
+      Some(sInnerStructNoStringNoUnknownFields), Some(sInnerStructNoUnknownFields))
+    testReadingUnknownField(TestStructInnerStructNoStringNoUnknownFieldsTracking, TestStructInnerStructNoUnknownFieldsTracking, sInnerStructNoUnknownFields,
+      Some(sInnerStructNoStringNoUnknownFields), Some(sInnerStructNoStringNoUnknownFields))
+    testReadingUnknownField(TestStructNoUnknownFieldsTrackingInnerStructNoStringNoUnknownFieldsTracking, TestStructInnerStructNoUnknownFieldsTracking, sInnerStructNoUnknownFields,
+      Some(sInnerStructNoStringNoUnknownFields), Some(sInnerStructNoStringNoUnknownFields))
+
+    testReadingUnknownField(TestStructInnerStructNoString, TestStructNoUnknownFieldsTracking, sNoUnknownFields,
+      Some(sNoUnknownFieldsInnerStructNoString), Some(sNoUnknownFields))
+    testReadingUnknownField(TestStructNoUnknownFieldsTrackingInnerStructNoString, TestStructNoUnknownFieldsTracking, sNoUnknownFields,
+      Some(sNoUnknownFieldsInnerStructNoString), Some(sNoUnknownFields))
+    testReadingUnknownField(TestStructInnerStructNoStringNoUnknownFieldsTracking, TestStructNoUnknownFieldsTracking, sNoUnknownFields,
+      Some(sNoUnknownFieldsInnerStructNoString), Some(sNoUnknownFieldsInnerStructNoString))
+    testReadingUnknownField(TestStructNoUnknownFieldsTrackingInnerStructNoStringNoUnknownFieldsTracking, TestStructNoUnknownFieldsTracking, sNoUnknownFields,
+      Some(sNoUnknownFieldsInnerStructNoString), Some(sNoUnknownFieldsInnerStructNoString))
 
     // TODO(benjy): Test that unknown values in known enum fields are preserved.
     // testReadingUnknownField(StructWithOldEnumField, StructWithNewEnumField, testEnumStruct())
 
     // "new" vs. "old" here mean "struct with all fields" vs. "struct without some fields".
-    def testReadingUnknownField(oldMeta: MetaRecord[_], newMeta: MetaRecord[_], newObj: TBase[_, _]) {
+    def testReadingUnknownField(oldMeta: MetaRecord[_], newMeta: MetaRecord[_], newObj: TBase[_, _],
+        expectedRoundTrippedObj: Option[TBase[_, _]] = None, expectedRoundTrippedObjSameProto: Option[TBase[_, _]] = None) {
       // Write the object out.
       val newBuf = doWrite(srcProtocol, newObj)
 
@@ -96,7 +172,15 @@ class WireCompatibilityTest {
       doRead(dstProtocol, oldBuf2, roundtrippedNewObj)
 
       // Check that we got what we expect.
-      assertEquals(newObj, roundtrippedNewObj)
+      val expected = {
+        if (srcProtocol == dstProtocol ||
+          TProtocolInfo.isRobust(srcProtocol) && TProtocolInfo.isRobust(dstProtocol)) {
+          expectedRoundTrippedObjSameProto.getOrElse(newObj)
+        } else {
+          expectedRoundTrippedObj.getOrElse(newObj)
+        }
+      }
+      assertEquals(expected, roundtrippedNewObj)
     }
   }
 
@@ -129,12 +213,148 @@ class WireCompatibilityTest {
     .aDouble(0.57)
     .aString("hello, world")
     .aBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5)))
-    .aStruct(InnerStruct("hi", 5))
+    .aStruct(InnerStruct("hi!", 5))
     .aSet(Set("foo", "bar", "baz"))
     .aList(List(4, 8, 15, 16, 23, 42))
     .aMap(Map("uno" -> InnerStruct("one", 1), "dos" -> InnerStruct("two", 2)))
     .aMyBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5, 6)))
     .aStructList(Seq(InnerStruct("hello", 4), InnerStruct("world", 2)))
+    .result()
+
+  private def testStructNoUnknownFieldsTracking() = TestStructNoUnknownFieldsTracking.newBuilder
+    .aBool(true)
+    .aByte(120.toByte)
+    .anI16(30000.toShort)
+    .anI32(7654321)
+    .anI64(987654321L)
+    .aDouble(0.57)
+    .aString("hello, world")
+    .aBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5)))
+    .aStruct(InnerStructNoUnknownFieldsTracking("hi!", 5))
+    .aSet(Set("foo", "bar", "baz"))
+    .aList(List(4, 8, 15, 16, 23, 42))
+    .aMap(Map("uno" -> InnerStructNoUnknownFieldsTracking("one", 1), "dos" -> InnerStructNoUnknownFieldsTracking("two", 2)))
+    .aMyBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5, 6)))
+    .aStructList(Seq(InnerStructNoUnknownFieldsTracking("hello", 4), InnerStructNoUnknownFieldsTracking("world", 2)))
+    .result()
+
+  private def testStructNoUnknownFieldsTrackingExceptInner() = TestStructNoUnknownFieldsTrackingExceptInnerStruct.newBuilder
+    .aBool(true)
+    .aByte(120.toByte)
+    .anI16(30000.toShort)
+    .anI32(7654321)
+    .anI64(987654321L)
+    .aDouble(0.57)
+    .aString("hello, world")
+    .aBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5)))
+    .aStruct(InnerStruct("hi!", 5))
+    .aSet(Set("foo", "bar", "baz"))
+    .aList(List(4, 8, 15, 16, 23, 42))
+    .aMap(Map("uno" -> InnerStruct("one", 1), "dos" -> InnerStruct("two", 2)))
+    .aMyBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5, 6)))
+    .aStructList(Seq(InnerStruct("hello", 4), InnerStruct("world", 2)))
+    .result()
+
+  private def testStructInnerStructNoUnknownFieldsTracking() = TestStructInnerStructNoUnknownFieldsTracking.newBuilder
+    .aBool(true)
+    .aByte(120.toByte)
+    .anI16(30000.toShort)
+    .anI32(7654321)
+    .anI64(987654321L)
+    .aDouble(0.57)
+    .aString("hello, world")
+    .aBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5)))
+    .aStruct(InnerStructNoUnknownFieldsTracking("hi!", 5))
+    .aSet(Set("foo", "bar", "baz"))
+    .aList(List(4, 8, 15, 16, 23, 42))
+    .aMap(Map("uno" -> InnerStructNoUnknownFieldsTracking("one", 1), "dos" -> InnerStructNoUnknownFieldsTracking("two", 2)))
+    .aMyBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5, 6)))
+    .aStructList(Seq(InnerStructNoUnknownFieldsTracking("hello", 4), InnerStructNoUnknownFieldsTracking("world", 2)))
+    .result()
+
+  private def testStructInnerStructNoString() = TestStruct.newBuilder
+    .aBool(true)
+    .aByte(120.toByte)
+    .anI16(30000.toShort)
+    .anI32(7654321)
+    .anI64(987654321L)
+    .aDouble(0.57)
+    .aString("hello, world")
+    .aBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5)))
+    .aStruct(InnerStruct.newBuilder.anInt(5).result())
+    .aSet(Set("foo", "bar", "baz"))
+    .aList(List(4, 8, 15, 16, 23, 42))
+    .aMap(Map("uno" -> InnerStruct.newBuilder.anInt(1).result(), "dos" -> InnerStruct.newBuilder.anInt(2).result()))
+    .aMyBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5, 6)))
+    .aStructList(Seq(InnerStruct.newBuilder.anInt(4).result(), InnerStruct.newBuilder.anInt(2).result()))
+    .result()
+
+  private def testStructNoUnknownFieldsTrackingInnerStructNoString() = TestStructNoUnknownFieldsTracking.newBuilder
+    .aBool(true)
+    .aByte(120.toByte)
+    .anI16(30000.toShort)
+    .anI32(7654321)
+    .anI64(987654321L)
+    .aDouble(0.57)
+    .aString("hello, world")
+    .aBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5)))
+    .aStruct(InnerStructNoUnknownFieldsTracking.newBuilder.anInt(5).result())
+    .aSet(Set("foo", "bar", "baz"))
+    .aList(List(4, 8, 15, 16, 23, 42))
+    .aMap(Map("uno" -> InnerStructNoUnknownFieldsTracking.newBuilder.anInt(1).result(), "dos" -> InnerStructNoUnknownFieldsTracking.newBuilder.anInt(2).result()))
+    .aMyBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5, 6)))
+    .aStructList(Seq(InnerStructNoUnknownFieldsTracking.newBuilder.anInt(4).result(), InnerStructNoUnknownFieldsTracking.newBuilder.anInt(2).result()))
+    .result()
+
+  private def testStructInnerStructNoStringNoUnknownFieldsTracking() = TestStructInnerStructNoUnknownFieldsTracking.newBuilder
+    .aBool(true)
+    .aByte(120.toByte)
+    .anI16(30000.toShort)
+    .anI32(7654321)
+    .anI64(987654321L)
+    .aDouble(0.57)
+    .aString("hello, world")
+    .aBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5)))
+    .aStruct(InnerStructNoUnknownFieldsTracking.newBuilder.anInt(5).result())
+    .aSet(Set("foo", "bar", "baz"))
+    .aList(List(4, 8, 15, 16, 23, 42))
+    .aMap(Map("uno" -> InnerStructNoUnknownFieldsTracking.newBuilder.anInt(1).result(), "dos" -> InnerStructNoUnknownFieldsTracking.newBuilder.anInt(2).result()))
+    .aMyBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5, 6)))
+    .aStructList(Seq(InnerStructNoUnknownFieldsTracking.newBuilder.anInt(4).result(), InnerStructNoUnknownFieldsTracking.newBuilder.anInt(2).result()))
+    .result()
+
+  private def testStructNoUnknownFieldsTrackingExceptInnerStructNoString() = TestStructNoUnknownFieldsTrackingExceptInnerStruct.newBuilder
+    .aBool(true)
+    .aByte(120.toByte)
+    .anI16(30000.toShort)
+    .anI32(7654321)
+    .anI64(987654321L)
+    .aDouble(0.57)
+    .aString("hello, world")
+    .aBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5)))
+    .aStruct(InnerStruct.newBuilder.anInt(5).result())
+    .aSet(Set("foo", "bar", "baz"))
+    .aList(List(4, 8, 15, 16, 23, 42))
+    .aMap(Map("uno" -> InnerStruct.newBuilder.anInt(1).result(), "dos" -> InnerStruct.newBuilder.anInt(2).result()))
+    .aMyBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5, 6)))
+    .aStructList(Seq(InnerStruct.newBuilder.anInt(4).result(), InnerStruct.newBuilder.anInt(2).result()))
+    .result()
+
+  private def testStructInnerStructNoI32() = TestStruct.newBuilder
+    .aBool(true)
+    .aByte(120.toByte)
+    .anI16(30000.toShort)
+    .anI32(7654321)
+    .anI64(987654321L)
+    .aDouble(0.57)
+    .aString("hello, world")
+    .aBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5)))
+    .aStruct(InnerStruct.newBuilder.aString("hi!").result())
+    .aSet(Set("foo", "bar", "baz"))
+    .aList(List(4, 8, 15, 16, 23, 42))
+    .aMap(Map("uno" -> InnerStruct.newBuilder.aString("one").result(), "dos" -> InnerStruct.newBuilder.aString("two").result()))
+    .aMyBinary(ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5, 6)))
+    .aStructList(Seq(InnerStruct.newBuilder.aString("hello").result(), InnerStruct.newBuilder.aString("world").result()))
     .result()
 
   private def testStructCollections() = TestStructCollections.newBuilder
