@@ -1,16 +1,18 @@
 <%@ val cls: com.foursquare.spindle.codegen.runtime.StructLike %>
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+#if (cls.annotations.contains("preserve_unknown_fields"))
     // Unknown fields in this read go here.
     var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
     def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
       case Some(uf) => uf
       case None => {
-        val uf = new com.foursquare.spindle.runtime.UnknownFields(com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot))
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(this, com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot))
         unknownFields = uf :: unknownFields
         currentUnknownFieldsOpt = Some(uf)
         uf
       }
     }
+#end
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -40,7 +42,13 @@
             }
           }
 #end
-          case _ => currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+          case _ => {
+#if (cls.annotations.contains("preserve_unknown_fields"))
+            currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+#else
+            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+#end
+          }
         }  // end match
       } catch {
         case e: org.apache.thrift.TException =>

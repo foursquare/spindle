@@ -16,9 +16,14 @@ enum NewTestEnum {
 struct StructWithOldEnumField {
   1: optional OldTestEnum anEnum
   2: optional list<OldTestEnum> anEnumList
-}
+} (
+  preserve_unknown_fields="1"
+)
+
 
 struct StructWithNewEnumField {
   1: optional NewTestEnum anEnum
   2: optional list<NewTestEnum> anEnumList
-}
+} (
+  preserve_unknown_fields="1"
+)

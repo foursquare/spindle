@@ -6,20 +6,45 @@ typedef binary MyBinary
 
 
 struct StructWithNoFields {
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct InnerStruct {
+  1: optional string aString
+  2: optional i32 anInt
+} (
+  preserve_unknown_fields="1"
+)
+
+struct InnerStructNoUnknownFieldsTracking {
   1: optional string aString
   2: optional i32 anInt
 }
 
 struct InnerStructNoString {
   2: optional i32 anInt
+} (
+  preserve_unknown_fields="1"
+)
+
+struct InnerStructNoStringNoUnknownFieldsTracking {
+  2: optional i32 anInt
 }
 
 struct InnerStructNoI32 {
   1: optional string aString
-}
+} (
+  preserve_unknown_fields="1"
+)
+
+struct InnerStructNoI32RetiredFields {
+  1: optional string aString
+} (
+  preserve_unknown_fields="1"
+  retired_ids="2"
+  retired_wire_names="anInt"
+)
 
 // A struct with a field of each type.
 
@@ -38,6 +63,61 @@ struct TestStruct {
   12: optional map<string, InnerStruct> aMap
   13: optional MyBinary aMyBinary
   14: optional list<InnerStruct> aStructList
+} (
+  preserve_unknown_fields="1"
+)
+
+struct TestStructNoUnknownFieldsTrackingExceptInnerStruct {
+  1: optional bool aBool
+  2: optional byte aByte
+  3: optional i16 anI16
+  4: optional i32 anI32
+  5: optional i64 anI64
+  6: optional double aDouble
+  7: optional string aString
+  8: optional binary aBinary
+  9: optional InnerStruct aStruct
+  10: optional set<string> aSet
+  11: optional list<i32> aList
+  12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
+}
+
+struct TestStructInnerStructNoUnknownFieldsTracking {
+  1: optional bool aBool
+  2: optional byte aByte
+  3: optional i16 anI16
+  4: optional i32 anI32
+  5: optional i64 anI64
+  6: optional double aDouble
+  7: optional string aString
+  8: optional binary aBinary
+  9: optional InnerStructNoUnknownFieldsTracking aStruct
+  10: optional set<string> aSet
+  11: optional list<i32> aList
+  12: optional map<string, InnerStructNoUnknownFieldsTracking> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStructNoUnknownFieldsTracking> aStructList
+} (
+  preserve_unknown_fields="1"
+)
+
+struct TestStructNoUnknownFieldsTracking {
+  1: optional bool aBool
+  2: optional byte aByte
+  3: optional i16 anI16
+  4: optional i32 anI32
+  5: optional i64 anI64
+  6: optional double aDouble
+  7: optional string aString
+  8: optional binary aBinary
+  9: optional InnerStructNoUnknownFieldsTracking aStruct
+  10: optional set<string> aSet
+  11: optional list<i32> aList
+  12: optional map<string, InnerStructNoUnknownFieldsTracking> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStructNoUnknownFieldsTracking> aStructList
 }
 
 // Identical structs, with one field missing. Useful for testing forwards wire compatibility, that is that you can
@@ -57,7 +137,64 @@ struct TestStructNoBool {
   12: optional map<string, InnerStruct> aMap
   13: optional MyBinary aMyBinary
   14: optional list<InnerStruct> aStructList
+} (
+  preserve_unknown_fields="1"
+)
+
+struct TestStructNoBoolNoUnknownFieldsTracking {
+  2: optional byte aByte
+  3: optional i16 anI16
+  4: optional i32 anI32
+  5: optional i64 anI64
+  6: optional double aDouble
+  7: optional string aString
+  8: optional binary aBinary
+  9: optional InnerStruct aStruct
+  10: optional set<string> aSet
+  11: optional list<i32> aList
+  12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
 }
+
+struct TestStructNoBoolRetiredFields {
+  2: optional byte aByte
+  3: optional i16 anI16
+  4: optional i32 anI32
+  5: optional i64 anI64
+  6: optional double aDouble
+  7: optional string aString
+  8: optional binary aBinary
+  9: optional InnerStruct aStruct
+  10: optional set<string> aSet
+  11: optional list<i32> aList
+  12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
+} (
+  preserve_unknown_fields="1"
+  retired_ids="1"
+  retired_wire_names="aBool"
+)
+
+struct TestStructNoBoolRetiredFieldsNoUnknownFieldsTracking {
+  2: optional byte aByte
+  3: optional i16 anI16
+  4: optional i32 anI32
+  5: optional i64 anI64
+  6: optional double aDouble
+  7: optional string aString
+  8: optional binary aBinary
+  9: optional InnerStruct aStruct
+  10: optional set<string> aSet
+  11: optional list<i32> aList
+  12: optional map<string, InnerStruct> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStruct> aStructList
+} (
+  retired_ids="1"
+  retired_wire_names="aBool"
+)
 
 struct TestStructNoByte {
   1: optional bool aBool
@@ -73,7 +210,9 @@ struct TestStructNoByte {
   12: optional map<string, InnerStruct> aMap
   13: optional MyBinary aMyBinary
   14: optional list<InnerStruct> aStructList
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructNoI16 {
   1: optional bool aBool
@@ -89,7 +228,9 @@ struct TestStructNoI16 {
   12: optional map<string, InnerStruct> aMap
   13: optional MyBinary aMyBinary
   14: optional list<InnerStruct> aStructList
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructNoI32 {
   1: optional bool aBool
@@ -105,7 +246,9 @@ struct TestStructNoI32 {
   12: optional map<string, InnerStruct> aMap
   13: optional MyBinary aMyBinary
   14: optional list<InnerStruct> aStructList
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructNoI64 {
   1: optional bool aBool
@@ -121,7 +264,9 @@ struct TestStructNoI64 {
   12: optional map<string, InnerStruct> aMap
   13: optional MyBinary aMyBinary
   14: optional list<InnerStruct> aStructList
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructNoDouble {
   1: optional bool aBool
@@ -137,7 +282,9 @@ struct TestStructNoDouble {
   12: optional map<string, InnerStruct> aMap
   13: optional MyBinary aMyBinary
   14: optional list<InnerStruct> aStructList
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructNoString {
   1: optional bool aBool
@@ -153,7 +300,9 @@ struct TestStructNoString {
   12: optional map<string, InnerStruct> aMap
   13: optional MyBinary aMyBinary
   14: optional list<InnerStruct> aStructList
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructNoBinary {
   1: optional bool aBool
@@ -169,7 +318,9 @@ struct TestStructNoBinary {
   12: optional map<string, InnerStruct> aMap
   13: optional MyBinary aMyBinary
   14: optional list<InnerStruct> aStructList
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructNoStruct {
   1: optional bool aBool
@@ -185,7 +336,9 @@ struct TestStructNoStruct {
   12: optional map<string, InnerStruct> aMap
   13: optional MyBinary aMyBinary
   14: optional list<InnerStruct> aStructList
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructNoSet {
   1: optional bool aBool
@@ -201,7 +354,9 @@ struct TestStructNoSet {
   12: optional map<string, InnerStruct> aMap
   13: optional MyBinary aMyBinary
   14: optional list<InnerStruct> aStructList
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructNoList {
   1: optional bool aBool
@@ -217,7 +372,9 @@ struct TestStructNoList {
   12: optional map<string, InnerStruct> aMap
   13: optional MyBinary aMyBinary
   14: optional list<InnerStruct> aStructList
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructNoMap {
   1: optional bool aBool
@@ -233,7 +390,9 @@ struct TestStructNoMap {
   11: optional list<i32> aList
   13: optional MyBinary aMyBinary
   14: optional list<InnerStruct> aStructList
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructNoMyBinary {
   1: optional bool aBool
@@ -249,7 +408,9 @@ struct TestStructNoMyBinary {
   11: optional list<i32> aList
   12: optional map<string, InnerStruct> aMap
   14: optional list<InnerStruct> aStructList
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructNoStructList {
   1: optional bool aBool
@@ -265,7 +426,9 @@ struct TestStructNoStructList {
   11: optional list<i32> aList
   12: optional map<string, InnerStruct> aMap
   13: optional MyBinary aMyBinary
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructInnerStructNoString {
   1: optional bool aBool
@@ -282,6 +445,61 @@ struct TestStructInnerStructNoString {
   12: optional map<string, InnerStructNoString> aMap
   13: optional MyBinary aMyBinary
   14: optional list<InnerStructNoString> aStructList
+} (
+  preserve_unknown_fields="1"
+)
+
+struct TestStructNoUnknownFieldsTrackingInnerStructNoString {
+  1: optional bool aBool
+  2: optional byte aByte
+  3: optional i16 anI16
+  4: optional i32 anI32
+  5: optional i64 anI64
+  6: optional double aDouble
+  7: optional string aString
+  8: optional binary aBinary
+  9: optional InnerStructNoString aStruct
+  10: optional set<string> aSet
+  11: optional list<i32> aList
+  12: optional map<string, InnerStructNoString> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStructNoString> aStructList
+}
+
+struct TestStructInnerStructNoStringNoUnknownFieldsTracking {
+  1: optional bool aBool
+  2: optional byte aByte
+  3: optional i16 anI16
+  4: optional i32 anI32
+  5: optional i64 anI64
+  6: optional double aDouble
+  7: optional string aString
+  8: optional binary aBinary
+  9: optional InnerStructNoStringNoUnknownFieldsTracking aStruct
+  10: optional set<string> aSet
+  11: optional list<i32> aList
+  12: optional map<string, InnerStructNoStringNoUnknownFieldsTracking> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStructNoStringNoUnknownFieldsTracking> aStructList
+} (
+  preserve_unknown_fields="1"
+)
+
+struct TestStructNoUnknownFieldsTrackingInnerStructNoStringNoUnknownFieldsTracking {
+  1: optional bool aBool
+  2: optional byte aByte
+  3: optional i16 anI16
+  4: optional i32 anI32
+  5: optional i64 anI64
+  6: optional double aDouble
+  7: optional string aString
+  8: optional binary aBinary
+  9: optional InnerStructNoStringNoUnknownFieldsTracking aStruct
+  10: optional set<string> aSet
+  11: optional list<i32> aList
+  12: optional map<string, InnerStructNoStringNoUnknownFieldsTracking> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStructNoStringNoUnknownFieldsTracking> aStructList
 }
 
 struct TestStructInnerStructNoI32 {
@@ -299,7 +517,28 @@ struct TestStructInnerStructNoI32 {
   12: optional map<string, InnerStructNoI32> aMap
   13: optional MyBinary aMyBinary
   14: optional list<InnerStructNoI32> aStructList
-}
+} (
+  preserve_unknown_fields="1"
+)
+
+struct TestStructInnerStructNoI32RetiredFields {
+  1: optional bool aBool
+  2: optional byte aByte
+  3: optional i16 anI16
+  4: optional i32 anI32
+  5: optional i64 anI64
+  6: optional double aDouble
+  7: optional string aString
+  8: optional binary aBinary
+  9: optional InnerStructNoI32RetiredFields aStruct
+  10: optional set<string> aSet
+  11: optional list<i32> aList
+  12: optional map<string, InnerStructNoI32RetiredFields> aMap
+  13: optional MyBinary aMyBinary
+  14: optional list<InnerStructNoI32RetiredFields> aStructList
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructCollections {
   1: optional list<bool> listBool
@@ -329,7 +568,9 @@ struct TestStructCollections {
   27: optional map<string, string> mapString
   28: optional map<string, binary> mapBinary
   29: optional map<string, InnerStruct> mapStruct
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructNestedCollections {
   1: optional list<list<bool>> listBool
@@ -359,7 +600,9 @@ struct TestStructNestedCollections {
   27: optional map<string, map<string, string>> mapString
   28: optional map<string, map<string, binary>> mapBinary
   29: optional map<string, map<string, InnerStruct>> mapStruct
-}
+} (
+  preserve_unknown_fields="1"
+)
 
 struct TestStructMapStructKeysValues {
   1: optional map<InnerStruct, InnerStruct> mapStructs

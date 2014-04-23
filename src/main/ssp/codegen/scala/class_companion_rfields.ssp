@@ -4,7 +4,7 @@
   import com.foursquare.spindle.codegen.runtime.StructLike
 %>
 <%@ val cls: StructLike %>
-  // Record v2 Descriptors.
+  // Spindle Descriptors.
 <%--
   // These look very much like the Thrift Descriptors, but they include type parameters
   // which will be useful for Rogue. Maybe there's a way to merge the two?

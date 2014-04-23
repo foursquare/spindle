@@ -2,6 +2,8 @@
 
 package com.foursquare.spindle.runtime
 
+import com.foursquare.spindle.Record
+import org.apache.thrift.TBase
 import org.apache.thrift.protocol.{TField, TList, TMap, TProtocol, TSet, TStruct, TType}
 import java.nio.ByteBuffer
 
@@ -84,7 +86,7 @@ case class MapUValue(tmap: TMap, value: Map[UValue, UValue]) extends UValue {
 
 object UValue {
   // Read the value of an unknown field off the wire.
-  def read(iprot: TProtocol, fieldType: Byte): UValue = fieldType match {
+  def read(rec: TBase[_, _] with Record[_], iprot: TProtocol, fieldType: Byte): UValue = fieldType match {
     case TType.BOOL => BoolUValue(iprot.readBool())
     case TType.BYTE => ByteUValue(iprot.readByte())
     case TType.DOUBLE => DoubleUValue(iprot.readDouble())
@@ -98,7 +100,7 @@ object UValue {
       case false => BinaryUValue(iprot.readBinary())
     }
     case TType.STRUCT => {
-      val inner = new UnknownFields(TProtocolInfo.getProtocolName(iprot))
+      val inner = new UnknownFields(rec, TProtocolInfo.getProtocolName(iprot))
       val tstruct: TStruct = iprot.readStructBegin()
       Iterator.continually(iprot.readFieldBegin()).takeWhile(_.`type` != TType.STOP) foreach {
         tfield: TField => {
@@ -115,8 +117,8 @@ object UValue {
       builder.sizeHint(tmap.size)
       var i: Int = tmap.size
       while (i > 0) {
-        val k = read(iprot, tmap.keyType)
-        val v = read(iprot, tmap.valueType)
+        val k = read(rec, iprot, tmap.keyType)
+        val v = read(rec, iprot, tmap.valueType)
         builder += ((k, v))
         i -= 1
       }
@@ -129,7 +131,7 @@ object UValue {
       var i: Int = tset.size
       builder.sizeHint(tset.size)
       while (i > 0) {
-        builder += read(iprot, tset.elemType)
+        builder += read(rec, iprot, tset.elemType)
         i -= 1
       }
       iprot.readSetEnd()
@@ -141,7 +143,7 @@ object UValue {
       var i: Int = tlist.size
       builder.sizeHint(tlist.size)
       while (i > 0) {
-        builder += read(iprot, tlist.elemType)
+        builder += read(rec, iprot, tlist.elemType)
         i -= 1
       }
       iprot.readListEnd()

@@ -2,9 +2,9 @@
 
 package com.foursquare.spindle.runtime
 
+import com.foursquare.spindle.Record
 import org.apache.thrift.TBase
-import org.apache.thrift.protocol.{TField, TProtocol, TType}
-
+import org.apache.thrift.protocol.{TField, TProtocol, TProtocolUtil, TType}
 
 // A single unknown field, as read from the wire.
 case class UnknownField(tfield: TField, value: UValue) {
@@ -31,8 +31,11 @@ case class UnknownField(tfield: TField, value: UValue) {
 // Note: UnknownFields don't participate in equality of the records that contain them.
 // However we do require UnknownFields to have well-defined equality for tests, which is
 // why stashList is a parameter of the case class.
-case class UnknownFields(inputProtocolName: String, private var stashList: List[UnknownField] = Nil) {
+case class UnknownFields(rec: TBase[_, _] with Record[_], inputProtocolName: String, private var stashList: List[UnknownField] = Nil) {
   private def stash(uf: UnknownField) { stashList = uf :: stashList }
+
+  val retiredIds = rec.meta.annotations.getAll("retired_ids").flatMap(_.split(',')).map(_.toShort).toSet
+  val retiredWireNames = rec.meta.annotations.getAll("retired_wire_names").flatMap(_.split(',')).toSet
 
   def write(oprot: TProtocol) {
     val outputProtocolName = TProtocolInfo.getProtocolName(oprot)
@@ -48,7 +51,10 @@ case class UnknownFields(inputProtocolName: String, private var stashList: List[
 
   // Read a field whose wire name/id is unknown to rec.
   def readUnknownField(iprot: TProtocol, wireTField: TField, rec: TBase[_, _]) {
-    if (wireTField.id == UnknownFieldsBlob.magicField.id || wireTField.name == UnknownFieldsBlob.magicField.name) {
+    if (retiredIds(wireTField.id) || retiredWireNames(wireTField.name)) {
+      // skip the field
+      TProtocolUtil.skip(iprot, wireTField.`type`)
+    } else if (wireTField.id == UnknownFieldsBlob.magicField.id || wireTField.name == UnknownFieldsBlob.magicField.name) {
       val blob = UnknownFieldsBlob.fromMagicField(iprot)
       blob.read(rec)
     } else {
@@ -73,7 +79,7 @@ case class UnknownFields(inputProtocolName: String, private var stashList: List[
   }
 
   def readInline(iprot: TProtocol, tfield: TField) {
-    val fieldVal: UValue = UValue.read(iprot, tfield.`type`)
+    val fieldVal: UValue = UValue.read(rec, iprot, tfield.`type`)
     stash(UnknownField(tfield, fieldVal))
   }
 }
