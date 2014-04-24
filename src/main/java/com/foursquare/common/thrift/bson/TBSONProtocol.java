@@ -25,7 +25,7 @@ import org.bson.BasicBSONEncoder;
  */
 public class TBSONProtocol extends TBSONObjectProtocol {
   // Our superclass uses a dummy transport, and we mediate its input/output from/to this transport.
-  private TTransport realTransport;
+  protected TTransport realTransport;
 
   /**
    * Factory for protocol objects used for serializing BSON.
