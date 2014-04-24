@@ -85,3 +85,7 @@
 # 1.8.3
 
 - fixed handling of ByteBuffers in UnknownFields read logic
+
+# 1.8.4
+
+- UnknownFields logic is opt-in per model and ignores retired fields
