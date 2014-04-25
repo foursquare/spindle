@@ -34,7 +34,7 @@ object RuntimeHelpers {
     ](
         record: R,
         field: ForeignKeyFieldDescriptor[F, R, M],
-        fieldValue: F
+        fieldValue: Option[F]
     ): Option[AnyRef]
 
     def mismatchedInstanceType[
@@ -95,7 +95,7 @@ object RuntimeHelpers {
     ](
         record: R,
         field: ForeignKeyFieldDescriptor[F, R, M],
-        fieldValue: F
+        fieldValue: Option[F]
     ): Option[AnyRef] = None
 
     override def mismatchedInstanceType[
