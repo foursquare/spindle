@@ -704,6 +704,8 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
     if (value == JsonToken.FIELD_NAME && currentReadContext().valueTType() == TType.MAP) {
       // This situation is okay, since we support string keyed maps, by using
       // JSON object field names.
+    } else if (value == JsonToken.VALUE_NULL) {
+      return null;
     } else if (value != JsonToken.VALUE_STRING) {
       throw new TException("Expecting string field value for:" + value);
     }
