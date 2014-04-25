@@ -43,7 +43,7 @@
     if (${field.isSetName} && ${field.varName}AlternateObj != null) {
       Some(${field.varName}AlternateObj)
     } else {
-      com.foursquare.spindle.RuntimeHelpers.fkHooks.missingAlternateObj(this, this.meta.${field.escapedName}, ${field.name}OrThrow)
+      com.foursquare.spindle.RuntimeHelpers.fkHooks.missingAlternateObj(this, this.meta.${field.escapedName}, ${field.name}Option)
     }
   }
   override def ${field.name}SetAlternateObj(x: AnyRef): Unit = {
