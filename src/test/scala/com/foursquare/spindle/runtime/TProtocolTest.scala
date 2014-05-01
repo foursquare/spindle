@@ -7,17 +7,20 @@ import com.foursquare.common.thrift.bson.TBSONObjectProtocol
 import com.foursquare.spindle.{Record, MetaRecord}
 import com.foursquare.spindle.test.gen.{TestStruct, TestStructNoBoolRetiredFields, TestStructNoUnknownFieldsTracking}
 import com.mongodb.{BasicDBObjectBuilder, DBObject}
-import org.apache.thrift.TBase
+import org.apache.thrift.{TBase, TDeserializer}
 import org.apache.thrift.transport.TMemoryInputTransport
 import org.junit.Assert.assertEquals
 import org.junit.{Test, Ignore}
 
 class TProtocolTest {
 
-  @Test
-  def testJsonNullValues {
-    val t1 = parseJson("""{"aString":null}""", TestStruct)
+@Test
+  def testNullValues {
+    val t1 = deserializeJson("""{"aString":null, "unknown": null}""", TestStruct)
     assertEquals(None, t1.aStringOption)
+
+    val t2 = deserializeJson("""{"aString":null, "unknown": null}""", TestStructNoUnknownFieldsTracking)
+    assertEquals(None, t2.aStringOption)
   }
 
   def parseJson[R <: Record[R] with TBase[R, _]](s: String, recMeta: MetaRecord[R]): R = {

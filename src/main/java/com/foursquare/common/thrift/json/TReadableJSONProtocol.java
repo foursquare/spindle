@@ -740,7 +740,11 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
         return ByteBuffer.wrap(b);
       } else {
         try {
-          return ByteBuffer.wrap(currentReadContext().parser().getBinaryValue(Base64Variants.MIME));
+          byte[] byteArray = currentReadContext().parser().getBinaryValue(Base64Variants.MIME);
+          if (byteArray == null) {
+            return null;
+          }
+          return ByteBuffer.wrap(byteArray);
         } catch (JsonParseException e) {
           // Read binary is often used during skip, but if we're skipping a string field,
           // we will end up trying to parse it as a Base64 blob. So of that fails, assume
