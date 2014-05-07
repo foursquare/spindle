@@ -4,9 +4,12 @@ package com.foursquare.spindle.runtime.test
 
 import com.foursquare.common.thrift.json.TReadableJSONProtocol
 import com.foursquare.spindle.{Record, MetaRecord}
-import com.foursquare.spindle.test.gen.{TestStruct, TestStructNoUnknownFieldsTracking}
+import com.foursquare.spindle.test.JsonPrettyPrinter
+import com.foursquare.spindle.test.gen.{BinaryStruct, TestStruct, TestStructNoUnknownFieldsTracking}
+import java.nio.ByteBuffer
 import org.apache.thrift.{TBase, TDeserializer}
-import org.apache.thrift.transport.TMemoryInputTransport
+import org.apache.thrift.transport.{TMemoryBuffer, TMemoryInputTransport}
+import org.bson.types.ObjectId
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -21,19 +24,51 @@ class TReadableJSONProtocolTest {
     assertEquals(None, t2.aStringOption)
   }
 
-  def parseJson[R <: Record[R] with TBase[R, _]](s: String, recMeta: MetaRecord[R]): R = {
-    val buf = s.getBytes("UTF-8")
-    val trans = new TMemoryInputTransport(buf)
-    val iprot = new TReadableJSONProtocol(trans, null)
-    val rec = recMeta.createRawRecord
-    rec.read(iprot)
-    rec
-  }
-
   def deserializeJson[R <: Record[R] with TBase[R, _ <: org.apache.thrift.TFieldIdEnum]](s: String, recMeta: MetaRecord[R]): R = {
     val deserializer = new TDeserializer(new TReadableJSONProtocol.Factory())
     val rec = recMeta.createRawRecord
     deserializer.deserialize(rec, s.getBytes("UTF-8"))
     rec
+  }
+
+  @Test
+  def testBinarySerialization {
+    val oid = new ObjectId("654321abcdef090909fedcba")
+    val binary = ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5))
+    val bs = BinaryStruct.newBuilder.anObjectId(oid).aBinary(binary).result
+
+    val js1 = writeJson(bs, false)
+    val rs1 = readJson(js1, BinaryStruct, false)
+    assertEquals(bs, rs1)
+    assertEquals(js1, """{
+  "anObjectId" : "ObjectId(\"654321abcdef090909fedcba\")",
+  "aBinary" : "AQIDBAU="
+}""")
+
+    val js2 = writeJson(bs, true)
+    val rs2 = readJson(js2, BinaryStruct, true)
+    assertEquals(bs, rs2)
+    assertEquals(js2, """{
+  "anObjectId" : "654321abcdef090909fedcba",
+  "aBinary" : "Base64(\"AQIDBAU=\")"
+}""")
+  }
+
+  def readJson[R <: Record[R] with TBase[R, _]](s: String, recMeta: MetaRecord[R], bareObjectIds: Boolean): R = {
+    val protocolFactory = new TReadableJSONProtocol.Factory(false, bareObjectIds)
+    val buf = s.getBytes("UTF-8")
+    val trans = new TMemoryInputTransport(buf)
+    val iprot = protocolFactory.getProtocol(trans)
+    val rec = recMeta.createRawRecord
+    rec.read(iprot)
+    rec
+  }
+
+  def writeJson[R <: Record[R] with TBase[R, _]](rec: R, bareObjectIds: Boolean): String = {
+    val protocolFactory = new TReadableJSONProtocol.Factory(false, bareObjectIds)
+    val trans = new TMemoryBuffer(1024)
+    val oprot = protocolFactory.getProtocol(trans)
+    rec.write(oprot)
+    JsonPrettyPrinter.prettify(trans.toString("UTF8"))
   }
 }

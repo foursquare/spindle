@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Stack;
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.thrift.TBaseHelper;
 import org.apache.thrift.TException;
@@ -69,6 +70,13 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   // the result of toString() be parseable.
   private boolean coerceMapKeys = false;
 
+
+  // If true, binary values will be serialized as "Base64(\"..b64..\")" and ObjectIds will be serialized as "..oid..".
+  // If false, binary values will be serialized as "..b64.." and ObjectIds will be serialized as "ObjectId(\"..oid..\")"
+  //   where b64 is the base-64 ASCII representation of the binary value
+  //     and oid is the hex-encoded ASCII representation of the ObjectId.
+  private boolean bareObjectIds = false;
+
   // For reading.
   private JsonParser jp = null;
   private final Stack<ReadContext> readContextStack = new Stack<ReadContext>();
@@ -82,9 +90,12 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   }
 
   public TReadableJSONProtocol(TTransport trans, PrettyPrinter pp, JsonParser jp) {
-    this(trans, pp, jp, false);
+    this(trans, pp, jp, false, false);
   }
   public TReadableJSONProtocol(TTransport trans, PrettyPrinter pp, JsonParser jp, boolean coerceMapKeys) {
+    this(trans, pp, jp, coerceMapKeys, false);
+  }
+  public TReadableJSONProtocol(TTransport trans, PrettyPrinter pp, JsonParser jp, boolean coerceMapKeys, boolean bareObjectIds) {
     super(trans);
 
     prettyPrinter = pp;
@@ -95,6 +106,7 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
       this.jp = jp;
     }
     this.coerceMapKeys = coerceMapKeys;
+    this.bareObjectIds = bareObjectIds;
   }
 
   public static byte getElemTypeFromToken(JsonToken token) throws TException {
@@ -148,18 +160,24 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
    */
   public static class Factory implements TProtocolFactory {
     private final boolean prettyPrint;
+    private final boolean bareObjectIds;
     private final JsonParser parser;
 
     public Factory() {
-      this(false);
+      this(false, false, null);
     }
 
     public Factory(boolean prettyPrint) {
-      this(prettyPrint, null);
+      this(prettyPrint, false, null);
     }
 
-    public Factory(boolean prettyPrint, JsonParser parser) {
+    public Factory(boolean prettyPrint, boolean bareObjectIds) {
+      this(prettyPrint, bareObjectIds, null);
+    }
+
+    public Factory(boolean prettyPrint, boolean bareObjectIds, JsonParser parser) {
       this.prettyPrint = prettyPrint;
+      this.bareObjectIds = bareObjectIds;
       this.parser = parser;
     }
 
@@ -174,7 +192,7 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
 
     @Override
     public TProtocol getProtocol(TTransport trans) {
-      return new TReadableJSONProtocol(trans, prettyPrinter(), parser, coerceMapKeys());
+      return new TReadableJSONProtocol(trans, prettyPrinter(), parser, coerceMapKeys(), bareObjectIds);
     }
   }
 
@@ -463,7 +481,7 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
         if ("ObjectId".equals(enhancedType)) {
           jg.writeString(toObjectIdString(arr));
         } else {
-          jg.writeBinary(Base64Variants.MIME, arr, 0, arr.length);
+          jg.writeString(toBase64String(arr));
         }
       }
     } catch (IOException e) {
@@ -478,18 +496,44 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   }
 
   private String toObjectIdString(byte[] arr) {
-    StringBuilder buf = new StringBuilder(24);
-    for (int i = 0; i < arr.length; i++) {
-      int x = arr[i] & 0xFF;
-      String s = Integer.toHexString(x);
-      if (s.length() == 1) {
-        buf.append("0");
-      }
-      buf.append(s);
+    String hex = DatatypeConverter.printHexBinary(arr).toLowerCase();
+    if (bareObjectIds) {
+      return hex;
+    } else {
+      return "ObjectId(\"" + hex + "\")";
     }
-    return "ObjectId(\"" +  buf.toString() + "\")";
   }
 
+  private String toBase64String(byte[] arr) {
+    String b64 = DatatypeConverter.printBase64Binary(arr);
+    if (bareObjectIds) {
+      return "Base64(\"" + b64 + "\")";
+    } else {
+      return b64;
+    }
+  }
+
+  private byte[] decodeBinaryString(String str) {
+    try {
+      if (bareObjectIds) {
+        if (str.startsWith("Base64(\"") && str.endsWith("\")")) {
+          String b64String = str.substring(8, str.length() - 2);
+          return DatatypeConverter.parseBase64Binary(b64String);
+        } else {
+          return DatatypeConverter.parseHexBinary(str);
+        }
+      } else {
+        if (str.startsWith("ObjectId(\"") && str.endsWith("\")")) {
+          String b64String = str.substring(10, str.length() - 2);
+          return DatatypeConverter.parseHexBinary(b64String);
+        } else {
+          return DatatypeConverter.parseBase64Binary(str);
+        }
+      }
+    } catch (IllegalArgumentException e) {
+      return null;
+    }
+  }
 
   // Read methods
   // ------------
@@ -726,31 +770,11 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
     }
     try {
       String strValue = currentReadContext().parser().getText();
-      if (strValue.length() == 36 && strValue.startsWith("ObjectId(\"") && strValue.endsWith("\")")) {
-        String objectIdRaw = strValue.substring(10, 34);
-        // Taken from ObjectId.java. (NumberFormatException handling added as a workaround.)
-        byte b[] = new byte[12];
-        for (int i = 0; i < b.length; i++){
-          try {
-            b[i] = (byte)Integer.parseInt(objectIdRaw.substring( i*2 , i*2 + 2), 16);
-          } catch (NumberFormatException e) {
-            return null;
-          }
-        }
-        return ByteBuffer.wrap(b);
+      byte byteArray[] = decodeBinaryString(strValue);
+      if (byteArray == null) {
+        return null;
       } else {
-        try {
-          byte[] byteArray = currentReadContext().parser().getBinaryValue(Base64Variants.MIME);
-          if (byteArray == null) {
-            return null;
-          }
-          return ByteBuffer.wrap(byteArray);
-        } catch (JsonParseException e) {
-          // Read binary is often used during skip, but if we're skipping a string field,
-          // we will end up trying to parse it as a Base64 blob. So of that fails, assume
-          // we're just trying to skip the field.
-          return null;
-        }
+        return ByteBuffer.wrap(byteArray);
       }
     } catch (IOException e) {
       throw new TException(e);
