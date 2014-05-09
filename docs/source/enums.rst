@@ -29,21 +29,36 @@ The following methods are availabel on an enumeration's companion object:
 * ``findByStringValueOrNull`` - given an string value, return the enum value with that string value, or ``null``
 * ``unapply`` - alias for findByName (TODO: should be findByStringValue)
 
+Matching and unknown values
+---------------------------
+
+Spindle will generate an additional value in every enum called ``UnknownWireValue``. This value is meant to handle
+values read off the wire that do not correspond to any known enum value. This can happen when a value is added to an
+enum, and old code tries to deserialize a value written by new code. So in order for your enum matches to be exhaustive,
+you must also match against ``UnknownWireValue(id)``.
+
 Examples
 --------
 
 Example thrift::
 
     enum ClientType {
-      android = 1
-      blackberry = 2
-      iphone = 3
-      web = 4
-      unknown = 5
+      Android = 1
+      Blackberry = 2
+      IPhone = 3
+      Web = 4
     }
 
 Example Scala::
 
     val client: ClientType = ClientType.web
+
+    client match {
+      case ClientType.Android => ...
+      case ClientType.Blackberry => ...
+      case ClientType.IPhone => ...
+      case ClientType.Web => ...
+      case ClientType.UnknownWireValue(id) => ???
+    }
 
 

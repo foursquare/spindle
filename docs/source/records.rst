@@ -1,7 +1,7 @@
 Records
 =======
 
-Creating a Record
+Creating a record
 -----------------
 
 There are three ways to create a Record.
@@ -52,7 +52,7 @@ can use the ``createRawRecord`` method on the Record's companion object or you c
 Raw class. This is unsafe, as it will not verify that required fields are set and can seriously corrupt data. Make sure
 you know what you're doing before you use Raw constructors.
 
-Reading/Writing Records
+Reading/writing records
 -----------------------
 
 All records have read and write methods that take one argument: a ``TProtocol``. We use a number of protocols, depending on
@@ -61,15 +61,15 @@ a particular way in which it's constructed. Refer to the documentation for each 
 reading in a record, it's acceptable to use the ``createRawRecord`` method on the MetaRecord companion object to instantiate
 a record that you can call read on.
 
-Traits
-------
+Record interface methods
+------------------------
 
 Every record has a trait of the same name that defines a mostly immutable interface to that record (the exception being
 some mutable methods for priming foreign keys). Methods that modify the record are generally only available as part of
 the Mutable trait.
 
 
-Field Access
+Field access
 ~~~~~~~~~~~~
 
 The record's trait has a bunch of methods for field access. Not all of them are always available. Given a field named
@@ -82,7 +82,7 @@ The record's trait has a bunch of methods for field access. Not all of them are 
 * ``fooOrThrow`` - Returns the value of the field, or throws an exception if the field is not set.
 * ``fooIsSet`` - Returns ``true`` if the field is set, ``false`` otherwise.
 
-Special Field Access
+Special field access
 ~~~~~~~~~~~~~~~~~~~~
 
 Some field types have special access methods:
@@ -91,7 +91,7 @@ Some field types have special access methods:
 * ``fooStruct`` - if the field has a ``bitfield_struct`` or ``bitfield_struct_no_setbits`` annotation, this method will exist and return a populated bitfield struct. (See: :ref:`bitfields`)
 * ``fooFk`` - if the field is a ``foreign_key`` field, this method will exist and return the foreign object. (See: :ref:`priming`)
 
-Other Methods
+Other methods
 -------------
 
 Other methods on the record trait:
@@ -106,12 +106,12 @@ Other methods on the record trait:
 * ``mutable`` - if the underlying implementation is mutable, return this typed as a ``Mutable`` trait, otherwise make a ``mutableCopy``
 * ``toBuilder`` - creates a new builder that has been initialized to have the same state as this record
 
-Mutable Trait
+Mutable trait
 -------------
 
 TODO: the Mutable trait interface is likely to change before being finalized
 
-Raw Class
+Raw class
 ---------
 
 TODO
@@ -148,7 +148,7 @@ Reflection
 
 TODO
 
-Field Descriptors
+Field descriptors
 -----------------
 
 TODO

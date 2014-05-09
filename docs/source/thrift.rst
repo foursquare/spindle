@@ -6,7 +6,7 @@ are described in ``.thrift`` files which conform to the Thrift Interface Descrip
 compiler will read Thrift IDLs and generate code for many different languages: Java, Python, JavaScript, C++, etc. We've
 built a custom Thrift compiler (documented here) which generates Scala code.
 
-Data Model
+Data model
 ----------
 
 Thrift's data model has the following base types:
@@ -38,7 +38,7 @@ Thrift includes three "class" types:
 
 Finally, Thrift allows you to define constants and typedefs. A constant is a value of any Thrift type. A typedef is an alias of any Thrift type.
 
-Interface Definition Language (IDL)
+Interface definition language (IDL)
 -----------------------------------
 
 Thrift data structures are described in ``.thrift`` files which conform to the Thrift IDL grammar. You can see the `Thrift
@@ -50,7 +50,7 @@ Tutorial`_ for an example, or reference the `formal grammar`_.
 
 .. _serialization-formats:
 
-Serialization Formats
+Serialization formats
 ---------------------
 
 There are four serialization formats we use. 

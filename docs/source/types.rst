@@ -1,9 +1,9 @@
-Custom Types
+Custom types
 ============
 
 In addition to all of the standard Thrift types, Spindle codegen makes available a few extras.
 
-Enhanced Types
+Enhanced types
 --------------
 
 Enhanced types are types tagged with an annotation so as to produce either a custom protocol format or a custom Scala

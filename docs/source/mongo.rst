@@ -1,5 +1,5 @@
-Working with Mongo
-==================
+Working with MongoDB
+====================
 
 Annotations
 -----------
@@ -29,7 +29,7 @@ Example::
        mongo_collection="checkins",
        mongo_identifier="foursquare")
 
-Rogue Queries
+Rogue queries
 -------------
 
 There are two main differences between Lift Record and Spindle when it comes to creating and executing Rogue queries.
