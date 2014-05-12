@@ -171,6 +171,10 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
       this(prettyPrint, false, null);
     }
 
+    public Factory(boolean prettyPrint, JsonParser parser) {
+      this(prettyPrint, false, parser);
+    }
+
     public Factory(boolean prettyPrint, boolean bareObjectIds) {
       this(prettyPrint, bareObjectIds, null);
     }
