@@ -534,7 +534,8 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
           return DatatypeConverter.parseBase64Binary(str);
         }
       }
-    } catch (IllegalArgumentException e) {
+    } catch (Exception e) {
+      // Handle all kinds of exceptions that could happen by passing junk data into a parse method.
       return null;
     }
   }

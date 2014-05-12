@@ -32,6 +32,12 @@ class TReadableJSONProtocolTest {
   }
 
   @Test
+  def testBadBase64 {
+    val t1 = readJson("""{"unknown": "aaaaa="}""", BinaryStruct, false)
+    assertEquals(None, t1.aBinaryOption)
+  }
+
+  @Test
   def testBinarySerialization {
     val oid = new ObjectId("654321abcdef090909fedcba")
     val binary = ByteBuffer.wrap(Array[Byte](1, 2, 3, 4, 5))
