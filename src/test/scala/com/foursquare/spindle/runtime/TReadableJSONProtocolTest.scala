@@ -60,6 +60,12 @@ class TReadableJSONProtocolTest {
 }""")
   }
 
+  @Test
+  def testLongParsing {
+    val t1 = deserializeJson("""{"anI64":72057594043056517}""", TestStruct)
+    assertEquals(Some(72057594043056517L), t1.anI64Option)
+  }
+
   def readJson[R <: Record[R] with TBase[R, _]](s: String, recMeta: MetaRecord[R], bareObjectIds: Boolean): R = {
     val protocolFactory = new TReadableJSONProtocol.Factory(false, bareObjectIds)
     val buf = s.getBytes("UTF-8")
