@@ -141,7 +141,34 @@ and so avoid dependency hairballs.)
 Proxies
 -------
 
-TODO
+Spindle can generate proxy classes that can be used to decorate generated models with additioanl behavior. For example,
+suppose you have this thrift definition::
+
+    struct Rectangle {
+      1: double length
+      2: double width
+    }
+
+Thrift will generate a class ``Rectangle``. But suppose you want to add a convenience method ``area`` to ``Rectangle``.
+First, instruct Spindle to generate a proxy::
+
+    struct Rectangle {
+      1: double length
+      2: double width
+    } (
+      generate_proxy="1"
+    )
+
+Thrift will now generate a class ``RectangleProxy`` that by forwards all of its methods to an underlying ``Rectangle``
+instance. You can now do::
+
+    class RichRectangle(override val underlying: Rectangle) extends RectangleProxy(underlying) {
+      def area = underlying.length * underlying.width
+    }
+
+    val rect: Rectangle = ... // fetch from database
+    val myRect = new RichRectangle(rect)
+    myRect.area
 
 Reflection
 ----------
