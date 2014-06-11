@@ -96,7 +96,7 @@ Other methods
 
 Other methods on the record trait:
 
-* ``toString`` - uses ``TReadableJSONProtocol`` to create a pretty-printed JSON string representation of the record
+* ``toString`` - produces a JSON-like string representation of the record. It is not strict JSON because it supports non-string map keys.
 * ``hashCode`` - uses ``scala.util.MurmurHash`` to produce a hash code from all the already-set fields on the record
 * ``equals`` - compares two records to make sure that all their fields have the same set state, and if they're both set that they have the same value
 * ``compare`` - compares two records by their set state for each field and their value for each field
@@ -141,7 +141,7 @@ and so avoid dependency hairballs.)
 Proxies
 -------
 
-Spindle can generate proxy classes that can be used to decorate generated models with additioanl behavior. For example,
+Spindle can generate proxy classes that can be used to decorate generated models with additional behavior. For example,
 suppose you have this thrift definition::
 
     struct Rectangle {
