@@ -24,6 +24,29 @@ class WireCompatibilityTest {
   }
 
   @Test
+  def testReusableStructWithClear() {
+    val srcProtocol = KnownTProtocolNames.TBSONProtocol
+
+    val newObj = testStruct()
+    val oldObj = TestStructNoBool.createRawRecord.asInstanceOf[TBase[_, _]]
+
+    // Write the object out.
+    val newBuf1 = doWrite(srcProtocol, newObj)
+    val newBuf2 = doWrite(srcProtocol, newObj)
+
+    // Read the new object into an older version of the same struct and write it out.
+    doRead(srcProtocol, newBuf1, oldObj)
+    val oldStr1 = oldObj.toString
+
+    // Reuse oldObj to read it in again.
+    oldObj.clear()
+    doRead(srcProtocol, newBuf2, oldObj)
+    val oldStr2 = oldObj.toString
+
+    assertEquals(oldStr1, oldStr2)
+  }
+
+  @Test
   def testAllCompatibilityCombos() {
     // Test all 25 possible combinations of src and dst protocol.
     val protocols = List(

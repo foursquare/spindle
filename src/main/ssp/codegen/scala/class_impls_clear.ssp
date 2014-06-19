@@ -8,4 +8,7 @@
 #for (field <- cls.fields)
     ${field.name}Unset()
 #end
+#if (cls.annotations.contains("preserve_unknown_fields"))
+  unknownFields = Nil
+#end
   }
