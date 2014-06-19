@@ -30,7 +30,7 @@ class ToStringTest {
       .result()
 
     val expected =
-      """{ aBool: true, aByte: 120, anI16: 30000, anI32: 7654321, anI64: 987654321, aDouble: 0.57, aString: "hello, world", aBinary: "AQIDBAU=", aStruct: { aString: "hi!", anInt: 5 }, aSet: { "foo", "bar", "baz" }, aList: [ 4, 8, 15, 16, 23, 42 ], aMap: { "uno": { aString: "one", anInt: 1 }, "dos": { aString: "two", anInt: 2 } }, aMyBinary: "AQIDBAUG", aStructList: [ { aString: "hello", anInt: 4 }, { aString: "world", anInt: 2 } ] }"""
+      """{ "aBool": true, "aByte": 120, "anI16": 30000, "anI32": 7654321, "anI64": 987654321, "aDouble": 0.57, "aString": "hello, world", "aBinary": "AQIDBAU=", "aStruct": { "aString": "hi!", "anInt": 5 }, "aSet": { "foo", "bar", "baz" }, "aList": [ 4, 8, 15, 16, 23, 42 ], "aMap": { "uno": { "aString": "one", "anInt": 1 }, "dos": { "aString": "two", "anInt": 2 } }, "aMyBinary": "AQIDBAUG", "aStructList": [ { "aString": "hello", "anInt": 4 }, { "aString": "world", "anInt": 2 } ] }"""
 
     val str = struct.toString
     assertEquals(expected, str)
@@ -46,7 +46,7 @@ class ToStringTest {
       .result()
 
     val expected =
-      """{ foo: { 123: "A", 456: "B" }, bar: { ObjectId("000102030405060708090a0b"): 77, ObjectId("0c0d0e0f1011121314151617"): 42 }, baz: { { a: "a", b: 1 }: 123, { a: "b", b: 2 }: 456 } }"""
+      """{ "foo": { 123: "A", 456: "B" }, "bar": { ObjectId("000102030405060708090a0b"): 77, ObjectId("0c0d0e0f1011121314151617"): 42 }, "baz": { { "a": "a", "b": 1 }: 123, { "a": "b", "b": 2 }: 456 } }"""
 
     val str = struct.toString
     assertEquals(expected, str)

@@ -243,8 +243,9 @@ public class TStringProtocol extends TProtocol implements SerializeDatesAsSecond
   public void writeFieldBegin(TField tField) throws TException {
     try {
       writeStructDelimiter(osw);
+      osw.write("\"");
       osw.write(tField.name);
-      osw.write(": ");
+      osw.write("\": ");
     } catch (IOException e) {
       wrapIOException(e);
     }
