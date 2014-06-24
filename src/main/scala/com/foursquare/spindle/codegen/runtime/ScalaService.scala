@@ -4,7 +4,7 @@ package com.foursquare.spindle.codegen.runtime
 
 import com.twitter.thrift.descriptors.{Service, ServiceProxy}
 
-class ScalaService(override val underlying: Service, resolver: TypeReferenceResolver) extends ServiceProxy {
+class ScalaService(override val underlying: Service, resolver: TypeReferenceResolver) extends ServiceProxy with HasAnnotations {
   val parentServiceName: Option[String] = {
     extendzOption.flatMap(extendz => resolver.resolveTypeAlias(extendz) match {
       case Right(ServiceRef(name)) => Some(name)
