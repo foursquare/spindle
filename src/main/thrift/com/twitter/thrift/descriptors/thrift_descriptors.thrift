@@ -117,7 +117,7 @@ struct Typedef {
   1: required string typeId,
   2: required string typeAlias,
   99: optional list<Annotation> annotations = []
-}
+} (generate_proxy="true")
 
 // A registry of all the types referenced in a thrift program.
 //
@@ -139,7 +139,7 @@ struct Const {
   1: required string typeId,
   2: required string name,
   3: required string value
-}
+} (generate_proxy="true")
 
 
 /* Enumerations. */
@@ -148,13 +148,13 @@ struct EnumElement {
   1: required string name,
   2: required i32 value,
   99: optional list<Annotation> annotations = []
-}
+} (generate_proxy="true")
 
 struct Enum {
   1: required string name,
   2: required list<EnumElement> elements,
   99: optional list<Annotation> annotations = []
-}
+} (generate_proxy="true")
 
 
 /* Structs, unions and exceptions. */
@@ -171,25 +171,25 @@ struct Field {
   4: optional Requiredness requiredness,
   5: optional string defaultValue,
   99: optional list<Annotation> annotations = []
-}
+} (generate_proxy="true")
 
 struct Struct {
   1: required string name,
   2: required list<Field> fields,
   99: optional list<Annotation> annotations = []
-}
+} (generate_proxy="true")
 
 struct Union {
   1: required string name,
   2: required list<Field> fields,
   99: optional list<Annotation> annotations = []
-}
+} (generate_proxy="true")
 
 struct Exception {
   1: required string name,
   2: required list<Field> fields,
   99: optional list<Annotation> annotations = []
-}
+} (generate_proxy="true")
 
 
 /* Services. */
@@ -201,14 +201,14 @@ struct Function {
   4: required list<Field> argz,
   5: required list<Field> throwz,
   99: optional list<Annotation> annotations = []
-}
+} (generate_proxy="true")
 
 struct Service {
   1: required string name,
   2: optional string extendz,
   3: required list<Function> functions,
   99: optional list<Annotation> annotations = []
-}
+} (generate_proxy="true")
 
 
 // In the Thrift parsing code the collection of all elements in a .thrift file
@@ -226,4 +226,4 @@ struct Program {
 
   // A registry of all types in the program. Used for resolving type references.
   98: required TypeRegistry typeRegistry
-}
+} (generate_proxy="true")
