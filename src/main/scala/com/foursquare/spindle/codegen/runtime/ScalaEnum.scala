@@ -4,7 +4,7 @@ package com.foursquare.spindle.codegen.runtime
 
 import com.twitter.thrift.descriptors.{Enum, EnumElement, EnumElementProxy, EnumProxy}
 
-class ScalaEnumElement(override val underlying: EnumElement) extends EnumElementProxy {
+class ScalaEnumElement(override val underlying: EnumElement) extends EnumElementProxy with HasAnnotations {
   val alternateValue: Option[String] = {
     val stringValueAnnotations = __annotations.find(_.keyOption.exists(_ == "string_value"))
     if (stringValueAnnotations.size > 1) {
@@ -14,7 +14,7 @@ class ScalaEnumElement(override val underlying: EnumElement) extends EnumElement
   }
 }
 
-class ScalaEnum(override val underlying: Enum) extends EnumProxy {
+class ScalaEnum(override val underlying: Enum) extends EnumProxy with HasAnnotations {
   override val elements: Seq[ScalaEnumElement] = underlying.elements.map(elem => new ScalaEnumElement(elem))
 
   val supportsAlternateValues: Boolean = {
