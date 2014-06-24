@@ -4,7 +4,7 @@ package com.foursquare.spindle.codegen.runtime
 
 import com.twitter.thrift.descriptors.{Annotation, Field, Function, FunctionProxy, Requiredness}
 
-class ScalaFunction(override val underlying: Function, resolver: TypeReferenceResolver) extends FunctionProxy {
+class ScalaFunction(override val underlying: Function, resolver: TypeReferenceResolver) extends FunctionProxy with HasAnnotations {
   val returnRenderType: Option[RenderType] = (underlying
     .returnTypeIdOption
     .flatMap(typeId => resolver.typeForTypeId(typeId).right.toOption)
