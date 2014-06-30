@@ -15,7 +15,7 @@ trait MetaRecord[R <: Record[R]] extends UntypedMetaRecord {
   type Raw <: R
 
   def recordName: String
-  def createRawRecord: Raw
+  def createRawRecord: Raw with MutableRecord[R]
   def fields: Seq[FieldDescriptor[_, R, this.type]]
   def ifInstanceFrom(x: AnyRef): Option[R]
 }

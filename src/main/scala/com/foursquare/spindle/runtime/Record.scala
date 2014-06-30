@@ -11,6 +11,12 @@ trait UntypedRecord {
   def write(oprot: TProtocol): Unit
 }
 
-trait Record[R <: Record[R]] extends UntypedRecord { self: R =>
+trait Record[R <: Record[R]] extends UntypedRecord with scala.Ordered[R] { self: R =>
   def meta: MetaRecord[R]
+
+  def mergeCopy(that: R): R
+}
+
+trait MutableRecord[R <: Record[R]] { self: R =>
+  def merge(that: R): Unit
 }

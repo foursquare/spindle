@@ -17,7 +17,6 @@ trait ${cls.name}
 #for (pkField <- cls.primaryKeyField)
     with com.foursquare.spindle.HasPrimaryKey[${pkField.renderType.text}, ${cls.name}]
 #end
-    with scala.Ordered[${cls.name}]
     with org.apache.thrift.TBase[${cls.name}, ${cls.name}._Fields] {
 
 #for (field <- cls.fields)
