@@ -1,12 +1,7 @@
 <%@ val renderType: com.foursquare.spindle.codegen.runtime.ObjectIdRenderType %>
 <%@ val lhs: String %>
 <%@ val indent: String %>
-<%@ val wrapLeft: String = "" %>
-<%@ val wrapRight: String = "" %>
-<% render("../" + renderType.ref.fieldReadTemplate,
-    Map(
-      "renderType" -> renderType.ref,
-      "lhs" -> lhs,
-      "indent" -> indent,
-      "wrapLeft" -> (wrapLeft + "new org.bson.types.ObjectId(org.apache.thrift.TBaseHelper.rightSize("),
-      "wrapRight" -> (").array)" + wrapRight))) %>
+${indent}${lhs} {
+${indent}  val bb: java.nio.ByteBuffer = iprot.readBinary
+${indent}  new org.bson.types.ObjectId(bb.getInt, bb.getInt, bb.getInt)
+${indent}}
