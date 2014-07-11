@@ -27,3 +27,10 @@ struct StructWithNewEnumField {
 } (
   preserve_unknown_fields="1"
 )
+
+enum TestEnum {
+  Foo = 0 (owner="jliszka")
+  Bar = 1
+} (
+  owner = "blackmad"
+)

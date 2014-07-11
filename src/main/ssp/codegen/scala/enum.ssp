@@ -4,6 +4,9 @@
   import com.foursquare.spindle.codegen.runtime.ScalaEnum
 %>
 <%@ val enum: ScalaEnum %>
+<%
+def escapeQuotes(str: String): String = str.replace("\"", "\\\"")
+%>\
 <%--
 // Scala Enumeration is awful, so we just generate our own enum-like thing
 // here. Enumeration (and Java's type-safe enums) are just boilerplate-reducing
@@ -32,9 +35,23 @@ object ${enum.name} extends com.foursquare.spindle.EnumMeta[${enum.name}] {
 #for (elem <- enum.elements)
   <% val alt = elem.alternateValue.getOrElse(elem.name) %>
   object ${elem.name} extends ${enum.name}(${elem.value.toString}, "${elem.name}", "${alt}")
+#if (elem.annotations.nonEmpty)\
+  {
+    override val annotations: com.foursquare.spindle.Annotations =
+      new com.foursquare.spindle.Annotations(scala.collection.immutable.Vector(
+        ${elem.annotations.toSeq.map(annot => "(\"%s\", \"%s\")".format(annot._1, escapeQuotes(annot._2))).mkString(",\n      ")}
+      ))
+  }
+#end
 #end
 
   final case class UnknownWireValue(override val id: Int) extends ${enum.name}(id, "?", "?")
+#if (enum.annotations.nonEmpty)
+  override val annotations: com.foursquare.spindle.Annotations =
+    new com.foursquare.spindle.Annotations(scala.collection.immutable.Vector(
+      ${enum.annotations.toSeq.map(annot => "(\"%s\", \"%s\")".format(annot._1, escapeQuotes(annot._2))).mkString(",\n      ")}
+    ))
+#end
 
   override val values: Vector[${enum.name}] =
     Vector(

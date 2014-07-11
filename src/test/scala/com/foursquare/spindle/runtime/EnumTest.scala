@@ -13,7 +13,14 @@ import com.foursquare.spindle.runtime.{TProtocolInfo, KnownTProtocolNames}
 class EnumTest {
 
   @Test
-  def testEnum() {
+  def testEnumAnnotations() {
+    assertEquals(Some("blackmad"), TestEnum.annotations.get("owner"))
+    assertEquals(Some("jliszka"), TestEnum.Foo.annotations.get("owner"))
+    assertEquals(None, TestEnum.Bar.annotations.get("owner"))
+  }
+
+  @Test
+  def testUnknownEnum() {
     // Test all 25 possible combinations of src and dst protocol.
     val protocols =
       KnownTProtocolNames.TBinaryProtocol ::
@@ -25,11 +32,11 @@ class EnumTest {
 
     for (src <- protocols; dst <- protocols) {
       println("Testing unknown enum value compatibility between: %s -> %s".format(src, dst))
-      doTestEnum(src, dst)
+      doTestUnknownEnum(src, dst)
     }
   }
 
-  private def doTestEnum(srcProtocol: String, dstProtocol: String) {
+  private def doTestUnknownEnum(srcProtocol: String, dstProtocol: String) {
     val enumStruct = StructWithNewEnumField.newBuilder
       .anEnum(NewTestEnum.Two)
       .anEnumList(NewTestEnum.Zero :: NewTestEnum.Two :: NewTestEnum.One :: Nil)

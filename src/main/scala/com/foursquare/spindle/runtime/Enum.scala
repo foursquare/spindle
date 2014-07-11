@@ -11,6 +11,8 @@ abstract class Enum[T <: Enum[T]] extends Ordered[T] { self: T =>
 
   // Implementation of Ordered[T].
   override def compare(other: T) = this.id.compare(other.id)
+
+  def annotations: Annotations = Annotations.empty
 }
 
 abstract class EnumMeta[T <: Enum[T]] {
@@ -36,4 +38,6 @@ abstract class EnumMeta[T <: Enum[T]] {
 
   // Implemented by concrete subclasses to implement the conversion.
   def findByStringValueOrNull(v: String): T
+
+  def annotations: Annotations = Annotations.empty
 }
