@@ -8,10 +8,10 @@ In order to use Spindle structs with Mongo, they must have the required Mongo an
 
 * ``mongo_collection`` - name of the Mongo collection
 * ``mongo_identifier`` - name of the Mongo instance
+* ``primary_key`` - the name of the primary key field
 
 There are also a number of optional Mongo annotations:
 
-* ``primary_key`` - the name of the primary key field
 * ``foreign_key`` - one or more annotations with names of foreign key fields
 * ``index`` - one or more annotations with indexed fields
 
