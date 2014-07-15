@@ -81,7 +81,8 @@ val requiredTraits = requiredFields.map(field => "Has" + field.name.capitalize)
     for ((trayt, paramName) <- requiredTraits.zip(paramNames)) yield {
       "%s: State <:< Builder.%s".format(paramName, trayt)
     }
-  val resultImplicitParams =  if (hasRequiredFields) "(implicit %s)".format(paramDecls.mkString(", ")) else "()"
+  val resultImplicitParams = if (hasRequiredFields) "(implicit %s)".format(paramDecls.mkString(", ")) else ""
+  val resultParams = if (hasRequiredFields) "(%s)".format(paramNames.mkString(", ")) else ""
 %>
     def resultMutable()${resultImplicitParams}: ${cls.name}.Mutable = {
       if (obj != null) {
@@ -93,7 +94,7 @@ val requiredTraits = requiredFields.map(field => "Has" + field.name.capitalize)
       }
     }
 
-    def result()${resultImplicitParams}: ${cls.name} = resultMutable()(${paramNames.mkString(", ")})
+    def result()${resultImplicitParams}: ${cls.name} = resultMutable()${resultParams}
   }
 
   def newBuilder: ${cls.name}.Builder.AllUnspecified = new Builder(${cls.name}.createRawRecord)
