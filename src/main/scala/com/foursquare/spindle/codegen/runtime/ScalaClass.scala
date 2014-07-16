@@ -9,7 +9,14 @@ class ScalaClass(
     override val underlying: Struct,
     resolver: TypeReferenceResolver
 ) extends StructProxy with StructLike {
-  private val primaryKeyFieldName: Option[String] = annotations.get("primary_key")
+  private val primaryKeyFieldName: Option[String] = {
+    annotations.get("primary_key") orElse {
+      if (annotations.contains("mongo_collection")) {
+        throw new CodegenException("Error: primary_key annotation must be specified on mongo record %s".format(this.name))
+      }
+      None
+    }
+  }
   private val foreignKeyFieldNames: Seq[String] = annotations.getAll("foreign_key")
 
   private val existingFieldNames: Set[String] = underlying.__fields.map(_.name).toSet
