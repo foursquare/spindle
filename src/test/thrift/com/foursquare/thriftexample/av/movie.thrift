@@ -7,9 +7,10 @@ include "com/foursquare/thriftexample/talent/crewmember.thrift"
 
 typedef crewmember.CrewMember CrewMember
 typedef binary (enhanced_types="bson:ObjectId") ObjectId
+typedef ObjectId MovieId (new_type="true")
 
 struct Movie {
-  5: optional ObjectId id (wire_name="id", builder_required="true")
+  5: optional MovieId id (wire_name="id", builder_required="true")
   1: required string name (wire_name="name", builder_required="true")
   2: required i32 lengthMinutes
   3: optional map<string, actor.Actor> cast  // E.g., "Austin Powers" -> Mike Myers

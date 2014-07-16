@@ -6,6 +6,7 @@ import com.foursquare.common.thrift.bson.TBSONProtocol
 import com.foursquare.common.thrift.json.TReadableJSONProtocol
 import com.foursquare.thriftexample.{Content, TvListingEntry}
 import com.foursquare.thriftexample.av.Movie
+import com.foursquare.thriftexample.av.MovieTypedefs.MovieId
 import com.foursquare.thriftexample.people.{ContactInfo, Gender, Person, PhoneNumber, PhoneType}
 import com.foursquare.thriftexample.talent.{Actor, CrewMember}
 import com.foursquare.thriftexample.TvlistingTypedefs.{MyLong, MyObjectId, MyString}
@@ -66,7 +67,7 @@ class GeneratedCodeTest {
     val movie =
       (Movie
         .newBuilder
-        .id(new ObjectId("522e3e9f4b90871874292b48"))
+        .id(MovieId(new ObjectId("522e3e9f4b90871874292b48")))
         .name("Dodgeball: A True Underdog Story")
         .lengthMinutes(92)
         .cast(Map("Peter La Fleur" -> vinceVaughn, "Kate Veatch" -> christineTaylor))
