@@ -6,10 +6,12 @@ import com.mojolly.scalate.ScalatePlugin.{ScalateKeys, TemplateConfig}
 import sbt._
 
 object Default {
+  lazy val IvyDefaultConfiguration = config("default") extend(Compile)
   val all: Seq[Setting[_]] = Seq(
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
-    Keys.version := "2.0.0-M8a",
+    Keys.version := "2.0.0-M9",
     Keys.organization := "com.foursquare",
+    Keys.ivyConfigurations += IvyDefaultConfiguration,
     Keys.publishMavenStyle := true,
     Keys.publishArtifact in Test := false,
     Keys.pomIncludeRepository := { _ => false },
