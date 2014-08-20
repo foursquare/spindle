@@ -27,7 +27,11 @@ trait FieldDescriptor[F, R <: Record[R], M <: MetaRecord[R]] extends Field[F, M]
   override def unsafeManifest: Manifest[_] = manifest
 }
 
-trait ForeignKeyField[F, R <: Record[R]] {
+trait UntypedForeignKeyField {
+  def unsafeObjGetter: Function1[Any, Option[Any]]
+}
+
+trait ForeignKeyField[F, R <: Record[R]] extends UntypedForeignKeyField {
   def objSetter: (R, SemitypedHasPrimaryKey[F]) => Unit
   def objGetter: (R, UntypedMetaRecord) => Option[UntypedRecord with SemitypedHasPrimaryKey[F]]
   def alternateObjSetter: (R, AnyRef) => Unit
@@ -66,6 +70,7 @@ case class ForeignKeyFieldDescriptor[F, R <: Record[R], M <: MetaRecord[R]](
     override val unsetterRaw: M#Raw => Unit,
     override val objSetter: (R, SemitypedHasPrimaryKey[F]) => Unit,
     override val objGetter: (R, UntypedMetaRecord) => Option[UntypedRecord with SemitypedHasPrimaryKey[F]],
+    override val unsafeObjGetter: Function1[Any, Option[Any]],
     override val alternateObjSetter: (R, AnyRef) => Unit,
     override val alternateObjGetter: R => Option[AnyRef],
     override val manifest: Manifest[F]

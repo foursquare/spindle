@@ -36,6 +36,13 @@
       None
     }
   }
+  override def ${field.name}GetObj: Option[com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]] = {
+    if (${field.varName}Obj != null) {
+      Some(${field.varName}Obj.asInstanceOf[com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]])
+    } else {
+      None
+    }
+  }
   override def ${field.name}SetObj(x: com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]): Unit = {
     ${field.varName}Obj = x
   }

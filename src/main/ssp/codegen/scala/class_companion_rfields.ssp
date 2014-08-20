@@ -31,6 +31,7 @@
 #if (field.isForeignKey)
       objSetter = (r: ${cls.name}, obj: com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]) => { r.${field.name}SetObj(obj) },
       objGetter = (r: ${cls.name}, m: com.foursquare.spindle.UntypedMetaRecord) => { r.${field.name}UntypedFk(m) },
+      unsafeObjGetter = (r: Any) => { r.asInstanceOf[${cls.name}].${field.name}GetObj },
       alternateObjSetter = (r: ${cls.name}, obj: AnyRef) => { r.${field.name}SetAlternateObj(obj) },
       alternateObjGetter = (r: ${cls.name}) => { r.${field.name}AlternateFk },
 #elseif (field.renderType.isInstanceOf[com.foursquare.spindle.codegen.runtime.BitfieldStructRenderType])
