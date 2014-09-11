@@ -9,7 +9,7 @@ object Default {
   lazy val IvyDefaultConfiguration = config("default") extend(Compile)
   val all: Seq[Setting[_]] = Seq(
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
-    Keys.version := "2.0.0-M9",
+    Keys.version := "2.0.0-M10a",
     Keys.organization := "com.foursquare",
     Keys.ivyConfigurations += IvyDefaultConfiguration,
     Keys.publishMavenStyle := true,
@@ -107,9 +107,10 @@ object Default {
   val thriftBootstrap = Default.scala ++ ThriftCodegenPlugin.thriftSettings ++ Seq(
     Keys.sourceDirectory in ThriftCodegenPlugin.thrift in Compile <<= (Keys.baseDirectory)(identity),
     Keys.scalaBinaryVersion in ThriftCodegenPlugin.thrift := "2.9.2",
-    ThriftCodegenPlugin.thriftCodegenVersion := "1.8.5",
+    ThriftCodegenPlugin.thriftCodegenVersion := "2.0.0-M10",
     ThriftCodegenPlugin.thriftCodegenRuntimeLibs := ThirdParty.scalajCollection,
     ThriftCodegenPlugin.thriftCodegenTemplate := file("src/main/ssp/codegen/scala/record.ssp").absolutePath,
+    ThriftCodegenPlugin.thriftCodegenJavaTemplate := file("src/main/ssp/codegen/java/record.ssp").absolutePath,
     Keys.ivyScala <<= (Keys.ivyScala)(_.map(_.copy(checkExplicit = false, filterImplicit = false, overrideScalaVersion =false))),
     Keys.update <<= (Keys.ivyModule, Keys.thisProjectRef, Keys.updateConfiguration, Keys.cacheDirectory, Keys.transitiveUpdate,
         Keys.executionRoots, Keys.resolvedScoped, Keys.skip in Keys.update, Keys.streams) map {
@@ -142,6 +143,7 @@ object Default {
           Keys.baseDirectory, Keys.sourceManaged, Keys.crossTarget, Keys.configuration in Compile, Keys.streams) map {
             (cp, r, in, out, targetDir, conf, s) =>
         val template = file("src/main/ssp/codegen/scala/record.ssp")
+        val javaTemplate = file("src/main/ssp/codegen/java/record.ssp")
         val extension = "scala"
         val workingDir = targetDir / (Defaults.prefix(conf.name) + "scalate.d")
         out.mkdirs()
@@ -151,6 +153,7 @@ object Default {
           cp.files,
           Seq(
             "--template", template.absolutePath,
+            "--java_template", javaTemplate.absolutePath,
             "--extension", extension,
             "--namespace_out", out.absolutePath,
             "--thrift_include", "src/test/thrift",
@@ -158,7 +161,7 @@ object Default {
           thriftSources.map(_.absolutePath),
           s.log
         ).foreach(error)
-        (out ** "*.scala") get
+        (out ** "*.java").get ++ (out ** "*.scala").get
       }
   )
 

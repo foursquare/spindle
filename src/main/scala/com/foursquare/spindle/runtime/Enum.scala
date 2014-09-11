@@ -2,7 +2,7 @@
 
 package com.foursquare.spindle
 
-abstract class Enum[T <: Enum[T]] extends Ordered[T] { self: T =>
+trait Enum[T <: Enum[T]] extends Ordered[T] { self: T =>
   def meta: EnumMeta[T]
 
   def id: Int
@@ -13,7 +13,7 @@ abstract class Enum[T <: Enum[T]] extends Ordered[T] { self: T =>
   override def compare(other: T) = this.id.compare(other.id)
 }
 
-abstract class EnumMeta[T <: Enum[T]] {
+trait EnumMeta[T <: Enum[T]] {
   def values: Vector[T]
 
   def findByIdOrNull(id: Int): T

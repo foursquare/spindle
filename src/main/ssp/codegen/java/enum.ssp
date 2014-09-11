@@ -1,0 +1,16 @@
+<%
+  // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
+
+  import com.foursquare.spindle.codegen.runtime.ScalaEnum
+%>
+<%@ val enum: ScalaEnum %>
+<%--
+// Scala Enumeration is awful, so we just generate our own enum-like thing
+// here. Enumeration (and Java's type-safe enums) are just boilerplate-reducing
+// conveniences, and since we're generating code, we don't need that
+// convenience anyway.
+--%>
+abstract class Java${enum.name} {
+  public abstract int id();
+  public int getValue() { return id(); }
+}

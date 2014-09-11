@@ -16,13 +16,22 @@ object ThriftCodegen {
   def main(_args: Array[String]): Unit = {
     val args = new CodegenArgs(_args)
     try {
+      args.javaTemplate.value.foreach(javaTemplate => {
+        compile(
+          javaTemplate,
+          args.input.value,
+          args.includes.value.getOrElse(Nil),
+          args.namespaceOut.value,
+          args.workingDir.value,
+          "java",
+          args.allowReload.value.getOrElse(false))
+      })
       compile(
         args.template.value.get,
         args.input.value,
         args.includes.value.getOrElse(Nil),
         args.namespaceOut.value,
         args.workingDir.value,
-        args.output.value,
         args.extension.value.getOrElse("scala"),
         args.allowReload.value.getOrElse(false))
     } catch {
@@ -38,7 +47,6 @@ object ThriftCodegen {
       includePaths: Seq[File],
       namespaceOutputPath: Option[File],
       workingDirPath: Option[File],
-      outputPath: Option[File],
       extension: String,
       allowReload: Boolean
   ): Unit = {
@@ -88,6 +96,13 @@ object ThriftCodegen {
             val outputDir = nsOut.getAbsoluteFile.toString + prefix
             new File(outputDir).mkdirs()
             val outputFile = new File(outputDir + File.separator + source.baseName + ".scala")
+            new PrintWriter(outputFile, "UTF-8")
+          }
+          case ("java", Some(nsOut)) => {
+            val prefix = program.pkg.map(_.split('.').mkString(File.separator, File.separator, "")).getOrElse("")
+            val outputDir = nsOut.getAbsoluteFile.toString + prefix
+            new File(outputDir).mkdirs()
+            val outputFile = new File(outputDir + File.separator + source.baseName + ".java")
             new PrintWriter(outputFile, "UTF-8")
           }
           case (a, b) => {
@@ -191,7 +206,9 @@ object ThriftCodegen {
   class CodegenArgs(args: Array[String]) {
     val parser = new ArgotParser("scala-thrift-codegen", preUsage=Some("scala-thrift-codegen: Version 0.1"))
 
-    val template = parser.option[String](List("template"), "/path/to/template", "path to template to generate from")
+    val template = parser.option[String](List("template"), "/path/to/template", "path to scala template to generate from")
+
+    val javaTemplate = parser.option[String](List("java_template"), "/path/to/template", "path to java template to generate from")
 
     val includes = parser.option[Seq[File]](List("thrift_include"), "dir1:dir2:...",
         "thrift include directives are resolved relative to these paths (and the including file's directory)") { (s, _) =>
@@ -200,11 +217,6 @@ object ThriftCodegen {
       if (nonexisting.nonEmpty)
         parser.usage("Thrift included file(s) " + nonexisting.mkString(":") + "do(es) not exists.")
       files
-    }
-
-    val output = parser.option[File](List("out"), "/path/to/output/file",
-        "Output file. If --out and --namespace_out are unspecified, we print to stdout.") { (s, _) =>
-      parseFile(s)
     }
 
     val namespaceOut = parser.option[File](List("namespace_out"), "/path/to/output/dir",
