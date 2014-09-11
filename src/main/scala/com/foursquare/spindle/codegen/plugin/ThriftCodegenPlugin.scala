@@ -15,7 +15,8 @@ object ThriftCodegenPlugin extends Plugin {
   val thriftCodegenBinaryLibs = SettingKey[Seq[ModuleID]]("thrift-codegen-binary-libs", "Version of Thrift codegen binary to use.")
   val thriftCodegenRuntimeLibs = SettingKey[Seq[ModuleID]]("thrift-codegen-runtime-libs", "Libraries needed for Thrift generated code.")
   val thriftCodegenIncludes = SettingKey[Seq[File]]("thrift-codegen-includes", "Directories to include in Thrift dependency resolution.")
-  val thriftCodegenTemplate = SettingKey[String]("thrift-codegen-template", "Template to use for generating code.")
+  val thriftCodegenTemplate = SettingKey[String]("thrift-codegen-template", "Template to use for generating Scala code.")
+  val thriftCodegenJavaTemplate = SettingKey[String]("thrift-codegen-java-template", "Template to use for generating Java code.")
   val thriftCodegenAllowReload = SettingKey[Boolean]("thrift-codegen-allow-reload", "Allow reloading of codegen templates.")
   val thriftCodegenWorkingDir = SettingKey[File]("thrift-codegen-working-dir", "Directory to use for caching compiled Scalate templates.")
 
@@ -25,6 +26,7 @@ object ThriftCodegenPlugin extends Plugin {
       runtime ++ binary.map(_ % "thrift")
     }),
     thriftCodegenTemplate := "scala/record.ssp",
+    thriftCodegenJavaTemplate := "javagen/record.ssp",
     thriftCodegenAllowReload := false,
     thriftCodegenVersion := "2.0.0-M9",
     thriftCodegenBinaryLibs <<= (thriftCodegenVersion, Keys.scalaBinaryVersion in thrift)((cv, bv) =>
@@ -64,7 +66,7 @@ object ThriftCodegenPlugin extends Plugin {
     },
     Keys.sourceManaged in thrift ~= (_ / "thrift"), // e.g. /target/scala-2.8.1.final/src_managed/main/thrift
     thrift                       <<= (Keys.javaHome, Keys.classpathTypes in thrift, Keys.update,
-                                  Keys.sources in thrift, thriftCodegenTemplate, Keys.sourceManaged in thrift,
+                                  Keys.sources in thrift, thriftCodegenTemplate, thriftCodegenJavaTemplate, Keys.sourceManaged in thrift,
                                   thriftCodegenIncludes, thriftCodegenAllowReload, thriftCodegenWorkingDir,
                                   Keys.resolvedScoped, Keys.streams).map(thriftCompile),
     Keys.sourceGenerators        <+= thrift,
@@ -81,6 +83,7 @@ object ThriftCodegenPlugin extends Plugin {
       updateReport: UpdateReport,
       thriftSources: Seq[File],
       template: String,
+      javaTemplate: String,
       sourceManaged: File,
       includes: Seq[File],
       allowReload: Boolean,
@@ -89,7 +92,7 @@ object ThriftCodegenPlugin extends Plugin {
       streams: TaskStreams
   ): Seq[File] = {
     import streams.log
-    def generated = (sourceManaged ** "*.scala").get
+    def generated = (sourceManaged ** "*.java").get ++ (sourceManaged ** "*.scala").get
 
     val shouldProcess = (thriftSources, generated) match {
       case (Seq(), _) => log.debug("No sources, skipping."); false
@@ -110,6 +113,7 @@ object ThriftCodegenPlugin extends Plugin {
       val mainClass = "com.foursquare.spindle.codegen.binary.ThriftCodegen"
       val appOptions = Seq(
         "--template", template,
+        "--java_template", javaTemplate,
         "--extension", "scala",
         "--namespace_out", sourceManaged.absolutePath,
         "--thrift_include", includes.map(_.absolutePath).mkString(":"),
