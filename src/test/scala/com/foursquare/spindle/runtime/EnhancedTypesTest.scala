@@ -62,10 +62,13 @@ class EnhancedTypesTest {
     val buf = doWrite(tproto, struct)
 
     // Read the new object into an older version of the same struct.
-    val roundtrippedStruct = BSONObjectFields.createRawRecord.asInstanceOf[TBase[_, _]]
+    val bsoStruct= BSONObjectFields.createRawRecord
+    val roundtrippedStruct = bsoStruct.asInstanceOf[TBase[_, _]]
     doRead(tproto, buf, roundtrippedStruct)
 
     assertEquals(struct, roundtrippedStruct)
+    assertEquals(struct.bsoOrNull.get("foo"), "bar")
+    assertEquals(bsoStruct.bsoOrNull.get("foo"), "bar")
   }
 
   private def doWrite(protocolName: String, thriftObj: TBase[_, _]): TMemoryBuffer = {
