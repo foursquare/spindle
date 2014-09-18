@@ -1,7 +1,7 @@
 <%
   // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-  import com.foursquare.spindle.codegen.runtime.StructLike 
+  import com.foursquare.spindle.codegen.runtime.StructLike
 %>
 <%@ val cls: StructLike %>
   override def compare(that: ${cls.name}): Int = {
@@ -10,12 +10,14 @@
       1
     }
 #for (field <- cls.fields)
+#if (field.renderType.hasOrdering)
     else if ({
       cmp = this.${field.isSetName}.compareTo(that.${field.isSetName})
       cmp != 0 }) cmp
     else if (this.${field.isSetName} && {
       cmp = ${render(field.renderType.compareTemplate, Map("field" -> field))}
       cmp != 0 }) cmp
+#end
 #end
     else 0
   }
