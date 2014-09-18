@@ -26,7 +26,6 @@ trait RenderType {
   def isEnum: Boolean = false
   def usesSetVar: Boolean
   def hasOrdering: Boolean
-  def hasCompare: Boolean = true
   def renderValueSupported = false
   def renderValue(v: String): Option[String] = None
 }
@@ -266,8 +265,7 @@ case class BSONObjectRenderType(ref: RenderType) extends RefRenderType with Enha
   override def text: String = "org.bson.BSONObject"
   override def fieldWriteTemplate: String = "write/bsonobject.ssp"
   override def fieldReadTemplate: String = "read/bsonobject.ssp"
-  // override def compareTemplate = "compare/bsonobject.ssp"
-  override def hasCompare: Boolean = false
+  override def compareTemplate = "compare/bsonobject.ssp"
   override def underlying: RenderType = ref.underlying
   override def ttype: TType = TType.STRING
   override def hasOrdering: Boolean = false

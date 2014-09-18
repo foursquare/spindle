@@ -10,14 +10,12 @@
       1
     }
 #for (field <- cls.fields)
-#if (field.renderType.hasOrdering)
     else if ({
       cmp = this.${field.isSetName}.compareTo(that.${field.isSetName})
       cmp != 0 }) cmp
     else if (this.${field.isSetName} && {
       cmp = ${render(field.renderType.compareTemplate, Map("field" -> field))}
       cmp != 0 }) cmp
-#end
 #end
     else 0
   }
