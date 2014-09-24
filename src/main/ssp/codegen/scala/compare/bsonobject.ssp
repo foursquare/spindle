@@ -4,4 +4,4 @@
   import com.foursquare.spindle.codegen.runtime.ScalaField
 %>
 <%@ val field: ScalaField %>
-this.${field.escapedName}.compareTo(that.${field.escapedName})
+{this.${field.name}OrNull.toString.compareTo(that.${field.name}OrNull.toString)}

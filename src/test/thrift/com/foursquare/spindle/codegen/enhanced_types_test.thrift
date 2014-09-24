@@ -3,9 +3,14 @@
 namespace java com.foursquare.spindle.test.gen
 
 typedef binary (enhanced_types="bson:ObjectId") ObjectId
+typedef binary (enhanced_types="bson:BSONObject") BSONObject
 
 struct ObjectIdFields {
   1: optional ObjectId foo
   2: optional list<ObjectId> bar
   3: optional map<string, ObjectId> baz
+}
+
+struct BSONObjectFields {
+  1: optional BSONObject bso
 }

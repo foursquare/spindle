@@ -2,7 +2,8 @@
 
 package com.foursquare.spindle.test
 
-import com.foursquare.spindle.test.gen.ObjectIdFields
+import com.foursquare.spindle.test.gen.{BSONObjectFields, ObjectIdFields}
+import org.bson.BasicBSONObject
 import org.bson.types.ObjectId
 import org.apache.thrift.TBase
 import org.apache.thrift.transport.{TTransport, TMemoryBuffer}
@@ -28,6 +29,7 @@ class EnhancedTypesTest {
     for (tproto <- protocols) {
       println("Testing enhanced types for protocol %s".format(tproto))
       doTestObjectIdFields(tproto)
+      doTestBSONObjectFields(tproto)
     }
   }
 
@@ -48,6 +50,26 @@ class EnhancedTypesTest {
     assertEquals(struct, roundtrippedStruct)
   }
 
+  private def doTestBSONObjectFields(tproto: String) {
+    val bso = new BasicBSONObject()
+    bso.put("foo", "bar")
+
+    val struct = BSONObjectFields.newBuilder
+      .bso(bso)
+      .result()
+
+    // Write the object out.
+    val buf = doWrite(tproto, struct)
+
+    // Read the new object into an older version of the same struct.
+    val bsoStruct= BSONObjectFields.createRawRecord
+    val roundtrippedStruct = bsoStruct.asInstanceOf[TBase[_, _]]
+    doRead(tproto, buf, roundtrippedStruct)
+
+    assertEquals(struct, roundtrippedStruct)
+    assertEquals(struct.bsoOrNull.get("foo"), "bar")
+    assertEquals(bsoStruct.bsoOrNull.get("foo"), "bar")
+  }
 
   private def doWrite(protocolName: String, thriftObj: TBase[_, _]): TMemoryBuffer = {
     val protocolFactory = TProtocolInfo.getWriterFactory(protocolName)

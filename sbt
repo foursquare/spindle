@@ -16,4 +16,9 @@ then
 fi
 
 # Call with INTERNAL_OPTS followed by SBT_OPTS (or DEFAULT_OPTS). java aways takes the last option when duplicate.
-exec java ${INTERNAL_OPTS} ${SBT_OPTS:-${DEFAULT_OPTS}} -jar $SBT_LAUNCHER "$@"
+JAVA_BINARY=java
+if [ -n "$JAVA_HOME" ]; then
+  JAVA_BINARY=$JAVA_HOME/bin/java
+fi
+
+exec $JAVA_BINARY ${INTERNAL_OPTS} ${SBT_OPTS:-${DEFAULT_OPTS}} -jar $SBT_LAUNCHER "$@"

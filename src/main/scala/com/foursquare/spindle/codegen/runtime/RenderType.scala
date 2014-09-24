@@ -156,7 +156,7 @@ case class SeqRenderType(e1: RenderType) extends Container1RenderType("scala.col
       val values = withoutParens.split("\\s*,\\s*")
       Some("List(%s)".format(values.flatMap(v => e1.renderValue(v)).mkString(", ")))
     } else None
-    
+
   } catch {
     case e: Exception => {
       throw new Exception("unable to parse map value '%s'".format())
@@ -183,7 +183,7 @@ case class MapRenderType(e1: RenderType, e2: RenderType) extends Container2Rende
   override def fieldReadTemplate: String = "read/map.ssp"
   override def underlying: MapRenderType = MapRenderType(e1.underlying, e2.underlying)
   override val renderValueSupported = e1.renderValueSupported && e2.renderValueSupported
-  override def renderValue(v: String) = try { 
+  override def renderValue(v: String) = try {
     if (renderValueSupported) {
       val withoutParens = v.slice(1, v.size-1)
       val tuples = withoutParens.split("\\s*,\\s*").map(_.split("\\s*:\\s*"))
@@ -201,7 +201,7 @@ case class MapRenderType(e1: RenderType, e2: RenderType) extends Container2Rende
       throw new Exception("unable to parse map value '%s'".format(v), e)
     }
   }
-  
+
 }
 
 case class TypedefRenderType(override val text: String, ref: RenderType) extends RenderType {
@@ -261,6 +261,18 @@ case class ObjectIdRenderType(ref: RenderType) extends RefRenderType with Enhanc
   override def renderValue(v: String) = Some("new org.bson.types.ObjectId(%s)".format(v))
 }
 
+case class BSONObjectRenderType(ref: RenderType) extends RefRenderType with EnhancedRenderType {
+  override def text: String = "org.bson.BSONObject"
+  override def fieldWriteTemplate: String = "write/bsonobject.ssp"
+  override def fieldReadTemplate: String = "read/bsonobject.ssp"
+  override def compareTemplate = "compare/bsonobject.ssp"
+  override def underlying: RenderType = ref.underlying
+  override def ttype: TType = TType.STRING
+  override def hasOrdering: Boolean = false
+  override def renderValueSupported = false
+  override def renderValue(v: String) = None //Some("new org.bson.types.ObjectId(%s)".format(v))
+}
+
 case class DateTimeRenderType(ref: RenderType) extends RefRenderType with EnhancedRenderType {
   override def text: String = "org.joda.time.DateTime"
   override def fieldWriteTemplate: String = "write/datetime.ssp"
@@ -268,7 +280,7 @@ case class DateTimeRenderType(ref: RenderType) extends RefRenderType with Enhanc
   override def underlying: RenderType = ref.underlying
   override def ttype: TType = TType.I64
   override def hasOrdering: Boolean = false
-  
+
 }
 
 case class JavaDateRenderType(ref: RenderType) extends RefRenderType with EnhancedRenderType {
@@ -377,6 +389,7 @@ object RenderType {
       case NewtypeRef(name, ref) => NewtypeRenderType(name, RenderType(ref))
       case EnhancedTypeRef(name, TypedefRef(_, ref)) => RenderType(EnhancedTypeRef(name, ref))
       case EnhancedTypeRef("bson:ObjectId", ref @ BinaryRef) => ObjectIdRenderType(RenderType(ref))
+      case EnhancedTypeRef("bson:BSONObject", ref @ BinaryRef) => BSONObjectRenderType(RenderType(ref))
       case EnhancedTypeRef("bson:DateTime", ref @ I64Ref) => DateTimeRenderType(RenderType(ref))
       case EnhancedTypeRef("java:Date", ref @ StringRef) => JavaDateRenderType(RenderType(ref))
       case EnhancedTypeRef("fs:DollarAmount", ref @ I64Ref) => DollarAmountRenderType(RenderType(ref))
