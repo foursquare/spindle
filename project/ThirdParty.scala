@@ -20,7 +20,7 @@ object ThirdParty {
   val finagleThrift29 = Seq(
     "com.twitter" % "finagle-thrift_2.9.2" % "6.3.0")
   val finagleThrift210 = Seq(
-    "com.twitter" %% "finagle-thrift" % "6.3.0")
+    "com.twitter" %% "finagle-thrift" % "6.16.0")
   val jackson = Seq(
     "org.codehaus.jackson" % "jackson-core-asl" % "1.9.8",
     "org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.8",
