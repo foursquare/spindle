@@ -79,3 +79,7 @@
 - include file name in thrift parser error message
 - codegen a trait for typedef implicits
 - scala 2.10.3
+
+# 2.0.0-M10
+
+- BSONObject enhanced type

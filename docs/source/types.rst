@@ -16,6 +16,11 @@ the code generator to deal with the enhanced type. For example::
     // A UTC datetime, stored as millis since the epoch.
     typedef i64 (enhanced_types="bson:DateTime") DateTime
 
+    // A BSON Object, stored as a binary blob 
+    // This is especially useful if you have serialized data to mongo that cannot be represented in thrift
+    typedef binary (enhanced_types="bson:BSONObject") BSONObject
+
+
 
 Without the enhanced types mechanism, an ``ObjectId`` would be serialized as binary over the wire and represented as a
 ``ByteBuffer`` or an ``Array[Byte]`` in Scala code. With the enhanced types mechanism, this will be serialized as binary
