@@ -632,4 +632,5 @@ service TestServices {
 
 service ChildTestServices extends TestServices {
   i32 dummy4(1: i32 A);
+  oneway void dummyOneway(1: i32 A, 2: i32 B);
 }
