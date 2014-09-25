@@ -3,12 +3,12 @@
 package com.foursquare.spindle.test
 
 import com.foursquare.spindle.test.gen.AService
+import com.twitter.conversions.time._
 import com.twitter.finagle.Thrift
-import org.junit.Assert.{assertEquals, assertFalse, assertTrue, fail}
-import org.junit.Test
 import com.twitter.util.{Await, Future, Promise}
 import java.net.InetSocketAddress
-import com.twitter.conversions.time._
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class ServicesTest {
   
