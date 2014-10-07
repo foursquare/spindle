@@ -9,7 +9,7 @@ object Default {
   lazy val IvyDefaultConfiguration = config("default") extend(Compile)
   val all: Seq[Setting[_]] = Seq(
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
-    Keys.version := "2.0.0-M11-bootstrap",
+    Keys.version := "2.0.0-M11-followup",
     Keys.organization := "com.foursquare",
     Keys.ivyConfigurations += IvyDefaultConfiguration,
     Keys.publishMavenStyle := true,
@@ -107,10 +107,10 @@ object Default {
   val thriftBootstrap = Default.scala ++ ThriftCodegenPlugin.thriftSettings ++ Seq(
     Keys.sourceDirectory in ThriftCodegenPlugin.thrift in Compile <<= (Keys.baseDirectory)(identity),
     Keys.scalaBinaryVersion in ThriftCodegenPlugin.thrift := "2.9.2",
-    ThriftCodegenPlugin.thriftCodegenVersion := "1.8.5",
+    ThriftCodegenPlugin.thriftCodegenVersion := "2.0.0-M11-bootstrap",
     ThriftCodegenPlugin.thriftCodegenRuntimeLibs := ThirdParty.scalajCollection,
     ThriftCodegenPlugin.thriftCodegenTemplate := file("src/main/ssp/codegen/scala/record.ssp").absolutePath,
-    // ThriftCodegenPlugin.thriftCodegenJavaTemplate := file("src/main/ssp/codegen/javagen/record.ssp").absolutePath,
+    ThriftCodegenPlugin.thriftCodegenJavaTemplate := file("src/main/ssp/codegen/javagen/record.ssp").absolutePath,
     Keys.ivyScala <<= (Keys.ivyScala)(_.map(_.copy(checkExplicit = false, filterImplicit = false, overrideScalaVersion =false))),
     Keys.update <<= (Keys.ivyModule, Keys.thisProjectRef, Keys.updateConfiguration, Keys.cacheDirectory, Keys.transitiveUpdate,
         Keys.executionRoots, Keys.resolvedScoped, Keys.skip in Keys.update, Keys.streams) map {
