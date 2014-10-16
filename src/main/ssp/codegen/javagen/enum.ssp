@@ -10,7 +10,7 @@
 // conveniences, and since we're generating code, we don't need that
 // convenience anyway.
 --%>
-interface Java${enum.name} {
+public static interface Java${enum.name} {
   public abstract int id();
   public int getValue();
 }

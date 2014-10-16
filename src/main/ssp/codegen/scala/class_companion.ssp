@@ -9,7 +9,8 @@ def escapeQuotes(str: String): String = str.replace("\"", "\\\"")
 %>\
 
 object ${cls.name}
-    extends com.foursquare.spindle.MetaRecord[${cls.name}]
+    extends Java${cls.name}Meta
+    with com.foursquare.spindle.MetaRecord[${cls.name}]
 #for (pkField <- cls.primaryKeyField)
     with com.foursquare.spindle.HasMetaPrimaryKey[${pkField.renderType.text}, ${cls.name}]
 #end
