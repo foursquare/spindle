@@ -60,7 +60,7 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
 
     <% render("service_funcsig.ssp", Map("function" -> function, "resolver" -> resolver, "namePrefix" -> "send_",
          "forceReturnTypeToUnit" -> true)) %> {
-      val args = ${function.name}_args.createRawRecord
+      val args = ${service.name}_${function.name}_args.createRawRecord
 #for (argument <- function.argz)
       args.${argument.name}_=(${argument.name})
 #end
@@ -70,7 +70,7 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
 #if (!function.oneWayOption.getOrElse(false))
 <%-- NOTE(tdyas): Unlike the regular Thrift compiler, we do not generate a @throws clause for recv_FOO methods. --%>
     def recv_${function.name}()${function.returnRenderType.map(rt => ": %s = {" format rt.text).getOrElse(" {")}
-      val result = ${function.name}_result.createRawRecord
+      val result = ${service.name}_${function.name}_result.createRawRecord
       receiveBase(result, "${function.name}")
 #for (field <- function.successField)
       if (result.${field.isSetName}) {
@@ -146,7 +146,7 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
       def write_args(prot: org.apache.thrift.protocol.TProtocol) {
 <%-- NOTE(tdyas): Thrift compiler sets the sequence ID (third argument) always to 0. See notes in thrift compiler. --%>\
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("${function.name}", org.apache.thrift.protocol.TMessageType.CALL, 0))
-        val args = ${function.name}_args.createRawRecord
+        val args = ${service.name}_${function.name}_args.createRawRecord
 #for (argument <- function.argz)
         args.${argument.name}_=(${argument.name})
 #end
@@ -189,7 +189,7 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
         val __memoryTransport__ = new org.apache.thrift.transport.TMemoryBuffer(512)
         val __prot__ = this.protocolFactory.getProtocol(__memoryTransport__)
         __prot__.writeMessageBegin(new org.apache.thrift.protocol.TMessage("${function.name}", org.apache.thrift.protocol.TMessageType.CALL, 0))
-        val __args__ = ${function.name}_args.createRawRecord
+        val __args__ = ${service.name}_${function.name}_args.createRawRecord
 #for (argument <- function.argz)
         __args__.${argument.name}_=(${argument.name})
 #end
@@ -254,17 +254,17 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
 <%-- Generate an org.apache.thrift.ProcessFunction for each of the service's functions. --%>
 #for (function <- service.functions)
 
-    class ${function.name}[I <: Iface] extends org.apache.thrift.ProcessFunction[I, ${function.name}_args]("${function.name}") {
-      override protected def getEmptyArgsInstance = ${function.name}_args.createRawRecord
+    class ${function.name}[I <: Iface] extends org.apache.thrift.ProcessFunction[I, ${service.name}_${function.name}_args]("${function.name}") {
+      override protected def getEmptyArgsInstance = ${service.name}_${function.name}_args.createRawRecord
 
       override protected def isOneway = ${function.oneWayOption.getOrElse(false)}
 
       override protected def getResult(
         iface: I,
-        args: ${function.name}_args
-      ): #if (function.oneWayOption.getOrElse(false))org.apache.thrift.TBase[_ <: org.apache.thrift.TBase[_, _], _ <: org.apache.thrift.TFieldIdEnum]#(else)${function.name}_result#(end) = {
+        args: ${service.name}_${function.name}_args
+      ): #if (function.oneWayOption.getOrElse(false))org.apache.thrift.TBase[_ <: org.apache.thrift.TBase[_, _], _ <: org.apache.thrift.TFieldIdEnum]#(else)${service.name}_${function.name}_result#(end) = {
 #if (!function.oneWayOption.getOrElse(false))
-        val result = ${function.name}_result.createRawRecord
+        val result = ${service.name}_${function.name}_result.createRawRecord
 #if (function.throwz.nonEmpty)
         try {
 #end
@@ -304,7 +304,7 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
 
     private def process_${function.name}(iprot: org.apache.thrift.protocol.TProtocol, seqid: Int): com.twitter.util.Future[Array[Byte]] = {
       try {
-        val args = ${function.name}_args.createRawRecord
+        val args = ${service.name}_${function.name}_args.createRawRecord
         var earlyResponse: com.twitter.util.Future[Array[Byte]] = null
 
         try {
@@ -339,7 +339,7 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
           future.map { value => new Array[Byte](0) }
 #else
           future.flatMap { value =>
-            val result = ${function.name}_result.createRawRecord
+            val result = ${service.name}_${function.name}_result.createRawRecord
             #if(!function.oneWayOption.getOrElse(false) && function.returnRenderType.isDefined)result.success_=(value)#(end)
 <%-- // result.setSuccessIsSet(true)  // NOTE(tdyas): Not applicable to our Scala version of Thrift data. --%>
 
@@ -360,7 +360,7 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
           } rescue { case throwable: Throwable =>
 #if (!function.oneWayOption.getOrElse(false) && function.throwz.nonEmpty)
             try {
-              val result = ${function.name}_result.createRawRecord
+              val result = ${service.name}_${function.name}_result.createRawRecord
               throwable match {
 #for (exception <- function.throwz)
                 case ex: ${exception.renderType.text} => result.${exception.name}_=(ex)
@@ -428,13 +428,13 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
 #for (function <- service.functions)
 <%
   // Dynamically generate a ScalaStruct for NAME_args, then emit Scala code for it.
-  val rawArgsStruct = Struct.newBuilder.name("%s_args" format function.name).__fields(function.argz).result()
+  val rawArgsStruct = Struct.newBuilder.name("%s_%s_args".format(service.name, function.name)).__fields(function.argz).result()
   val argsStruct = new ScalaClass(rawArgsStruct, resolver)
   render("class.ssp", Map("cls" -> argsStruct)) // TODO(tdyas): Capture and indent properly.
 
   // Dynamically generate a ScalaStruct for NAME_result, then emit Scala code for it. For one-way functions,
   // this is purely so functionDescriptors has a class to reference.
-  val rawResultStruct = Struct.newBuilder.name("%s_result" format function.name).__fields(function.fields).result()
+  val rawResultStruct = Struct.newBuilder.name("%s_%s_result".format(service.name, function.name)).__fields(function.fields).result()
   val resultStruct = new ScalaClass(rawResultStruct, resolver)
   render("class.ssp", Map("cls" -> resultStruct)) // TODO(tdyas): Capture and indent properly.
 %>
@@ -443,11 +443,11 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
 <%-- Output the ServiceDescriptor and FunctionDescriptors. --%>
   override val serviceName: String = "${service.name}"
   override val functionDescriptors: Seq[com.foursquare.spindle.FunctionDescriptor[_,_]] = #if (parentServiceName != "")${parentServiceName}.functionDescriptors ++ #(end)Seq(
-<% val items = for (function <- service.functions) yield ("""    new com.foursquare.spindle.FunctionDescriptor[%s_args, %s_result] {
+<% val items = for (function <- service.functions) yield ("""    new com.foursquare.spindle.FunctionDescriptor[%s_%s_args, %s_%s_result] {
       override val functionName = "%s"
-      override val requestMetaRecord = %s_args
-      override val responseMetaRecord = %s_result
-    }""".format(function.name, function.name, function.name, function.name, function.name)
+      override val requestMetaRecord = %s_%s_args
+      override val responseMetaRecord = %s_%s_result
+    }""".format(service.name, function.name, service.name, function.name, function.name, service.name, function.name, service.name, function.name)
     )
 %>
 <%= items.mkString(",\n") %>
