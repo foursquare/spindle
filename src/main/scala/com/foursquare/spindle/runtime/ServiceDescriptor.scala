@@ -27,7 +27,7 @@ trait ServiceDescriptor {
 
   /**
    * Returns descriptors for the methods implemented by this service.
-   * @return a sequence of [[com.foursquare.spindle.ServiceMethodDescriptor]]
+   * @return a sequence of [[com.foursquare.spindle.FunctionDescriptor]]
    */
   def functionDescriptors: Seq[FunctionDescriptor[_,_]]
 }
