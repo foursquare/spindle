@@ -28,7 +28,7 @@
     }
   }
   override def ${field.name}UntypedFk(meta: com.foursquare.spindle.UntypedMetaRecord): Option[com.foursquare.spindle.UntypedRecord with com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]] = {
-    val foreignOpt = meta.ifInstanceFrom(${field.varName}Obj).asInstanceOf[Option[com.foursquare.spindle.UntypedRecord with com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]]]
+    val foreignOpt = meta.untypedIfInstanceFrom(${field.varName}Obj).asInstanceOf[Option[com.foursquare.spindle.UntypedRecord with com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]]]
     if (${field.isSetName} && foreignOpt.isDefined && foreignOpt.get.primaryKey == ${field.name}OrThrow) {
       foreignOpt
     } else {

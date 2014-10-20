@@ -22,9 +22,11 @@ object ${cls.name}
   override type Mutable = Mutable${cls.name}
   override type Raw = Raw${cls.name}
 
+  override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: ${cls.name} = createRawRecord
   override def createRawRecord: ${cls.name}.Raw = new ${cls.name}.Raw
 
+  override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[${cls.name}] = {
     if (x.isInstanceOf[${cls.name}]) Some(x.asInstanceOf[${cls.name}]) else None
   }
