@@ -9,7 +9,7 @@ object Default {
   lazy val IvyDefaultConfiguration = config("default") extend(Compile)
   val all: Seq[Setting[_]] = Seq(
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
-    Keys.version := "3.0.0-M1.2",
+    Keys.version := "3.0.0-M2",
     Keys.organization := "com.foursquare",
     Keys.ivyConfigurations += IvyDefaultConfiguration,
     Keys.publishMavenStyle := true,
@@ -107,7 +107,7 @@ object Default {
   val thriftBootstrap = Default.scala ++ ThriftCodegenPlugin.thriftSettings ++ Seq(
     Keys.sourceDirectory in ThriftCodegenPlugin.thrift in Compile <<= (Keys.baseDirectory)(identity),
     Keys.scalaBinaryVersion in ThriftCodegenPlugin.thrift := "2.9.2",
-    ThriftCodegenPlugin.thriftCodegenVersion := "3.0.0-M1.1",
+    ThriftCodegenPlugin.thriftCodegenVersion := "3.0.0-M1.2",
     ThriftCodegenPlugin.thriftCodegenRuntimeLibs := ThirdParty.scalajCollection,
     ThriftCodegenPlugin.thriftCodegenTemplate := file("src/main/ssp/codegen/scala/record.ssp").absolutePath,
     ThriftCodegenPlugin.thriftCodegenJavaTemplate := file("src/main/ssp/codegen/javagen/record.ssp").absolutePath,
