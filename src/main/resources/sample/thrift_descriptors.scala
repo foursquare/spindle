@@ -141,9 +141,48 @@ object Requiredness extends com.foursquare.spindle.EnumMeta[Requiredness] {
 
 
 
-object Include
-    extends JavaIncludeMeta
-    with com.foursquare.spindle.MetaRecord[Include]
+object Include extends IncludeMeta {
+
+
+  object Builder {
+    sealed trait HasPath
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasPath
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Include] (private var obj: RawInclude) {
+    def path(v: String): Include.Builder[State with Builder.HasPath] = {
+      obj.path_=(v)
+      this.asInstanceOf[Include.Builder[State with Builder.HasPath]]
+    }
+
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasPath): MutableInclude = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Include.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasPath): Include = resultMutable()(ev0)
+  }
+
+  def newBuilder: Include.Builder.AllUnspecified = new Builder(Include.createRawRecord)
+
+  implicit val companionProvider: IncludeCompanionProvider = new IncludeCompanionProvider
+}
+
+class IncludeMeta
+    extends JavaIncludeMeta[Include, RawInclude, IncludeMeta]
     with com.foursquare.spindle.RecordProvider[Include] {
   override def recordName: String = "Include"
 
@@ -181,12 +220,9 @@ object Include
     1.toShort -> _Fields.path
   )
 
-  override type Mutable = MutableInclude
-  override type Raw = RawInclude
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Include = createRawRecord
-  override def createRawRecord: Include.Raw = new Include.Raw
+  override def createRawRecord: RawInclude = new RawInclude
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Include] = {
@@ -202,21 +238,21 @@ object Include
 
   val path =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Include, Include.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Include, IncludeMeta](
       name = "path",
       longName = "path",
       id = 1,
       annotations = Map(),
-      owner = Include,
+      owner = this,
       getter = _.pathOption,
-      setterRaw = (r: Include.Raw, v: String) => { r.path_=(v) },
-      unsetterRaw = (r: Include.Raw) => { r.pathUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Include], v: String) => { r.asInstanceOf[RawInclude].path_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Include]) => { r.asInstanceOf[RawInclude].pathUnset() },
       manifest = manifest[String]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Include, Include.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Include, Include.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Include, IncludeMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Include, IncludeMeta]](
       path
     )
 
@@ -224,62 +260,25 @@ object Include
   def apply(
       path: String
   ): Include = {
-    val ret = Include.createRawRecord
+    val ret = this.createRawRecord
     ret.path_=(path)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasPath
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasPath
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Include] (private var obj: Include.Raw) {
-    def path(v: String): Include.Builder[State with Builder.HasPath] = {
-      obj.path_=(v)
-      this.asInstanceOf[Include.Builder[State with Builder.HasPath]]
-    }
-
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasPath): Include.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Include.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasPath): Include = resultMutable()(ev0)
-  }
-
-  def newBuilder: Include.Builder.AllUnspecified = new Builder(Include.createRawRecord)
-
-  implicit val companionProvider: IncludeCompanionProvider = new IncludeCompanionProvider
 }
 
 class IncludeCompanionProvider extends com.foursquare.spindle.CompanionProvider[Include] {
-  type CompanionT = Include.type
-  override def provide: Include.type = Include
+  type CompanionT = IncludeMeta
+  override def provide: IncludeMeta = Include
 }
 
 
 
 trait Include
 
-    extends JavaInclude
-    with com.foursquare.spindle.Record[Include]
+    extends JavaInclude[Include, RawInclude, IncludeMeta]
     with org.apache.thrift.TBase[Include, Include._Fields] {
+
+  override def meta: IncludeMeta
 
 
   def path: String
@@ -300,6 +299,11 @@ trait Include
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Include): Boolean = { this.compare(that) < 0 }
+  override def >(that: Include): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Include): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Include): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Include): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -309,7 +313,7 @@ trait Include
       path: String = pathOrNull
   ): Include
 
-  def mutableCopy(): Include.Mutable = {
+  def mutableCopy(): MutableInclude = {
     val ret = Include.createRawRecord
 
     if (pathIsSet) ret.path_=(pathOrNull)
@@ -328,7 +332,7 @@ trait Include
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Include.Mutable
+  def mutable: MutableInclude
 
   def toBuilder(): Include.Builder.AllSpecified = {
     val ret = new Include.Builder(Include.createRawRecord)
@@ -342,8 +346,7 @@ trait Include
 }
 
 trait MutableInclude extends Include
-  with JavaIncludeMutable
-  with com.foursquare.spindle.MutableRecord[Include] {
+  with JavaIncludeMutable[Include, RawInclude, IncludeMeta] {
   def path_=(x: String): Unit
   def pathUnset(): Unit
 
@@ -351,17 +354,17 @@ trait MutableInclude extends Include
 
   def copy(
       path: String = pathOrNull
-  ): Include.Mutable
+  ): MutableInclude
 
-  override def mutable: Include.Mutable = this
+  override def mutable: MutableInclude = this
 }
 
 
 
 
 
-final class RawInclude extends JavaIncludeRaw with MutableInclude {
-  override def meta = Include
+final class RawInclude extends JavaIncludeRaw[Include, RawInclude, IncludeMeta] with MutableInclude {
+  override def meta: IncludeMeta = Include
 
   // Field #1 - path
   private var _path: String = null  // Underlying type: String
@@ -488,7 +491,7 @@ final class RawInclude extends JavaIncludeRaw with MutableInclude {
     }
   }
 
-  override def deepCopy(): Include.Raw = {
+  override def deepCopy(): RawInclude = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -500,8 +503,8 @@ final class RawInclude extends JavaIncludeRaw with MutableInclude {
 
   override def copy(
       path: String = pathOrNull
-  ): Include.Raw = {
-    val ret = new Include.Raw
+  ): RawInclude = {
+    val ret = new RawInclude
     if (path != null) ret.path_=(path)
     ret
   }
@@ -515,9 +518,54 @@ final class RawInclude extends JavaIncludeRaw with MutableInclude {
 }
 
 
-object Namespace
-    extends JavaNamespaceMeta
-    with com.foursquare.spindle.MetaRecord[Namespace]
+object Namespace extends NamespaceMeta {
+
+
+  object Builder {
+    sealed trait HasLanguage
+    sealed trait HasName
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasLanguage with HasName
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Namespace] (private var obj: RawNamespace) {
+    def language(v: String): Namespace.Builder[State with Builder.HasLanguage] = {
+      obj.language_=(v)
+      this.asInstanceOf[Namespace.Builder[State with Builder.HasLanguage]]
+    }
+
+    def name(v: String): Namespace.Builder[State with Builder.HasName] = {
+      obj.name_=(v)
+      this.asInstanceOf[Namespace.Builder[State with Builder.HasName]]
+    }
+
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasLanguage, ev1: State <:< Builder.HasName): MutableNamespace = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Namespace.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasLanguage, ev1: State <:< Builder.HasName): Namespace = resultMutable()(ev0, ev1)
+  }
+
+  def newBuilder: Namespace.Builder.AllUnspecified = new Builder(Namespace.createRawRecord)
+
+  implicit val companionProvider: NamespaceCompanionProvider = new NamespaceCompanionProvider
+}
+
+class NamespaceMeta
+    extends JavaNamespaceMeta[Namespace, RawNamespace, NamespaceMeta]
     with com.foursquare.spindle.RecordProvider[Namespace] {
   override def recordName: String = "Namespace"
 
@@ -568,12 +616,9 @@ object Namespace
     2.toShort -> _Fields.name
   )
 
-  override type Mutable = MutableNamespace
-  override type Raw = RawNamespace
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Namespace = createRawRecord
-  override def createRawRecord: Namespace.Raw = new Namespace.Raw
+  override def createRawRecord: RawNamespace = new RawNamespace
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Namespace] = {
@@ -589,35 +634,35 @@ object Namespace
 
   val language =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Namespace, Namespace.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Namespace, NamespaceMeta](
       name = "language",
       longName = "language",
       id = 1,
       annotations = Map(),
-      owner = Namespace,
+      owner = this,
       getter = _.languageOption,
-      setterRaw = (r: Namespace.Raw, v: String) => { r.language_=(v) },
-      unsetterRaw = (r: Namespace.Raw) => { r.languageUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Namespace], v: String) => { r.asInstanceOf[RawNamespace].language_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Namespace]) => { r.asInstanceOf[RawNamespace].languageUnset() },
       manifest = manifest[String]
     )
 
   val name =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Namespace, Namespace.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Namespace, NamespaceMeta](
       name = "name",
       longName = "name",
       id = 2,
       annotations = Map(),
-      owner = Namespace,
+      owner = this,
       getter = _.nameOption,
-      setterRaw = (r: Namespace.Raw, v: String) => { r.name_=(v) },
-      unsetterRaw = (r: Namespace.Raw) => { r.nameUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Namespace], v: String) => { r.asInstanceOf[RawNamespace].name_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Namespace]) => { r.asInstanceOf[RawNamespace].nameUnset() },
       manifest = manifest[String]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Namespace, Namespace.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Namespace, Namespace.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Namespace, NamespaceMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Namespace, NamespaceMeta]](
       language,
       name
     )
@@ -627,69 +672,26 @@ object Namespace
       language: String,
       name: String
   ): Namespace = {
-    val ret = Namespace.createRawRecord
+    val ret = this.createRawRecord
     ret.language_=(language)
     ret.name_=(name)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasLanguage
-    sealed trait HasName
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasLanguage with HasName
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Namespace] (private var obj: Namespace.Raw) {
-    def language(v: String): Namespace.Builder[State with Builder.HasLanguage] = {
-      obj.language_=(v)
-      this.asInstanceOf[Namespace.Builder[State with Builder.HasLanguage]]
-    }
-
-    def name(v: String): Namespace.Builder[State with Builder.HasName] = {
-      obj.name_=(v)
-      this.asInstanceOf[Namespace.Builder[State with Builder.HasName]]
-    }
-
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasLanguage, ev1: State <:< Builder.HasName): Namespace.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Namespace.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasLanguage, ev1: State <:< Builder.HasName): Namespace = resultMutable()(ev0, ev1)
-  }
-
-  def newBuilder: Namespace.Builder.AllUnspecified = new Builder(Namespace.createRawRecord)
-
-  implicit val companionProvider: NamespaceCompanionProvider = new NamespaceCompanionProvider
 }
 
 class NamespaceCompanionProvider extends com.foursquare.spindle.CompanionProvider[Namespace] {
-  type CompanionT = Namespace.type
-  override def provide: Namespace.type = Namespace
+  type CompanionT = NamespaceMeta
+  override def provide: NamespaceMeta = Namespace
 }
 
 
 
 trait Namespace
 
-    extends JavaNamespace
-    with com.foursquare.spindle.Record[Namespace]
+    extends JavaNamespace[Namespace, RawNamespace, NamespaceMeta]
     with org.apache.thrift.TBase[Namespace, Namespace._Fields] {
+
+  override def meta: NamespaceMeta
 
 
   def language: String
@@ -722,6 +724,11 @@ trait Namespace
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Namespace): Boolean = { this.compare(that) < 0 }
+  override def >(that: Namespace): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Namespace): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Namespace): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Namespace): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -732,7 +739,7 @@ trait Namespace
       name: String = nameOrNull
   ): Namespace
 
-  def mutableCopy(): Namespace.Mutable = {
+  def mutableCopy(): MutableNamespace = {
     val ret = Namespace.createRawRecord
 
     if (languageIsSet) ret.language_=(languageOrNull)
@@ -753,7 +760,7 @@ trait Namespace
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Namespace.Mutable
+  def mutable: MutableNamespace
 
   def toBuilder(): Namespace.Builder.AllSpecified = {
     val ret = new Namespace.Builder(Namespace.createRawRecord)
@@ -769,8 +776,7 @@ trait Namespace
 }
 
 trait MutableNamespace extends Namespace
-  with JavaNamespaceMutable
-  with com.foursquare.spindle.MutableRecord[Namespace] {
+  with JavaNamespaceMutable[Namespace, RawNamespace, NamespaceMeta] {
   def language_=(x: String): Unit
   def languageUnset(): Unit
   def name_=(x: String): Unit
@@ -781,17 +787,17 @@ trait MutableNamespace extends Namespace
   def copy(
       language: String = languageOrNull,
       name: String = nameOrNull
-  ): Namespace.Mutable
+  ): MutableNamespace
 
-  override def mutable: Namespace.Mutable = this
+  override def mutable: MutableNamespace = this
 }
 
 
 
 
 
-final class RawNamespace extends JavaNamespaceRaw with MutableNamespace {
-  override def meta = Namespace
+final class RawNamespace extends JavaNamespaceRaw[Namespace, RawNamespace, NamespaceMeta] with MutableNamespace {
+  override def meta: NamespaceMeta = Namespace
 
   // Field #1 - language
   private var _language: String = null  // Underlying type: String
@@ -951,7 +957,7 @@ final class RawNamespace extends JavaNamespaceRaw with MutableNamespace {
     }
   }
 
-  override def deepCopy(): Namespace.Raw = {
+  override def deepCopy(): RawNamespace = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -964,8 +970,8 @@ final class RawNamespace extends JavaNamespaceRaw with MutableNamespace {
   override def copy(
       language: String = languageOrNull,
       name: String = nameOrNull
-  ): Namespace.Raw = {
-    val ret = new Namespace.Raw
+  ): RawNamespace = {
+    val ret = new RawNamespace
     if (language != null) ret.language_=(language)
     if (name != null) ret.name_=(name)
     ret
@@ -980,9 +986,54 @@ final class RawNamespace extends JavaNamespaceRaw with MutableNamespace {
 }
 
 
-object Annotation
-    extends JavaAnnotationMeta
-    with com.foursquare.spindle.MetaRecord[Annotation]
+object Annotation extends AnnotationMeta {
+
+
+  object Builder {
+    sealed trait HasKey
+    sealed trait HasValue
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasKey with HasValue
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Annotation] (private var obj: RawAnnotation) {
+    def key(v: String): Annotation.Builder[State with Builder.HasKey] = {
+      obj.key_=(v)
+      this.asInstanceOf[Annotation.Builder[State with Builder.HasKey]]
+    }
+
+    def value(v: String): Annotation.Builder[State with Builder.HasValue] = {
+      obj.value_=(v)
+      this.asInstanceOf[Annotation.Builder[State with Builder.HasValue]]
+    }
+
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasKey, ev1: State <:< Builder.HasValue): MutableAnnotation = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Annotation.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasKey, ev1: State <:< Builder.HasValue): Annotation = resultMutable()(ev0, ev1)
+  }
+
+  def newBuilder: Annotation.Builder.AllUnspecified = new Builder(Annotation.createRawRecord)
+
+  implicit val companionProvider: AnnotationCompanionProvider = new AnnotationCompanionProvider
+}
+
+class AnnotationMeta
+    extends JavaAnnotationMeta[Annotation, RawAnnotation, AnnotationMeta]
     with com.foursquare.spindle.RecordProvider[Annotation] {
   override def recordName: String = "Annotation"
 
@@ -1033,12 +1084,9 @@ object Annotation
     2.toShort -> _Fields.value
   )
 
-  override type Mutable = MutableAnnotation
-  override type Raw = RawAnnotation
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Annotation = createRawRecord
-  override def createRawRecord: Annotation.Raw = new Annotation.Raw
+  override def createRawRecord: RawAnnotation = new RawAnnotation
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Annotation] = {
@@ -1054,35 +1102,35 @@ object Annotation
 
   val key =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Annotation, Annotation.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Annotation, AnnotationMeta](
       name = "key",
       longName = "key",
       id = 1,
       annotations = Map(),
-      owner = Annotation,
+      owner = this,
       getter = _.keyOption,
-      setterRaw = (r: Annotation.Raw, v: String) => { r.key_=(v) },
-      unsetterRaw = (r: Annotation.Raw) => { r.keyUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Annotation], v: String) => { r.asInstanceOf[RawAnnotation].key_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Annotation]) => { r.asInstanceOf[RawAnnotation].keyUnset() },
       manifest = manifest[String]
     )
 
   val value =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Annotation, Annotation.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Annotation, AnnotationMeta](
       name = "value",
       longName = "value",
       id = 2,
       annotations = Map(),
-      owner = Annotation,
+      owner = this,
       getter = _.valueOption,
-      setterRaw = (r: Annotation.Raw, v: String) => { r.value_=(v) },
-      unsetterRaw = (r: Annotation.Raw) => { r.valueUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Annotation], v: String) => { r.asInstanceOf[RawAnnotation].value_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Annotation]) => { r.asInstanceOf[RawAnnotation].valueUnset() },
       manifest = manifest[String]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Annotation, Annotation.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Annotation, Annotation.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Annotation, AnnotationMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Annotation, AnnotationMeta]](
       key,
       value
     )
@@ -1092,69 +1140,26 @@ object Annotation
       key: String,
       value: String
   ): Annotation = {
-    val ret = Annotation.createRawRecord
+    val ret = this.createRawRecord
     ret.key_=(key)
     ret.value_=(value)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasKey
-    sealed trait HasValue
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasKey with HasValue
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Annotation] (private var obj: Annotation.Raw) {
-    def key(v: String): Annotation.Builder[State with Builder.HasKey] = {
-      obj.key_=(v)
-      this.asInstanceOf[Annotation.Builder[State with Builder.HasKey]]
-    }
-
-    def value(v: String): Annotation.Builder[State with Builder.HasValue] = {
-      obj.value_=(v)
-      this.asInstanceOf[Annotation.Builder[State with Builder.HasValue]]
-    }
-
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasKey, ev1: State <:< Builder.HasValue): Annotation.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Annotation.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasKey, ev1: State <:< Builder.HasValue): Annotation = resultMutable()(ev0, ev1)
-  }
-
-  def newBuilder: Annotation.Builder.AllUnspecified = new Builder(Annotation.createRawRecord)
-
-  implicit val companionProvider: AnnotationCompanionProvider = new AnnotationCompanionProvider
 }
 
 class AnnotationCompanionProvider extends com.foursquare.spindle.CompanionProvider[Annotation] {
-  type CompanionT = Annotation.type
-  override def provide: Annotation.type = Annotation
+  type CompanionT = AnnotationMeta
+  override def provide: AnnotationMeta = Annotation
 }
 
 
 
 trait Annotation
 
-    extends JavaAnnotation
-    with com.foursquare.spindle.Record[Annotation]
+    extends JavaAnnotation[Annotation, RawAnnotation, AnnotationMeta]
     with org.apache.thrift.TBase[Annotation, Annotation._Fields] {
+
+  override def meta: AnnotationMeta
 
 
   def key: String
@@ -1187,6 +1192,11 @@ trait Annotation
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Annotation): Boolean = { this.compare(that) < 0 }
+  override def >(that: Annotation): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Annotation): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Annotation): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Annotation): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -1197,7 +1207,7 @@ trait Annotation
       value: String = valueOrNull
   ): Annotation
 
-  def mutableCopy(): Annotation.Mutable = {
+  def mutableCopy(): MutableAnnotation = {
     val ret = Annotation.createRawRecord
 
     if (keyIsSet) ret.key_=(keyOrNull)
@@ -1218,7 +1228,7 @@ trait Annotation
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Annotation.Mutable
+  def mutable: MutableAnnotation
 
   def toBuilder(): Annotation.Builder.AllSpecified = {
     val ret = new Annotation.Builder(Annotation.createRawRecord)
@@ -1234,8 +1244,7 @@ trait Annotation
 }
 
 trait MutableAnnotation extends Annotation
-  with JavaAnnotationMutable
-  with com.foursquare.spindle.MutableRecord[Annotation] {
+  with JavaAnnotationMutable[Annotation, RawAnnotation, AnnotationMeta] {
   def key_=(x: String): Unit
   def keyUnset(): Unit
   def value_=(x: String): Unit
@@ -1246,17 +1255,17 @@ trait MutableAnnotation extends Annotation
   def copy(
       key: String = keyOrNull,
       value: String = valueOrNull
-  ): Annotation.Mutable
+  ): MutableAnnotation
 
-  override def mutable: Annotation.Mutable = this
+  override def mutable: MutableAnnotation = this
 }
 
 
 
 
 
-final class RawAnnotation extends JavaAnnotationRaw with MutableAnnotation {
-  override def meta = Annotation
+final class RawAnnotation extends JavaAnnotationRaw[Annotation, RawAnnotation, AnnotationMeta] with MutableAnnotation {
+  override def meta: AnnotationMeta = Annotation
 
   // Field #1 - key
   private var _key: String = null  // Underlying type: String
@@ -1416,7 +1425,7 @@ final class RawAnnotation extends JavaAnnotationRaw with MutableAnnotation {
     }
   }
 
-  override def deepCopy(): Annotation.Raw = {
+  override def deepCopy(): RawAnnotation = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -1429,8 +1438,8 @@ final class RawAnnotation extends JavaAnnotationRaw with MutableAnnotation {
   override def copy(
       key: String = keyOrNull,
       value: String = valueOrNull
-  ): Annotation.Raw = {
-    val ret = new Annotation.Raw
+  ): RawAnnotation = {
+    val ret = new RawAnnotation
     if (key != null) ret.key_=(key)
     if (value != null) ret.value_=(value)
     ret
@@ -1445,9 +1454,61 @@ final class RawAnnotation extends JavaAnnotationRaw with MutableAnnotation {
 }
 
 
-object BaseType
-    extends JavaBaseTypeMeta
-    with com.foursquare.spindle.MetaRecord[BaseType]
+object BaseType extends BaseTypeMeta {
+
+
+  object Builder {
+    sealed trait HasSimpleBaseType
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasSimpleBaseType
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[BaseType] (private var obj: RawBaseType) {
+    def simpleBaseType(v: com.twitter.thrift.descriptors.SimpleBaseType): BaseType.Builder[State with Builder.HasSimpleBaseType] = {
+      obj.simpleBaseType_=(v)
+      this.asInstanceOf[BaseType.Builder[State with Builder.HasSimpleBaseType]]
+    }
+
+
+    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): BaseType.Builder[State] = {
+      obj.__annotations_=(v)
+      this
+    }
+
+    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): BaseType.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.__annotations_=(v)
+        case None => obj.annotationsUnset()
+      }
+      this
+    }
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasSimpleBaseType): MutableBaseType = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("BaseType.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasSimpleBaseType): BaseType = resultMutable()(ev0)
+  }
+
+  def newBuilder: BaseType.Builder.AllUnspecified = new Builder(BaseType.createRawRecord)
+
+  implicit val companionProvider: BaseTypeCompanionProvider = new BaseTypeCompanionProvider
+}
+
+class BaseTypeMeta
+    extends JavaBaseTypeMeta[BaseType, RawBaseType, BaseTypeMeta]
     with com.foursquare.spindle.RecordProvider[BaseType] {
   override def recordName: String = "BaseType"
 
@@ -1498,12 +1559,9 @@ object BaseType
     99.toShort -> _Fields.__annotations
   )
 
-  override type Mutable = MutableBaseType
-  override type Raw = RawBaseType
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: BaseType = createRawRecord
-  override def createRawRecord: BaseType.Raw = new BaseType.Raw
+  override def createRawRecord: RawBaseType = new RawBaseType
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[BaseType] = {
@@ -1519,35 +1577,35 @@ object BaseType
 
   val simpleBaseType =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SimpleBaseType, BaseType, BaseType.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SimpleBaseType, BaseType, BaseTypeMeta](
       name = "simpleBaseType",
       longName = "simpleBaseType",
       id = 1,
       annotations = Map(),
-      owner = BaseType,
+      owner = this,
       getter = _.simpleBaseTypeOption,
-      setterRaw = (r: BaseType.Raw, v: com.twitter.thrift.descriptors.SimpleBaseType) => { r.simpleBaseType_=(v) },
-      unsetterRaw = (r: BaseType.Raw) => { r.simpleBaseTypeUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[BaseType], v: com.twitter.thrift.descriptors.SimpleBaseType) => { r.asInstanceOf[RawBaseType].simpleBaseType_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[BaseType]) => { r.asInstanceOf[RawBaseType].simpleBaseTypeUnset() },
       manifest = manifest[com.twitter.thrift.descriptors.SimpleBaseType]
     )
 
   val __annotations =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], BaseType, BaseType.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], BaseType, BaseTypeMeta](
       name = "annotations",
       longName = "annotations",
       id = 99,
       annotations = Map(),
-      owner = BaseType,
+      owner = this,
       getter = _.annotationsOption,
-      setterRaw = (r: BaseType.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.__annotations_=(v) },
-      unsetterRaw = (r: BaseType.Raw) => { r.annotationsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[BaseType], v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.asInstanceOf[RawBaseType].__annotations_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[BaseType]) => { r.asInstanceOf[RawBaseType].annotationsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, BaseType, BaseType.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, BaseType, BaseType.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, BaseType, BaseTypeMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, BaseType, BaseTypeMeta]](
       simpleBaseType,
       __annotations
     )
@@ -1557,76 +1615,26 @@ object BaseType
       simpleBaseType: com.twitter.thrift.descriptors.SimpleBaseType,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
   ): BaseType = {
-    val ret = BaseType.createRawRecord
+    val ret = this.createRawRecord
     ret.simpleBaseType_=(simpleBaseType)
     ret.__annotations_=(__annotations)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasSimpleBaseType
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasSimpleBaseType
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[BaseType] (private var obj: BaseType.Raw) {
-    def simpleBaseType(v: com.twitter.thrift.descriptors.SimpleBaseType): BaseType.Builder[State with Builder.HasSimpleBaseType] = {
-      obj.simpleBaseType_=(v)
-      this.asInstanceOf[BaseType.Builder[State with Builder.HasSimpleBaseType]]
-    }
-
-
-    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): BaseType.Builder[State] = {
-      obj.__annotations_=(v)
-      this
-    }
-
-    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): BaseType.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.__annotations_=(v)
-        case None => obj.annotationsUnset()
-      }
-      this
-    }
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasSimpleBaseType): BaseType.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("BaseType.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasSimpleBaseType): BaseType = resultMutable()(ev0)
-  }
-
-  def newBuilder: BaseType.Builder.AllUnspecified = new Builder(BaseType.createRawRecord)
-
-  implicit val companionProvider: BaseTypeCompanionProvider = new BaseTypeCompanionProvider
 }
 
 class BaseTypeCompanionProvider extends com.foursquare.spindle.CompanionProvider[BaseType] {
-  type CompanionT = BaseType.type
-  override def provide: BaseType.type = BaseType
+  type CompanionT = BaseTypeMeta
+  override def provide: BaseTypeMeta = BaseType
 }
 
 
 
 trait BaseType
 
-    extends JavaBaseType
-    with com.foursquare.spindle.Record[BaseType]
+    extends JavaBaseType[BaseType, RawBaseType, BaseTypeMeta]
     with org.apache.thrift.TBase[BaseType, BaseType._Fields] {
+
+  override def meta: BaseTypeMeta
 
 
   def simpleBaseType: com.twitter.thrift.descriptors.SimpleBaseType
@@ -1659,6 +1667,11 @@ trait BaseType
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: BaseType): Boolean = { this.compare(that) < 0 }
+  override def >(that: BaseType): Boolean = { this.compare(that) > 0 }
+  override def <=(that: BaseType): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: BaseType): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: BaseType): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -1669,7 +1682,7 @@ trait BaseType
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
   ): BaseType
 
-  def mutableCopy(): BaseType.Mutable = {
+  def mutableCopy(): MutableBaseType = {
     val ret = BaseType.createRawRecord
 
     if (simpleBaseTypeIsSet) ret.simpleBaseType_=(simpleBaseTypeOrNull)
@@ -1690,7 +1703,7 @@ trait BaseType
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: BaseType.Mutable
+  def mutable: MutableBaseType
 
   def toBuilder(): BaseType.Builder.AllSpecified = {
     val ret = new BaseType.Builder(BaseType.createRawRecord)
@@ -1706,8 +1719,7 @@ trait BaseType
 }
 
 trait MutableBaseType extends BaseType
-  with JavaBaseTypeMutable
-  with com.foursquare.spindle.MutableRecord[BaseType] {
+  with JavaBaseTypeMutable[BaseType, RawBaseType, BaseTypeMeta] {
   def simpleBaseType_=(x: com.twitter.thrift.descriptors.SimpleBaseType): Unit
   def simpleBaseTypeUnset(): Unit
   def __annotations_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Unit
@@ -1718,17 +1730,17 @@ trait MutableBaseType extends BaseType
   def copy(
       simpleBaseType: com.twitter.thrift.descriptors.SimpleBaseType = simpleBaseTypeOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): BaseType.Mutable
+  ): MutableBaseType
 
-  override def mutable: BaseType.Mutable = this
+  override def mutable: MutableBaseType = this
 }
 
 
 
 
 
-final class RawBaseType extends JavaBaseTypeRaw with MutableBaseType {
-  override def meta = BaseType
+final class RawBaseType extends JavaBaseTypeRaw[BaseType, RawBaseType, BaseTypeMeta] with MutableBaseType {
+  override def meta: BaseTypeMeta = BaseType
 
   // Field #1 - simpleBaseType
   private var _simpleBaseType: com.twitter.thrift.descriptors.SimpleBaseType = null  // Underlying type: com.twitter.thrift.descriptors.SimpleBaseType
@@ -1911,7 +1923,7 @@ final class RawBaseType extends JavaBaseTypeRaw with MutableBaseType {
     }
   }
 
-  override def deepCopy(): BaseType.Raw = {
+  override def deepCopy(): RawBaseType = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -1924,8 +1936,8 @@ final class RawBaseType extends JavaBaseTypeRaw with MutableBaseType {
   override def copy(
       simpleBaseType: com.twitter.thrift.descriptors.SimpleBaseType = simpleBaseTypeOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): BaseType.Raw = {
-    val ret = new BaseType.Raw
+  ): RawBaseType = {
+    val ret = new RawBaseType
     if (simpleBaseType != null) ret.simpleBaseType_=(simpleBaseType)
     if (__annotations != null) ret.__annotations_=(__annotations)
     ret
@@ -1940,9 +1952,48 @@ final class RawBaseType extends JavaBaseTypeRaw with MutableBaseType {
 }
 
 
-object ListType
-    extends JavaListTypeMeta
-    with com.foursquare.spindle.MetaRecord[ListType]
+object ListType extends ListTypeMeta {
+
+
+  object Builder {
+    sealed trait HasElementTypeId
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasElementTypeId
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[ListType] (private var obj: RawListType) {
+    def elementTypeId(v: String): ListType.Builder[State with Builder.HasElementTypeId] = {
+      obj.elementTypeId_=(v)
+      this.asInstanceOf[ListType.Builder[State with Builder.HasElementTypeId]]
+    }
+
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasElementTypeId): MutableListType = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("ListType.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasElementTypeId): ListType = resultMutable()(ev0)
+  }
+
+  def newBuilder: ListType.Builder.AllUnspecified = new Builder(ListType.createRawRecord)
+
+  implicit val companionProvider: ListTypeCompanionProvider = new ListTypeCompanionProvider
+}
+
+class ListTypeMeta
+    extends JavaListTypeMeta[ListType, RawListType, ListTypeMeta]
     with com.foursquare.spindle.RecordProvider[ListType] {
   override def recordName: String = "ListType"
 
@@ -1980,12 +2031,9 @@ object ListType
     1.toShort -> _Fields.elementTypeId
   )
 
-  override type Mutable = MutableListType
-  override type Raw = RawListType
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: ListType = createRawRecord
-  override def createRawRecord: ListType.Raw = new ListType.Raw
+  override def createRawRecord: RawListType = new RawListType
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[ListType] = {
@@ -2001,21 +2049,21 @@ object ListType
 
   val elementTypeId =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, ListType, ListType.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, ListType, ListTypeMeta](
       name = "elementTypeId",
       longName = "elementTypeId",
       id = 1,
       annotations = Map(),
-      owner = ListType,
+      owner = this,
       getter = _.elementTypeIdOption,
-      setterRaw = (r: ListType.Raw, v: String) => { r.elementTypeId_=(v) },
-      unsetterRaw = (r: ListType.Raw) => { r.elementTypeIdUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[ListType], v: String) => { r.asInstanceOf[RawListType].elementTypeId_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[ListType]) => { r.asInstanceOf[RawListType].elementTypeIdUnset() },
       manifest = manifest[String]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, ListType, ListType.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, ListType, ListType.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, ListType, ListTypeMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, ListType, ListTypeMeta]](
       elementTypeId
     )
 
@@ -2023,62 +2071,25 @@ object ListType
   def apply(
       elementTypeId: String
   ): ListType = {
-    val ret = ListType.createRawRecord
+    val ret = this.createRawRecord
     ret.elementTypeId_=(elementTypeId)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasElementTypeId
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasElementTypeId
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[ListType] (private var obj: ListType.Raw) {
-    def elementTypeId(v: String): ListType.Builder[State with Builder.HasElementTypeId] = {
-      obj.elementTypeId_=(v)
-      this.asInstanceOf[ListType.Builder[State with Builder.HasElementTypeId]]
-    }
-
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasElementTypeId): ListType.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("ListType.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasElementTypeId): ListType = resultMutable()(ev0)
-  }
-
-  def newBuilder: ListType.Builder.AllUnspecified = new Builder(ListType.createRawRecord)
-
-  implicit val companionProvider: ListTypeCompanionProvider = new ListTypeCompanionProvider
 }
 
 class ListTypeCompanionProvider extends com.foursquare.spindle.CompanionProvider[ListType] {
-  type CompanionT = ListType.type
-  override def provide: ListType.type = ListType
+  type CompanionT = ListTypeMeta
+  override def provide: ListTypeMeta = ListType
 }
 
 
 
 trait ListType
 
-    extends JavaListType
-    with com.foursquare.spindle.Record[ListType]
+    extends JavaListType[ListType, RawListType, ListTypeMeta]
     with org.apache.thrift.TBase[ListType, ListType._Fields] {
+
+  override def meta: ListTypeMeta
 
 
   def elementTypeId: String
@@ -2099,6 +2110,11 @@ trait ListType
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: ListType): Boolean = { this.compare(that) < 0 }
+  override def >(that: ListType): Boolean = { this.compare(that) > 0 }
+  override def <=(that: ListType): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: ListType): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: ListType): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -2108,7 +2124,7 @@ trait ListType
       elementTypeId: String = elementTypeIdOrNull
   ): ListType
 
-  def mutableCopy(): ListType.Mutable = {
+  def mutableCopy(): MutableListType = {
     val ret = ListType.createRawRecord
 
     if (elementTypeIdIsSet) ret.elementTypeId_=(elementTypeIdOrNull)
@@ -2127,7 +2143,7 @@ trait ListType
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: ListType.Mutable
+  def mutable: MutableListType
 
   def toBuilder(): ListType.Builder.AllSpecified = {
     val ret = new ListType.Builder(ListType.createRawRecord)
@@ -2141,8 +2157,7 @@ trait ListType
 }
 
 trait MutableListType extends ListType
-  with JavaListTypeMutable
-  with com.foursquare.spindle.MutableRecord[ListType] {
+  with JavaListTypeMutable[ListType, RawListType, ListTypeMeta] {
   def elementTypeId_=(x: String): Unit
   def elementTypeIdUnset(): Unit
 
@@ -2150,17 +2165,17 @@ trait MutableListType extends ListType
 
   def copy(
       elementTypeId: String = elementTypeIdOrNull
-  ): ListType.Mutable
+  ): MutableListType
 
-  override def mutable: ListType.Mutable = this
+  override def mutable: MutableListType = this
 }
 
 
 
 
 
-final class RawListType extends JavaListTypeRaw with MutableListType {
-  override def meta = ListType
+final class RawListType extends JavaListTypeRaw[ListType, RawListType, ListTypeMeta] with MutableListType {
+  override def meta: ListTypeMeta = ListType
 
   // Field #1 - elementTypeId
   private var _elementTypeId: String = null  // Underlying type: String
@@ -2287,7 +2302,7 @@ final class RawListType extends JavaListTypeRaw with MutableListType {
     }
   }
 
-  override def deepCopy(): ListType.Raw = {
+  override def deepCopy(): RawListType = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -2299,8 +2314,8 @@ final class RawListType extends JavaListTypeRaw with MutableListType {
 
   override def copy(
       elementTypeId: String = elementTypeIdOrNull
-  ): ListType.Raw = {
-    val ret = new ListType.Raw
+  ): RawListType = {
+    val ret = new RawListType
     if (elementTypeId != null) ret.elementTypeId_=(elementTypeId)
     ret
   }
@@ -2314,9 +2329,48 @@ final class RawListType extends JavaListTypeRaw with MutableListType {
 }
 
 
-object SetType
-    extends JavaSetTypeMeta
-    with com.foursquare.spindle.MetaRecord[SetType]
+object SetType extends SetTypeMeta {
+
+
+  object Builder {
+    sealed trait HasElementTypeId
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasElementTypeId
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[SetType] (private var obj: RawSetType) {
+    def elementTypeId(v: String): SetType.Builder[State with Builder.HasElementTypeId] = {
+      obj.elementTypeId_=(v)
+      this.asInstanceOf[SetType.Builder[State with Builder.HasElementTypeId]]
+    }
+
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasElementTypeId): MutableSetType = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("SetType.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasElementTypeId): SetType = resultMutable()(ev0)
+  }
+
+  def newBuilder: SetType.Builder.AllUnspecified = new Builder(SetType.createRawRecord)
+
+  implicit val companionProvider: SetTypeCompanionProvider = new SetTypeCompanionProvider
+}
+
+class SetTypeMeta
+    extends JavaSetTypeMeta[SetType, RawSetType, SetTypeMeta]
     with com.foursquare.spindle.RecordProvider[SetType] {
   override def recordName: String = "SetType"
 
@@ -2354,12 +2408,9 @@ object SetType
     1.toShort -> _Fields.elementTypeId
   )
 
-  override type Mutable = MutableSetType
-  override type Raw = RawSetType
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: SetType = createRawRecord
-  override def createRawRecord: SetType.Raw = new SetType.Raw
+  override def createRawRecord: RawSetType = new RawSetType
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[SetType] = {
@@ -2375,21 +2426,21 @@ object SetType
 
   val elementTypeId =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, SetType, SetType.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, SetType, SetTypeMeta](
       name = "elementTypeId",
       longName = "elementTypeId",
       id = 1,
       annotations = Map(),
-      owner = SetType,
+      owner = this,
       getter = _.elementTypeIdOption,
-      setterRaw = (r: SetType.Raw, v: String) => { r.elementTypeId_=(v) },
-      unsetterRaw = (r: SetType.Raw) => { r.elementTypeIdUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[SetType], v: String) => { r.asInstanceOf[RawSetType].elementTypeId_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[SetType]) => { r.asInstanceOf[RawSetType].elementTypeIdUnset() },
       manifest = manifest[String]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, SetType, SetType.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, SetType, SetType.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, SetType, SetTypeMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, SetType, SetTypeMeta]](
       elementTypeId
     )
 
@@ -2397,62 +2448,25 @@ object SetType
   def apply(
       elementTypeId: String
   ): SetType = {
-    val ret = SetType.createRawRecord
+    val ret = this.createRawRecord
     ret.elementTypeId_=(elementTypeId)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasElementTypeId
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasElementTypeId
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[SetType] (private var obj: SetType.Raw) {
-    def elementTypeId(v: String): SetType.Builder[State with Builder.HasElementTypeId] = {
-      obj.elementTypeId_=(v)
-      this.asInstanceOf[SetType.Builder[State with Builder.HasElementTypeId]]
-    }
-
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasElementTypeId): SetType.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("SetType.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasElementTypeId): SetType = resultMutable()(ev0)
-  }
-
-  def newBuilder: SetType.Builder.AllUnspecified = new Builder(SetType.createRawRecord)
-
-  implicit val companionProvider: SetTypeCompanionProvider = new SetTypeCompanionProvider
 }
 
 class SetTypeCompanionProvider extends com.foursquare.spindle.CompanionProvider[SetType] {
-  type CompanionT = SetType.type
-  override def provide: SetType.type = SetType
+  type CompanionT = SetTypeMeta
+  override def provide: SetTypeMeta = SetType
 }
 
 
 
 trait SetType
 
-    extends JavaSetType
-    with com.foursquare.spindle.Record[SetType]
+    extends JavaSetType[SetType, RawSetType, SetTypeMeta]
     with org.apache.thrift.TBase[SetType, SetType._Fields] {
+
+  override def meta: SetTypeMeta
 
 
   def elementTypeId: String
@@ -2473,6 +2487,11 @@ trait SetType
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: SetType): Boolean = { this.compare(that) < 0 }
+  override def >(that: SetType): Boolean = { this.compare(that) > 0 }
+  override def <=(that: SetType): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: SetType): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: SetType): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -2482,7 +2501,7 @@ trait SetType
       elementTypeId: String = elementTypeIdOrNull
   ): SetType
 
-  def mutableCopy(): SetType.Mutable = {
+  def mutableCopy(): MutableSetType = {
     val ret = SetType.createRawRecord
 
     if (elementTypeIdIsSet) ret.elementTypeId_=(elementTypeIdOrNull)
@@ -2501,7 +2520,7 @@ trait SetType
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: SetType.Mutable
+  def mutable: MutableSetType
 
   def toBuilder(): SetType.Builder.AllSpecified = {
     val ret = new SetType.Builder(SetType.createRawRecord)
@@ -2515,8 +2534,7 @@ trait SetType
 }
 
 trait MutableSetType extends SetType
-  with JavaSetTypeMutable
-  with com.foursquare.spindle.MutableRecord[SetType] {
+  with JavaSetTypeMutable[SetType, RawSetType, SetTypeMeta] {
   def elementTypeId_=(x: String): Unit
   def elementTypeIdUnset(): Unit
 
@@ -2524,17 +2542,17 @@ trait MutableSetType extends SetType
 
   def copy(
       elementTypeId: String = elementTypeIdOrNull
-  ): SetType.Mutable
+  ): MutableSetType
 
-  override def mutable: SetType.Mutable = this
+  override def mutable: MutableSetType = this
 }
 
 
 
 
 
-final class RawSetType extends JavaSetTypeRaw with MutableSetType {
-  override def meta = SetType
+final class RawSetType extends JavaSetTypeRaw[SetType, RawSetType, SetTypeMeta] with MutableSetType {
+  override def meta: SetTypeMeta = SetType
 
   // Field #1 - elementTypeId
   private var _elementTypeId: String = null  // Underlying type: String
@@ -2661,7 +2679,7 @@ final class RawSetType extends JavaSetTypeRaw with MutableSetType {
     }
   }
 
-  override def deepCopy(): SetType.Raw = {
+  override def deepCopy(): RawSetType = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -2673,8 +2691,8 @@ final class RawSetType extends JavaSetTypeRaw with MutableSetType {
 
   override def copy(
       elementTypeId: String = elementTypeIdOrNull
-  ): SetType.Raw = {
-    val ret = new SetType.Raw
+  ): RawSetType = {
+    val ret = new RawSetType
     if (elementTypeId != null) ret.elementTypeId_=(elementTypeId)
     ret
   }
@@ -2688,9 +2706,54 @@ final class RawSetType extends JavaSetTypeRaw with MutableSetType {
 }
 
 
-object MapType
-    extends JavaMapTypeMeta
-    with com.foursquare.spindle.MetaRecord[MapType]
+object MapType extends MapTypeMeta {
+
+
+  object Builder {
+    sealed trait HasKeyTypeId
+    sealed trait HasValueTypeId
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasKeyTypeId with HasValueTypeId
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[MapType] (private var obj: RawMapType) {
+    def keyTypeId(v: String): MapType.Builder[State with Builder.HasKeyTypeId] = {
+      obj.keyTypeId_=(v)
+      this.asInstanceOf[MapType.Builder[State with Builder.HasKeyTypeId]]
+    }
+
+    def valueTypeId(v: String): MapType.Builder[State with Builder.HasValueTypeId] = {
+      obj.valueTypeId_=(v)
+      this.asInstanceOf[MapType.Builder[State with Builder.HasValueTypeId]]
+    }
+
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasKeyTypeId, ev1: State <:< Builder.HasValueTypeId): MutableMapType = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("MapType.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasKeyTypeId, ev1: State <:< Builder.HasValueTypeId): MapType = resultMutable()(ev0, ev1)
+  }
+
+  def newBuilder: MapType.Builder.AllUnspecified = new Builder(MapType.createRawRecord)
+
+  implicit val companionProvider: MapTypeCompanionProvider = new MapTypeCompanionProvider
+}
+
+class MapTypeMeta
+    extends JavaMapTypeMeta[MapType, RawMapType, MapTypeMeta]
     with com.foursquare.spindle.RecordProvider[MapType] {
   override def recordName: String = "MapType"
 
@@ -2741,12 +2804,9 @@ object MapType
     2.toShort -> _Fields.valueTypeId
   )
 
-  override type Mutable = MutableMapType
-  override type Raw = RawMapType
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: MapType = createRawRecord
-  override def createRawRecord: MapType.Raw = new MapType.Raw
+  override def createRawRecord: RawMapType = new RawMapType
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[MapType] = {
@@ -2762,35 +2822,35 @@ object MapType
 
   val keyTypeId =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, MapType, MapType.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, MapType, MapTypeMeta](
       name = "keyTypeId",
       longName = "keyTypeId",
       id = 1,
       annotations = Map(),
-      owner = MapType,
+      owner = this,
       getter = _.keyTypeIdOption,
-      setterRaw = (r: MapType.Raw, v: String) => { r.keyTypeId_=(v) },
-      unsetterRaw = (r: MapType.Raw) => { r.keyTypeIdUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[MapType], v: String) => { r.asInstanceOf[RawMapType].keyTypeId_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[MapType]) => { r.asInstanceOf[RawMapType].keyTypeIdUnset() },
       manifest = manifest[String]
     )
 
   val valueTypeId =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, MapType, MapType.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, MapType, MapTypeMeta](
       name = "valueTypeId",
       longName = "valueTypeId",
       id = 2,
       annotations = Map(),
-      owner = MapType,
+      owner = this,
       getter = _.valueTypeIdOption,
-      setterRaw = (r: MapType.Raw, v: String) => { r.valueTypeId_=(v) },
-      unsetterRaw = (r: MapType.Raw) => { r.valueTypeIdUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[MapType], v: String) => { r.asInstanceOf[RawMapType].valueTypeId_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[MapType]) => { r.asInstanceOf[RawMapType].valueTypeIdUnset() },
       manifest = manifest[String]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, MapType, MapType.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, MapType, MapType.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, MapType, MapTypeMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, MapType, MapTypeMeta]](
       keyTypeId,
       valueTypeId
     )
@@ -2800,69 +2860,26 @@ object MapType
       keyTypeId: String,
       valueTypeId: String
   ): MapType = {
-    val ret = MapType.createRawRecord
+    val ret = this.createRawRecord
     ret.keyTypeId_=(keyTypeId)
     ret.valueTypeId_=(valueTypeId)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasKeyTypeId
-    sealed trait HasValueTypeId
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasKeyTypeId with HasValueTypeId
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[MapType] (private var obj: MapType.Raw) {
-    def keyTypeId(v: String): MapType.Builder[State with Builder.HasKeyTypeId] = {
-      obj.keyTypeId_=(v)
-      this.asInstanceOf[MapType.Builder[State with Builder.HasKeyTypeId]]
-    }
-
-    def valueTypeId(v: String): MapType.Builder[State with Builder.HasValueTypeId] = {
-      obj.valueTypeId_=(v)
-      this.asInstanceOf[MapType.Builder[State with Builder.HasValueTypeId]]
-    }
-
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasKeyTypeId, ev1: State <:< Builder.HasValueTypeId): MapType.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("MapType.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasKeyTypeId, ev1: State <:< Builder.HasValueTypeId): MapType = resultMutable()(ev0, ev1)
-  }
-
-  def newBuilder: MapType.Builder.AllUnspecified = new Builder(MapType.createRawRecord)
-
-  implicit val companionProvider: MapTypeCompanionProvider = new MapTypeCompanionProvider
 }
 
 class MapTypeCompanionProvider extends com.foursquare.spindle.CompanionProvider[MapType] {
-  type CompanionT = MapType.type
-  override def provide: MapType.type = MapType
+  type CompanionT = MapTypeMeta
+  override def provide: MapTypeMeta = MapType
 }
 
 
 
 trait MapType
 
-    extends JavaMapType
-    with com.foursquare.spindle.Record[MapType]
+    extends JavaMapType[MapType, RawMapType, MapTypeMeta]
     with org.apache.thrift.TBase[MapType, MapType._Fields] {
+
+  override def meta: MapTypeMeta
 
 
   def keyTypeId: String
@@ -2895,6 +2912,11 @@ trait MapType
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: MapType): Boolean = { this.compare(that) < 0 }
+  override def >(that: MapType): Boolean = { this.compare(that) > 0 }
+  override def <=(that: MapType): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: MapType): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: MapType): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -2905,7 +2927,7 @@ trait MapType
       valueTypeId: String = valueTypeIdOrNull
   ): MapType
 
-  def mutableCopy(): MapType.Mutable = {
+  def mutableCopy(): MutableMapType = {
     val ret = MapType.createRawRecord
 
     if (keyTypeIdIsSet) ret.keyTypeId_=(keyTypeIdOrNull)
@@ -2926,7 +2948,7 @@ trait MapType
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: MapType.Mutable
+  def mutable: MutableMapType
 
   def toBuilder(): MapType.Builder.AllSpecified = {
     val ret = new MapType.Builder(MapType.createRawRecord)
@@ -2942,8 +2964,7 @@ trait MapType
 }
 
 trait MutableMapType extends MapType
-  with JavaMapTypeMutable
-  with com.foursquare.spindle.MutableRecord[MapType] {
+  with JavaMapTypeMutable[MapType, RawMapType, MapTypeMeta] {
   def keyTypeId_=(x: String): Unit
   def keyTypeIdUnset(): Unit
   def valueTypeId_=(x: String): Unit
@@ -2954,17 +2975,17 @@ trait MutableMapType extends MapType
   def copy(
       keyTypeId: String = keyTypeIdOrNull,
       valueTypeId: String = valueTypeIdOrNull
-  ): MapType.Mutable
+  ): MutableMapType
 
-  override def mutable: MapType.Mutable = this
+  override def mutable: MutableMapType = this
 }
 
 
 
 
 
-final class RawMapType extends JavaMapTypeRaw with MutableMapType {
-  override def meta = MapType
+final class RawMapType extends JavaMapTypeRaw[MapType, RawMapType, MapTypeMeta] with MutableMapType {
+  override def meta: MapTypeMeta = MapType
 
   // Field #1 - keyTypeId
   private var _keyTypeId: String = null  // Underlying type: String
@@ -3124,7 +3145,7 @@ final class RawMapType extends JavaMapTypeRaw with MutableMapType {
     }
   }
 
-  override def deepCopy(): MapType.Raw = {
+  override def deepCopy(): RawMapType = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -3137,8 +3158,8 @@ final class RawMapType extends JavaMapTypeRaw with MutableMapType {
   override def copy(
       keyTypeId: String = keyTypeIdOrNull,
       valueTypeId: String = valueTypeIdOrNull
-  ): MapType.Raw = {
-    val ret = new MapType.Raw
+  ): RawMapType = {
+    val ret = new RawMapType
     if (keyTypeId != null) ret.keyTypeId_=(keyTypeId)
     if (valueTypeId != null) ret.valueTypeId_=(valueTypeId)
     ret
@@ -3153,9 +3174,61 @@ final class RawMapType extends JavaMapTypeRaw with MutableMapType {
 }
 
 
-object ContainerType
-    extends JavaContainerTypeMeta
-    with com.foursquare.spindle.MetaRecord[ContainerType]
+object ContainerType extends ContainerTypeMeta {
+
+
+  object Builder {
+    sealed trait HasSimpleContainerType
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasSimpleContainerType
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[ContainerType] (private var obj: RawContainerType) {
+    def simpleContainerType(v: com.twitter.thrift.descriptors.SimpleContainerType): ContainerType.Builder[State with Builder.HasSimpleContainerType] = {
+      obj.simpleContainerType_=(v)
+      this.asInstanceOf[ContainerType.Builder[State with Builder.HasSimpleContainerType]]
+    }
+
+
+    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): ContainerType.Builder[State] = {
+      obj.__annotations_=(v)
+      this
+    }
+
+    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): ContainerType.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.__annotations_=(v)
+        case None => obj.annotationsUnset()
+      }
+      this
+    }
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasSimpleContainerType): MutableContainerType = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("ContainerType.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasSimpleContainerType): ContainerType = resultMutable()(ev0)
+  }
+
+  def newBuilder: ContainerType.Builder.AllUnspecified = new Builder(ContainerType.createRawRecord)
+
+  implicit val companionProvider: ContainerTypeCompanionProvider = new ContainerTypeCompanionProvider
+}
+
+class ContainerTypeMeta
+    extends JavaContainerTypeMeta[ContainerType, RawContainerType, ContainerTypeMeta]
     with com.foursquare.spindle.RecordProvider[ContainerType] {
   override def recordName: String = "ContainerType"
 
@@ -3206,12 +3279,9 @@ object ContainerType
     99.toShort -> _Fields.__annotations
   )
 
-  override type Mutable = MutableContainerType
-  override type Raw = RawContainerType
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: ContainerType = createRawRecord
-  override def createRawRecord: ContainerType.Raw = new ContainerType.Raw
+  override def createRawRecord: RawContainerType = new RawContainerType
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[ContainerType] = {
@@ -3227,35 +3297,35 @@ object ContainerType
 
   val simpleContainerType =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SimpleContainerType, ContainerType, ContainerType.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SimpleContainerType, ContainerType, ContainerTypeMeta](
       name = "simpleContainerType",
       longName = "simpleContainerType",
       id = 1,
       annotations = Map(),
-      owner = ContainerType,
+      owner = this,
       getter = _.simpleContainerTypeOption,
-      setterRaw = (r: ContainerType.Raw, v: com.twitter.thrift.descriptors.SimpleContainerType) => { r.simpleContainerType_=(v) },
-      unsetterRaw = (r: ContainerType.Raw) => { r.simpleContainerTypeUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[ContainerType], v: com.twitter.thrift.descriptors.SimpleContainerType) => { r.asInstanceOf[RawContainerType].simpleContainerType_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[ContainerType]) => { r.asInstanceOf[RawContainerType].simpleContainerTypeUnset() },
       manifest = manifest[com.twitter.thrift.descriptors.SimpleContainerType]
     )
 
   val __annotations =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], ContainerType, ContainerType.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], ContainerType, ContainerTypeMeta](
       name = "annotations",
       longName = "annotations",
       id = 99,
       annotations = Map(),
-      owner = ContainerType,
+      owner = this,
       getter = _.annotationsOption,
-      setterRaw = (r: ContainerType.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.__annotations_=(v) },
-      unsetterRaw = (r: ContainerType.Raw) => { r.annotationsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[ContainerType], v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.asInstanceOf[RawContainerType].__annotations_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[ContainerType]) => { r.asInstanceOf[RawContainerType].annotationsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, ContainerType, ContainerType.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, ContainerType, ContainerType.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, ContainerType, ContainerTypeMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, ContainerType, ContainerTypeMeta]](
       simpleContainerType,
       __annotations
     )
@@ -3265,76 +3335,26 @@ object ContainerType
       simpleContainerType: com.twitter.thrift.descriptors.SimpleContainerType,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
   ): ContainerType = {
-    val ret = ContainerType.createRawRecord
+    val ret = this.createRawRecord
     ret.simpleContainerType_=(simpleContainerType)
     ret.__annotations_=(__annotations)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasSimpleContainerType
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasSimpleContainerType
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[ContainerType] (private var obj: ContainerType.Raw) {
-    def simpleContainerType(v: com.twitter.thrift.descriptors.SimpleContainerType): ContainerType.Builder[State with Builder.HasSimpleContainerType] = {
-      obj.simpleContainerType_=(v)
-      this.asInstanceOf[ContainerType.Builder[State with Builder.HasSimpleContainerType]]
-    }
-
-
-    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): ContainerType.Builder[State] = {
-      obj.__annotations_=(v)
-      this
-    }
-
-    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): ContainerType.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.__annotations_=(v)
-        case None => obj.annotationsUnset()
-      }
-      this
-    }
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasSimpleContainerType): ContainerType.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("ContainerType.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasSimpleContainerType): ContainerType = resultMutable()(ev0)
-  }
-
-  def newBuilder: ContainerType.Builder.AllUnspecified = new Builder(ContainerType.createRawRecord)
-
-  implicit val companionProvider: ContainerTypeCompanionProvider = new ContainerTypeCompanionProvider
 }
 
 class ContainerTypeCompanionProvider extends com.foursquare.spindle.CompanionProvider[ContainerType] {
-  type CompanionT = ContainerType.type
-  override def provide: ContainerType.type = ContainerType
+  type CompanionT = ContainerTypeMeta
+  override def provide: ContainerTypeMeta = ContainerType
 }
 
 
 
 trait ContainerType
 
-    extends JavaContainerType
-    with com.foursquare.spindle.Record[ContainerType]
+    extends JavaContainerType[ContainerType, RawContainerType, ContainerTypeMeta]
     with org.apache.thrift.TBase[ContainerType, ContainerType._Fields] {
+
+  override def meta: ContainerTypeMeta
 
 
   def simpleContainerType: com.twitter.thrift.descriptors.SimpleContainerType
@@ -3367,6 +3387,11 @@ trait ContainerType
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: ContainerType): Boolean = { this.compare(that) < 0 }
+  override def >(that: ContainerType): Boolean = { this.compare(that) > 0 }
+  override def <=(that: ContainerType): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: ContainerType): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: ContainerType): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -3377,7 +3402,7 @@ trait ContainerType
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
   ): ContainerType
 
-  def mutableCopy(): ContainerType.Mutable = {
+  def mutableCopy(): MutableContainerType = {
     val ret = ContainerType.createRawRecord
 
     if (simpleContainerTypeIsSet) ret.simpleContainerType_=(simpleContainerTypeOrNull)
@@ -3398,7 +3423,7 @@ trait ContainerType
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: ContainerType.Mutable
+  def mutable: MutableContainerType
 
   def toBuilder(): ContainerType.Builder.AllSpecified = {
     val ret = new ContainerType.Builder(ContainerType.createRawRecord)
@@ -3414,8 +3439,7 @@ trait ContainerType
 }
 
 trait MutableContainerType extends ContainerType
-  with JavaContainerTypeMutable
-  with com.foursquare.spindle.MutableRecord[ContainerType] {
+  with JavaContainerTypeMutable[ContainerType, RawContainerType, ContainerTypeMeta] {
   def simpleContainerType_=(x: com.twitter.thrift.descriptors.SimpleContainerType): Unit
   def simpleContainerTypeUnset(): Unit
   def __annotations_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Unit
@@ -3426,17 +3450,17 @@ trait MutableContainerType extends ContainerType
   def copy(
       simpleContainerType: com.twitter.thrift.descriptors.SimpleContainerType = simpleContainerTypeOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): ContainerType.Mutable
+  ): MutableContainerType
 
-  override def mutable: ContainerType.Mutable = this
+  override def mutable: MutableContainerType = this
 }
 
 
 
 
 
-final class RawContainerType extends JavaContainerTypeRaw with MutableContainerType {
-  override def meta = ContainerType
+final class RawContainerType extends JavaContainerTypeRaw[ContainerType, RawContainerType, ContainerTypeMeta] with MutableContainerType {
+  override def meta: ContainerTypeMeta = ContainerType
 
   // Field #1 - simpleContainerType
   private var _simpleContainerType: com.twitter.thrift.descriptors.SimpleContainerType = null  // Underlying type: com.twitter.thrift.descriptors.SimpleContainerType
@@ -3623,7 +3647,7 @@ final class RawContainerType extends JavaContainerTypeRaw with MutableContainerT
     }
   }
 
-  override def deepCopy(): ContainerType.Raw = {
+  override def deepCopy(): RawContainerType = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -3636,8 +3660,8 @@ final class RawContainerType extends JavaContainerTypeRaw with MutableContainerT
   override def copy(
       simpleContainerType: com.twitter.thrift.descriptors.SimpleContainerType = simpleContainerTypeOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): ContainerType.Raw = {
-    val ret = new ContainerType.Raw
+  ): RawContainerType = {
+    val ret = new RawContainerType
     if (simpleContainerType != null) ret.simpleContainerType_=(simpleContainerType)
     if (__annotations != null) ret.__annotations_=(__annotations)
     ret
@@ -3652,9 +3676,48 @@ final class RawContainerType extends JavaContainerTypeRaw with MutableContainerT
 }
 
 
-object Typeref
-    extends JavaTyperefMeta
-    with com.foursquare.spindle.MetaRecord[Typeref]
+object Typeref extends TyperefMeta {
+
+
+  object Builder {
+    sealed trait HasTypeAlias
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasTypeAlias
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Typeref] (private var obj: RawTyperef) {
+    def typeAlias(v: String): Typeref.Builder[State with Builder.HasTypeAlias] = {
+      obj.typeAlias_=(v)
+      this.asInstanceOf[Typeref.Builder[State with Builder.HasTypeAlias]]
+    }
+
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasTypeAlias): MutableTyperef = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Typeref.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasTypeAlias): Typeref = resultMutable()(ev0)
+  }
+
+  def newBuilder: Typeref.Builder.AllUnspecified = new Builder(Typeref.createRawRecord)
+
+  implicit val companionProvider: TyperefCompanionProvider = new TyperefCompanionProvider
+}
+
+class TyperefMeta
+    extends JavaTyperefMeta[Typeref, RawTyperef, TyperefMeta]
     with com.foursquare.spindle.RecordProvider[Typeref] {
   override def recordName: String = "Typeref"
 
@@ -3692,12 +3755,9 @@ object Typeref
     1.toShort -> _Fields.typeAlias
   )
 
-  override type Mutable = MutableTyperef
-  override type Raw = RawTyperef
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Typeref = createRawRecord
-  override def createRawRecord: Typeref.Raw = new Typeref.Raw
+  override def createRawRecord: RawTyperef = new RawTyperef
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Typeref] = {
@@ -3713,21 +3773,21 @@ object Typeref
 
   val typeAlias =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Typeref, Typeref.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Typeref, TyperefMeta](
       name = "typeAlias",
       longName = "typeAlias",
       id = 1,
       annotations = Map(),
-      owner = Typeref,
+      owner = this,
       getter = _.typeAliasOption,
-      setterRaw = (r: Typeref.Raw, v: String) => { r.typeAlias_=(v) },
-      unsetterRaw = (r: Typeref.Raw) => { r.typeAliasUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Typeref], v: String) => { r.asInstanceOf[RawTyperef].typeAlias_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Typeref]) => { r.asInstanceOf[RawTyperef].typeAliasUnset() },
       manifest = manifest[String]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Typeref, Typeref.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Typeref, Typeref.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Typeref, TyperefMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Typeref, TyperefMeta]](
       typeAlias
     )
 
@@ -3735,62 +3795,25 @@ object Typeref
   def apply(
       typeAlias: String
   ): Typeref = {
-    val ret = Typeref.createRawRecord
+    val ret = this.createRawRecord
     ret.typeAlias_=(typeAlias)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasTypeAlias
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasTypeAlias
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Typeref] (private var obj: Typeref.Raw) {
-    def typeAlias(v: String): Typeref.Builder[State with Builder.HasTypeAlias] = {
-      obj.typeAlias_=(v)
-      this.asInstanceOf[Typeref.Builder[State with Builder.HasTypeAlias]]
-    }
-
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasTypeAlias): Typeref.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Typeref.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasTypeAlias): Typeref = resultMutable()(ev0)
-  }
-
-  def newBuilder: Typeref.Builder.AllUnspecified = new Builder(Typeref.createRawRecord)
-
-  implicit val companionProvider: TyperefCompanionProvider = new TyperefCompanionProvider
 }
 
 class TyperefCompanionProvider extends com.foursquare.spindle.CompanionProvider[Typeref] {
-  type CompanionT = Typeref.type
-  override def provide: Typeref.type = Typeref
+  type CompanionT = TyperefMeta
+  override def provide: TyperefMeta = Typeref
 }
 
 
 
 trait Typeref
 
-    extends JavaTyperef
-    with com.foursquare.spindle.Record[Typeref]
+    extends JavaTyperef[Typeref, RawTyperef, TyperefMeta]
     with org.apache.thrift.TBase[Typeref, Typeref._Fields] {
+
+  override def meta: TyperefMeta
 
 
   def typeAlias: String
@@ -3811,6 +3834,11 @@ trait Typeref
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Typeref): Boolean = { this.compare(that) < 0 }
+  override def >(that: Typeref): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Typeref): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Typeref): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Typeref): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -3820,7 +3848,7 @@ trait Typeref
       typeAlias: String = typeAliasOrNull
   ): Typeref
 
-  def mutableCopy(): Typeref.Mutable = {
+  def mutableCopy(): MutableTyperef = {
     val ret = Typeref.createRawRecord
 
     if (typeAliasIsSet) ret.typeAlias_=(typeAliasOrNull)
@@ -3839,7 +3867,7 @@ trait Typeref
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Typeref.Mutable
+  def mutable: MutableTyperef
 
   def toBuilder(): Typeref.Builder.AllSpecified = {
     val ret = new Typeref.Builder(Typeref.createRawRecord)
@@ -3853,8 +3881,7 @@ trait Typeref
 }
 
 trait MutableTyperef extends Typeref
-  with JavaTyperefMutable
-  with com.foursquare.spindle.MutableRecord[Typeref] {
+  with JavaTyperefMutable[Typeref, RawTyperef, TyperefMeta] {
   def typeAlias_=(x: String): Unit
   def typeAliasUnset(): Unit
 
@@ -3862,17 +3889,17 @@ trait MutableTyperef extends Typeref
 
   def copy(
       typeAlias: String = typeAliasOrNull
-  ): Typeref.Mutable
+  ): MutableTyperef
 
-  override def mutable: Typeref.Mutable = this
+  override def mutable: MutableTyperef = this
 }
 
 
 
 
 
-final class RawTyperef extends JavaTyperefRaw with MutableTyperef {
-  override def meta = Typeref
+final class RawTyperef extends JavaTyperefRaw[Typeref, RawTyperef, TyperefMeta] with MutableTyperef {
+  override def meta: TyperefMeta = Typeref
 
   // Field #1 - typeAlias
   private var _typeAlias: String = null  // Underlying type: String
@@ -3999,7 +4026,7 @@ final class RawTyperef extends JavaTyperefRaw with MutableTyperef {
     }
   }
 
-  override def deepCopy(): Typeref.Raw = {
+  override def deepCopy(): RawTyperef = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -4011,8 +4038,8 @@ final class RawTyperef extends JavaTyperefRaw with MutableTyperef {
 
   override def copy(
       typeAlias: String = typeAliasOrNull
-  ): Typeref.Raw = {
-    val ret = new Typeref.Raw
+  ): RawTyperef = {
+    val ret = new RawTyperef
     if (typeAlias != null) ret.typeAlias_=(typeAlias)
     ret
   }
@@ -4026,9 +4053,54 @@ final class RawTyperef extends JavaTyperefRaw with MutableTyperef {
 }
 
 
-object Type
-    extends JavaTypeMeta
-    with com.foursquare.spindle.MetaRecord[Type]
+object Type extends TypeMeta {
+
+
+  object Builder {
+    sealed trait HasId
+    sealed trait HasSimpleType
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasId with HasSimpleType
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Type] (private var obj: RawType) {
+    def id(v: String): Type.Builder[State with Builder.HasId] = {
+      obj.id_=(v)
+      this.asInstanceOf[Type.Builder[State with Builder.HasId]]
+    }
+
+    def simpleType(v: com.twitter.thrift.descriptors.SimpleType): Type.Builder[State with Builder.HasSimpleType] = {
+      obj.simpleType_=(v)
+      this.asInstanceOf[Type.Builder[State with Builder.HasSimpleType]]
+    }
+
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasId, ev1: State <:< Builder.HasSimpleType): MutableType = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Type.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasId, ev1: State <:< Builder.HasSimpleType): Type = resultMutable()(ev0, ev1)
+  }
+
+  def newBuilder: Type.Builder.AllUnspecified = new Builder(Type.createRawRecord)
+
+  implicit val companionProvider: TypeCompanionProvider = new TypeCompanionProvider
+}
+
+class TypeMeta
+    extends JavaTypeMeta[Type, RawType, TypeMeta]
     with com.foursquare.spindle.RecordProvider[Type] {
   override def recordName: String = "Type"
 
@@ -4079,12 +4151,9 @@ object Type
     2.toShort -> _Fields.simpleType
   )
 
-  override type Mutable = MutableType
-  override type Raw = RawType
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Type = createRawRecord
-  override def createRawRecord: Type.Raw = new Type.Raw
+  override def createRawRecord: RawType = new RawType
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Type] = {
@@ -4100,35 +4169,35 @@ object Type
 
   val id =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Type, Type.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Type, TypeMeta](
       name = "id",
       longName = "id",
       id = 1,
       annotations = Map(),
-      owner = Type,
+      owner = this,
       getter = _.idOption,
-      setterRaw = (r: Type.Raw, v: String) => { r.id_=(v) },
-      unsetterRaw = (r: Type.Raw) => { r.idUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Type], v: String) => { r.asInstanceOf[RawType].id_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Type]) => { r.asInstanceOf[RawType].idUnset() },
       manifest = manifest[String]
     )
 
   val simpleType =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SimpleType, Type, Type.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SimpleType, Type, TypeMeta](
       name = "simpleType",
       longName = "simpleType",
       id = 2,
       annotations = Map(),
-      owner = Type,
+      owner = this,
       getter = _.simpleTypeOption,
-      setterRaw = (r: Type.Raw, v: com.twitter.thrift.descriptors.SimpleType) => { r.simpleType_=(v) },
-      unsetterRaw = (r: Type.Raw) => { r.simpleTypeUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Type], v: com.twitter.thrift.descriptors.SimpleType) => { r.asInstanceOf[RawType].simpleType_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Type]) => { r.asInstanceOf[RawType].simpleTypeUnset() },
       manifest = manifest[com.twitter.thrift.descriptors.SimpleType]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Type, Type.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Type, Type.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Type, TypeMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Type, TypeMeta]](
       id,
       simpleType
     )
@@ -4138,69 +4207,26 @@ object Type
       id: String,
       simpleType: com.twitter.thrift.descriptors.SimpleType
   ): Type = {
-    val ret = Type.createRawRecord
+    val ret = this.createRawRecord
     ret.id_=(id)
     ret.simpleType_=(simpleType)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasId
-    sealed trait HasSimpleType
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasId with HasSimpleType
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Type] (private var obj: Type.Raw) {
-    def id(v: String): Type.Builder[State with Builder.HasId] = {
-      obj.id_=(v)
-      this.asInstanceOf[Type.Builder[State with Builder.HasId]]
-    }
-
-    def simpleType(v: com.twitter.thrift.descriptors.SimpleType): Type.Builder[State with Builder.HasSimpleType] = {
-      obj.simpleType_=(v)
-      this.asInstanceOf[Type.Builder[State with Builder.HasSimpleType]]
-    }
-
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasId, ev1: State <:< Builder.HasSimpleType): Type.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Type.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasId, ev1: State <:< Builder.HasSimpleType): Type = resultMutable()(ev0, ev1)
-  }
-
-  def newBuilder: Type.Builder.AllUnspecified = new Builder(Type.createRawRecord)
-
-  implicit val companionProvider: TypeCompanionProvider = new TypeCompanionProvider
 }
 
 class TypeCompanionProvider extends com.foursquare.spindle.CompanionProvider[Type] {
-  type CompanionT = Type.type
-  override def provide: Type.type = Type
+  type CompanionT = TypeMeta
+  override def provide: TypeMeta = Type
 }
 
 
 
 trait Type
 
-    extends JavaType
-    with com.foursquare.spindle.Record[Type]
+    extends JavaType[Type, RawType, TypeMeta]
     with org.apache.thrift.TBase[Type, Type._Fields] {
+
+  override def meta: TypeMeta
 
 
   def id: String
@@ -4233,6 +4259,11 @@ trait Type
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Type): Boolean = { this.compare(that) < 0 }
+  override def >(that: Type): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Type): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Type): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Type): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -4243,7 +4274,7 @@ trait Type
       simpleType: com.twitter.thrift.descriptors.SimpleType = simpleTypeOrNull
   ): Type
 
-  def mutableCopy(): Type.Mutable = {
+  def mutableCopy(): MutableType = {
     val ret = Type.createRawRecord
 
     if (idIsSet) ret.id_=(idOrNull)
@@ -4264,7 +4295,7 @@ trait Type
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Type.Mutable
+  def mutable: MutableType
 
   def toBuilder(): Type.Builder.AllSpecified = {
     val ret = new Type.Builder(Type.createRawRecord)
@@ -4280,8 +4311,7 @@ trait Type
 }
 
 trait MutableType extends Type
-  with JavaTypeMutable
-  with com.foursquare.spindle.MutableRecord[Type] {
+  with JavaTypeMutable[Type, RawType, TypeMeta] {
   def id_=(x: String): Unit
   def idUnset(): Unit
   def simpleType_=(x: com.twitter.thrift.descriptors.SimpleType): Unit
@@ -4292,17 +4322,17 @@ trait MutableType extends Type
   def copy(
       id: String = idOrNull,
       simpleType: com.twitter.thrift.descriptors.SimpleType = simpleTypeOrNull
-  ): Type.Mutable
+  ): MutableType
 
-  override def mutable: Type.Mutable = this
+  override def mutable: MutableType = this
 }
 
 
 
 
 
-final class RawType extends JavaTypeRaw with MutableType {
-  override def meta = Type
+final class RawType extends JavaTypeRaw[Type, RawType, TypeMeta] with MutableType {
+  override def meta: TypeMeta = Type
 
   // Field #1 - id
   private var _id: String = null  // Underlying type: String
@@ -4466,7 +4496,7 @@ final class RawType extends JavaTypeRaw with MutableType {
     }
   }
 
-  override def deepCopy(): Type.Raw = {
+  override def deepCopy(): RawType = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -4479,8 +4509,8 @@ final class RawType extends JavaTypeRaw with MutableType {
   override def copy(
       id: String = idOrNull,
       simpleType: com.twitter.thrift.descriptors.SimpleType = simpleTypeOrNull
-  ): Type.Raw = {
-    val ret = new Type.Raw
+  ): RawType = {
+    val ret = new RawType
     if (id != null) ret.id_=(id)
     if (simpleType != null) ret.simpleType_=(simpleType)
     ret
@@ -4495,9 +4525,67 @@ final class RawType extends JavaTypeRaw with MutableType {
 }
 
 
-object Typedef
-    extends JavaTypedefMeta
-    with com.foursquare.spindle.MetaRecord[Typedef]
+object Typedef extends TypedefMeta {
+
+
+  object Builder {
+    sealed trait HasTypeId
+    sealed trait HasTypeAlias
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasTypeId with HasTypeAlias
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Typedef] (private var obj: RawTypedef) {
+    def typeId(v: String): Typedef.Builder[State with Builder.HasTypeId] = {
+      obj.typeId_=(v)
+      this.asInstanceOf[Typedef.Builder[State with Builder.HasTypeId]]
+    }
+
+    def typeAlias(v: String): Typedef.Builder[State with Builder.HasTypeAlias] = {
+      obj.typeAlias_=(v)
+      this.asInstanceOf[Typedef.Builder[State with Builder.HasTypeAlias]]
+    }
+
+
+    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Typedef.Builder[State] = {
+      obj.__annotations_=(v)
+      this
+    }
+
+    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Typedef.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.__annotations_=(v)
+        case None => obj.annotationsUnset()
+      }
+      this
+    }
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasTypeId, ev1: State <:< Builder.HasTypeAlias): MutableTypedef = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Typedef.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasTypeId, ev1: State <:< Builder.HasTypeAlias): Typedef = resultMutable()(ev0, ev1)
+  }
+
+  def newBuilder: Typedef.Builder.AllUnspecified = new Builder(Typedef.createRawRecord)
+
+  implicit val companionProvider: TypedefCompanionProvider = new TypedefCompanionProvider
+}
+
+class TypedefMeta
+    extends JavaTypedefMeta[Typedef, RawTypedef, TypedefMeta]
     with com.foursquare.spindle.RecordProvider[Typedef] {
   override def recordName: String = "Typedef"
 
@@ -4561,12 +4649,9 @@ object Typedef
     99.toShort -> _Fields.__annotations
   )
 
-  override type Mutable = MutableTypedef
-  override type Raw = RawTypedef
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Typedef = createRawRecord
-  override def createRawRecord: Typedef.Raw = new Typedef.Raw
+  override def createRawRecord: RawTypedef = new RawTypedef
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Typedef] = {
@@ -4584,49 +4669,49 @@ object Typedef
 
   val typeId =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Typedef, Typedef.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Typedef, TypedefMeta](
       name = "typeId",
       longName = "typeId",
       id = 1,
       annotations = Map(),
-      owner = Typedef,
+      owner = this,
       getter = _.typeIdOption,
-      setterRaw = (r: Typedef.Raw, v: String) => { r.typeId_=(v) },
-      unsetterRaw = (r: Typedef.Raw) => { r.typeIdUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Typedef], v: String) => { r.asInstanceOf[RawTypedef].typeId_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Typedef]) => { r.asInstanceOf[RawTypedef].typeIdUnset() },
       manifest = manifest[String]
     )
 
   val typeAlias =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Typedef, Typedef.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Typedef, TypedefMeta](
       name = "typeAlias",
       longName = "typeAlias",
       id = 2,
       annotations = Map(),
-      owner = Typedef,
+      owner = this,
       getter = _.typeAliasOption,
-      setterRaw = (r: Typedef.Raw, v: String) => { r.typeAlias_=(v) },
-      unsetterRaw = (r: Typedef.Raw) => { r.typeAliasUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Typedef], v: String) => { r.asInstanceOf[RawTypedef].typeAlias_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Typedef]) => { r.asInstanceOf[RawTypedef].typeAliasUnset() },
       manifest = manifest[String]
     )
 
   val __annotations =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Typedef, Typedef.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Typedef, TypedefMeta](
       name = "annotations",
       longName = "annotations",
       id = 99,
       annotations = Map(),
-      owner = Typedef,
+      owner = this,
       getter = _.annotationsOption,
-      setterRaw = (r: Typedef.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.__annotations_=(v) },
-      unsetterRaw = (r: Typedef.Raw) => { r.annotationsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Typedef], v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.asInstanceOf[RawTypedef].__annotations_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Typedef]) => { r.asInstanceOf[RawTypedef].annotationsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Typedef, Typedef.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Typedef, Typedef.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Typedef, TypedefMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Typedef, TypedefMeta]](
       typeId,
       typeAlias,
       __annotations
@@ -4638,83 +4723,27 @@ object Typedef
       typeAlias: String,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
   ): Typedef = {
-    val ret = Typedef.createRawRecord
+    val ret = this.createRawRecord
     ret.typeId_=(typeId)
     ret.typeAlias_=(typeAlias)
     ret.__annotations_=(__annotations)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasTypeId
-    sealed trait HasTypeAlias
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasTypeId with HasTypeAlias
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Typedef] (private var obj: Typedef.Raw) {
-    def typeId(v: String): Typedef.Builder[State with Builder.HasTypeId] = {
-      obj.typeId_=(v)
-      this.asInstanceOf[Typedef.Builder[State with Builder.HasTypeId]]
-    }
-
-    def typeAlias(v: String): Typedef.Builder[State with Builder.HasTypeAlias] = {
-      obj.typeAlias_=(v)
-      this.asInstanceOf[Typedef.Builder[State with Builder.HasTypeAlias]]
-    }
-
-
-    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Typedef.Builder[State] = {
-      obj.__annotations_=(v)
-      this
-    }
-
-    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Typedef.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.__annotations_=(v)
-        case None => obj.annotationsUnset()
-      }
-      this
-    }
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasTypeId, ev1: State <:< Builder.HasTypeAlias): Typedef.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Typedef.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasTypeId, ev1: State <:< Builder.HasTypeAlias): Typedef = resultMutable()(ev0, ev1)
-  }
-
-  def newBuilder: Typedef.Builder.AllUnspecified = new Builder(Typedef.createRawRecord)
-
-  implicit val companionProvider: TypedefCompanionProvider = new TypedefCompanionProvider
 }
 
 class TypedefCompanionProvider extends com.foursquare.spindle.CompanionProvider[Typedef] {
-  type CompanionT = Typedef.type
-  override def provide: Typedef.type = Typedef
+  type CompanionT = TypedefMeta
+  override def provide: TypedefMeta = Typedef
 }
 
 
 
 trait Typedef
 
-    extends JavaTypedef
-    with com.foursquare.spindle.Record[Typedef]
+    extends JavaTypedef[Typedef, RawTypedef, TypedefMeta]
     with org.apache.thrift.TBase[Typedef, Typedef._Fields] {
+
+  override def meta: TypedefMeta
 
 
   def typeId: String
@@ -4759,6 +4788,11 @@ trait Typedef
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Typedef): Boolean = { this.compare(that) < 0 }
+  override def >(that: Typedef): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Typedef): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Typedef): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Typedef): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -4770,7 +4804,7 @@ trait Typedef
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
   ): Typedef
 
-  def mutableCopy(): Typedef.Mutable = {
+  def mutableCopy(): MutableTypedef = {
     val ret = Typedef.createRawRecord
 
     if (typeIdIsSet) ret.typeId_=(typeIdOrNull)
@@ -4793,7 +4827,7 @@ trait Typedef
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Typedef.Mutable
+  def mutable: MutableTypedef
 
   def toBuilder(): Typedef.Builder.AllSpecified = {
     val ret = new Typedef.Builder(Typedef.createRawRecord)
@@ -4811,8 +4845,7 @@ trait Typedef
 }
 
 trait MutableTypedef extends Typedef
-  with JavaTypedefMutable
-  with com.foursquare.spindle.MutableRecord[Typedef] {
+  with JavaTypedefMutable[Typedef, RawTypedef, TypedefMeta] {
   def typeId_=(x: String): Unit
   def typeIdUnset(): Unit
   def typeAlias_=(x: String): Unit
@@ -4826,9 +4859,9 @@ trait MutableTypedef extends Typedef
       typeId: String = typeIdOrNull,
       typeAlias: String = typeAliasOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Typedef.Mutable
+  ): MutableTypedef
 
-  override def mutable: Typedef.Mutable = this
+  override def mutable: MutableTypedef = this
 }
 
 
@@ -4875,11 +4908,11 @@ trait TypedefProxy extends Typedef {
     __annotations = __annotations
   )
 
-  override def mutableCopy(): Typedef.Mutable = underlying.mutableCopy()
+  override def mutableCopy(): MutableTypedef = underlying.mutableCopy()
 
   override def mergeCopy(that: Typedef): Typedef = underlying.mergeCopy(that)
 
-  override def mutable: Typedef.Mutable = underlying.mutable
+  override def mutable: MutableTypedef = underlying.mutable
 
   override def deepCopy(): Typedef = underlying.deepCopy()
 
@@ -4906,7 +4939,7 @@ trait MutableTypedefProxy extends MutableTypedef with TypedefProxy {
       typeId: String = typeIdOrNull,
       typeAlias: String = typeAliasOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Typedef.Mutable = underlying.copy(
+  ): MutableTypedef = underlying.copy(
     typeId = typeId,
     typeAlias = typeAlias,
     __annotations = __annotations
@@ -4918,8 +4951,8 @@ trait MutableTypedefProxy extends MutableTypedef with TypedefProxy {
 
 
 
-final class RawTypedef extends JavaTypedefRaw with MutableTypedef {
-  override def meta = Typedef
+final class RawTypedef extends JavaTypedefRaw[Typedef, RawTypedef, TypedefMeta] with MutableTypedef {
+  override def meta: TypedefMeta = Typedef
 
   // Field #1 - typeId
   private var _typeId: String = null  // Underlying type: String
@@ -5135,7 +5168,7 @@ final class RawTypedef extends JavaTypedefRaw with MutableTypedef {
     }
   }
 
-  override def deepCopy(): Typedef.Raw = {
+  override def deepCopy(): RawTypedef = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -5149,8 +5182,8 @@ final class RawTypedef extends JavaTypedefRaw with MutableTypedef {
       typeId: String = typeIdOrNull,
       typeAlias: String = typeAliasOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Typedef.Raw = {
-    val ret = new Typedef.Raw
+  ): RawTypedef = {
+    val ret = new RawTypedef
     if (typeId != null) ret.typeId_=(typeId)
     if (typeAlias != null) ret.typeAlias_=(typeAlias)
     if (__annotations != null) ret.__annotations_=(__annotations)
@@ -5166,9 +5199,54 @@ final class RawTypedef extends JavaTypedefRaw with MutableTypedef {
 }
 
 
-object TypeRegistry
-    extends JavaTypeRegistryMeta
-    with com.foursquare.spindle.MetaRecord[TypeRegistry]
+object TypeRegistry extends TypeRegistryMeta {
+
+
+  object Builder {
+    sealed trait HasIdToType
+    sealed trait HasAliasToTypeId
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasIdToType with HasAliasToTypeId
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[TypeRegistry] (private var obj: RawTypeRegistry) {
+    def idToType(v: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]): TypeRegistry.Builder[State with Builder.HasIdToType] = {
+      obj.idToType_=(v)
+      this.asInstanceOf[TypeRegistry.Builder[State with Builder.HasIdToType]]
+    }
+
+    def aliasToTypeId(v: scala.collection.immutable.Map[String, String]): TypeRegistry.Builder[State with Builder.HasAliasToTypeId] = {
+      obj.aliasToTypeId_=(v)
+      this.asInstanceOf[TypeRegistry.Builder[State with Builder.HasAliasToTypeId]]
+    }
+
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasIdToType, ev1: State <:< Builder.HasAliasToTypeId): MutableTypeRegistry = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("TypeRegistry.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasIdToType, ev1: State <:< Builder.HasAliasToTypeId): TypeRegistry = resultMutable()(ev0, ev1)
+  }
+
+  def newBuilder: TypeRegistry.Builder.AllUnspecified = new Builder(TypeRegistry.createRawRecord)
+
+  implicit val companionProvider: TypeRegistryCompanionProvider = new TypeRegistryCompanionProvider
+}
+
+class TypeRegistryMeta
+    extends JavaTypeRegistryMeta[TypeRegistry, RawTypeRegistry, TypeRegistryMeta]
     with com.foursquare.spindle.RecordProvider[TypeRegistry] {
   override def recordName: String = "TypeRegistry"
 
@@ -5219,12 +5297,9 @@ object TypeRegistry
     2.toShort -> _Fields.aliasToTypeId
   )
 
-  override type Mutable = MutableTypeRegistry
-  override type Raw = RawTypeRegistry
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: TypeRegistry = createRawRecord
-  override def createRawRecord: TypeRegistry.Raw = new TypeRegistry.Raw
+  override def createRawRecord: RawTypeRegistry = new RawTypeRegistry
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[TypeRegistry] = {
@@ -5240,35 +5315,35 @@ object TypeRegistry
 
   val idToType =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type], TypeRegistry, TypeRegistry.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type], TypeRegistry, TypeRegistryMeta](
       name = "idToType",
       longName = "idToType",
       id = 1,
       annotations = Map(),
-      owner = TypeRegistry,
+      owner = this,
       getter = _.idToTypeOption,
-      setterRaw = (r: TypeRegistry.Raw, v: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]) => { r.idToType_=(v) },
-      unsetterRaw = (r: TypeRegistry.Raw) => { r.idToTypeUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[TypeRegistry], v: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]) => { r.asInstanceOf[RawTypeRegistry].idToType_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[TypeRegistry]) => { r.asInstanceOf[RawTypeRegistry].idToTypeUnset() },
       manifest = manifest[scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]]
     )
 
   val aliasToTypeId =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.immutable.Map[String, String], TypeRegistry, TypeRegistry.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.immutable.Map[String, String], TypeRegistry, TypeRegistryMeta](
       name = "aliasToTypeId",
       longName = "aliasToTypeId",
       id = 2,
       annotations = Map(),
-      owner = TypeRegistry,
+      owner = this,
       getter = _.aliasToTypeIdOption,
-      setterRaw = (r: TypeRegistry.Raw, v: scala.collection.immutable.Map[String, String]) => { r.aliasToTypeId_=(v) },
-      unsetterRaw = (r: TypeRegistry.Raw) => { r.aliasToTypeIdUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[TypeRegistry], v: scala.collection.immutable.Map[String, String]) => { r.asInstanceOf[RawTypeRegistry].aliasToTypeId_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[TypeRegistry]) => { r.asInstanceOf[RawTypeRegistry].aliasToTypeIdUnset() },
       manifest = manifest[scala.collection.immutable.Map[String, String]]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, TypeRegistry, TypeRegistry.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, TypeRegistry, TypeRegistry.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, TypeRegistry, TypeRegistryMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, TypeRegistry, TypeRegistryMeta]](
       idToType,
       aliasToTypeId
     )
@@ -5278,69 +5353,26 @@ object TypeRegistry
       idToType: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type],
       aliasToTypeId: scala.collection.immutable.Map[String, String]
   ): TypeRegistry = {
-    val ret = TypeRegistry.createRawRecord
+    val ret = this.createRawRecord
     ret.idToType_=(idToType)
     ret.aliasToTypeId_=(aliasToTypeId)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasIdToType
-    sealed trait HasAliasToTypeId
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasIdToType with HasAliasToTypeId
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[TypeRegistry] (private var obj: TypeRegistry.Raw) {
-    def idToType(v: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]): TypeRegistry.Builder[State with Builder.HasIdToType] = {
-      obj.idToType_=(v)
-      this.asInstanceOf[TypeRegistry.Builder[State with Builder.HasIdToType]]
-    }
-
-    def aliasToTypeId(v: scala.collection.immutable.Map[String, String]): TypeRegistry.Builder[State with Builder.HasAliasToTypeId] = {
-      obj.aliasToTypeId_=(v)
-      this.asInstanceOf[TypeRegistry.Builder[State with Builder.HasAliasToTypeId]]
-    }
-
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasIdToType, ev1: State <:< Builder.HasAliasToTypeId): TypeRegistry.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("TypeRegistry.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasIdToType, ev1: State <:< Builder.HasAliasToTypeId): TypeRegistry = resultMutable()(ev0, ev1)
-  }
-
-  def newBuilder: TypeRegistry.Builder.AllUnspecified = new Builder(TypeRegistry.createRawRecord)
-
-  implicit val companionProvider: TypeRegistryCompanionProvider = new TypeRegistryCompanionProvider
 }
 
 class TypeRegistryCompanionProvider extends com.foursquare.spindle.CompanionProvider[TypeRegistry] {
-  type CompanionT = TypeRegistry.type
-  override def provide: TypeRegistry.type = TypeRegistry
+  type CompanionT = TypeRegistryMeta
+  override def provide: TypeRegistryMeta = TypeRegistry
 }
 
 
 
 trait TypeRegistry
 
-    extends JavaTypeRegistry
-    with com.foursquare.spindle.Record[TypeRegistry]
+    extends JavaTypeRegistry[TypeRegistry, RawTypeRegistry, TypeRegistryMeta]
     with org.apache.thrift.TBase[TypeRegistry, TypeRegistry._Fields] {
+
+  override def meta: TypeRegistryMeta
 
   def idToType: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]
   def idToTypeOption: Option[scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]]
@@ -5373,6 +5405,11 @@ trait TypeRegistry
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: TypeRegistry): Boolean = { this.compare(that) < 0 }
+  override def >(that: TypeRegistry): Boolean = { this.compare(that) > 0 }
+  override def <=(that: TypeRegistry): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: TypeRegistry): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: TypeRegistry): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -5383,7 +5420,7 @@ trait TypeRegistry
       aliasToTypeId: scala.collection.immutable.Map[String, String] = aliasToTypeIdOrNull
   ): TypeRegistry
 
-  def mutableCopy(): TypeRegistry.Mutable = {
+  def mutableCopy(): MutableTypeRegistry = {
     val ret = TypeRegistry.createRawRecord
 
     if (idToTypeIsSet) ret.idToType_=(idToTypeOrNull)
@@ -5404,7 +5441,7 @@ trait TypeRegistry
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: TypeRegistry.Mutable
+  def mutable: MutableTypeRegistry
 
   def toBuilder(): TypeRegistry.Builder.AllSpecified = {
     val ret = new TypeRegistry.Builder(TypeRegistry.createRawRecord)
@@ -5420,8 +5457,7 @@ trait TypeRegistry
 }
 
 trait MutableTypeRegistry extends TypeRegistry
-  with JavaTypeRegistryMutable
-  with com.foursquare.spindle.MutableRecord[TypeRegistry] {
+  with JavaTypeRegistryMutable[TypeRegistry, RawTypeRegistry, TypeRegistryMeta] {
   def idToType_=(x: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]): Unit
   def idToTypeUnset(): Unit
   def aliasToTypeId_=(x: scala.collection.immutable.Map[String, String]): Unit
@@ -5432,17 +5468,17 @@ trait MutableTypeRegistry extends TypeRegistry
   def copy(
       idToType: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type] = idToTypeOrNull,
       aliasToTypeId: scala.collection.immutable.Map[String, String] = aliasToTypeIdOrNull
-  ): TypeRegistry.Mutable
+  ): MutableTypeRegistry
 
-  override def mutable: TypeRegistry.Mutable = this
+  override def mutable: MutableTypeRegistry = this
 }
 
 
 
 
 
-final class RawTypeRegistry extends JavaTypeRegistryRaw with MutableTypeRegistry {
-  override def meta = TypeRegistry
+final class RawTypeRegistry extends JavaTypeRegistryRaw[TypeRegistry, RawTypeRegistry, TypeRegistryMeta] with MutableTypeRegistry {
+  override def meta: TypeRegistryMeta = TypeRegistry
 
   // Field #1 - idToType
   private var _idToType: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type] = null  // Underlying type: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]
@@ -5650,7 +5686,7 @@ final class RawTypeRegistry extends JavaTypeRegistryRaw with MutableTypeRegistry
     }
   }
 
-  override def deepCopy(): TypeRegistry.Raw = {
+  override def deepCopy(): RawTypeRegistry = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -5663,8 +5699,8 @@ final class RawTypeRegistry extends JavaTypeRegistryRaw with MutableTypeRegistry
   override def copy(
       idToType: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type] = idToTypeOrNull,
       aliasToTypeId: scala.collection.immutable.Map[String, String] = aliasToTypeIdOrNull
-  ): TypeRegistry.Raw = {
-    val ret = new TypeRegistry.Raw
+  ): RawTypeRegistry = {
+    val ret = new RawTypeRegistry
     if (idToType != null) ret.idToType_=(idToType)
     if (aliasToTypeId != null) ret.aliasToTypeId_=(aliasToTypeId)
     ret
@@ -5679,9 +5715,60 @@ final class RawTypeRegistry extends JavaTypeRegistryRaw with MutableTypeRegistry
 }
 
 
-object Const
-    extends JavaConstMeta
-    with com.foursquare.spindle.MetaRecord[Const]
+object Const extends ConstMeta {
+
+
+  object Builder {
+    sealed trait HasTypeId
+    sealed trait HasName
+    sealed trait HasValue
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasTypeId with HasName with HasValue
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Const] (private var obj: RawConst) {
+    def typeId(v: String): Const.Builder[State with Builder.HasTypeId] = {
+      obj.typeId_=(v)
+      this.asInstanceOf[Const.Builder[State with Builder.HasTypeId]]
+    }
+
+    def name(v: String): Const.Builder[State with Builder.HasName] = {
+      obj.name_=(v)
+      this.asInstanceOf[Const.Builder[State with Builder.HasName]]
+    }
+
+    def value(v: String): Const.Builder[State with Builder.HasValue] = {
+      obj.value_=(v)
+      this.asInstanceOf[Const.Builder[State with Builder.HasValue]]
+    }
+
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasTypeId, ev1: State <:< Builder.HasName, ev2: State <:< Builder.HasValue): MutableConst = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Const.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasTypeId, ev1: State <:< Builder.HasName, ev2: State <:< Builder.HasValue): Const = resultMutable()(ev0, ev1, ev2)
+  }
+
+  def newBuilder: Const.Builder.AllUnspecified = new Builder(Const.createRawRecord)
+
+  implicit val companionProvider: ConstCompanionProvider = new ConstCompanionProvider
+}
+
+class ConstMeta
+    extends JavaConstMeta[Const, RawConst, ConstMeta]
     with com.foursquare.spindle.RecordProvider[Const] {
   override def recordName: String = "Const"
 
@@ -5745,12 +5832,9 @@ object Const
     3.toShort -> _Fields.value
   )
 
-  override type Mutable = MutableConst
-  override type Raw = RawConst
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Const = createRawRecord
-  override def createRawRecord: Const.Raw = new Const.Raw
+  override def createRawRecord: RawConst = new RawConst
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Const] = {
@@ -5768,49 +5852,49 @@ object Const
 
   val typeId =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Const, Const.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Const, ConstMeta](
       name = "typeId",
       longName = "typeId",
       id = 1,
       annotations = Map(),
-      owner = Const,
+      owner = this,
       getter = _.typeIdOption,
-      setterRaw = (r: Const.Raw, v: String) => { r.typeId_=(v) },
-      unsetterRaw = (r: Const.Raw) => { r.typeIdUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Const], v: String) => { r.asInstanceOf[RawConst].typeId_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Const]) => { r.asInstanceOf[RawConst].typeIdUnset() },
       manifest = manifest[String]
     )
 
   val name =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Const, Const.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Const, ConstMeta](
       name = "name",
       longName = "name",
       id = 2,
       annotations = Map(),
-      owner = Const,
+      owner = this,
       getter = _.nameOption,
-      setterRaw = (r: Const.Raw, v: String) => { r.name_=(v) },
-      unsetterRaw = (r: Const.Raw) => { r.nameUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Const], v: String) => { r.asInstanceOf[RawConst].name_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Const]) => { r.asInstanceOf[RawConst].nameUnset() },
       manifest = manifest[String]
     )
 
   val value =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Const, Const.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Const, ConstMeta](
       name = "value",
       longName = "value",
       id = 3,
       annotations = Map(),
-      owner = Const,
+      owner = this,
       getter = _.valueOption,
-      setterRaw = (r: Const.Raw, v: String) => { r.value_=(v) },
-      unsetterRaw = (r: Const.Raw) => { r.valueUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Const], v: String) => { r.asInstanceOf[RawConst].value_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Const]) => { r.asInstanceOf[RawConst].valueUnset() },
       manifest = manifest[String]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Const, Const.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Const, Const.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Const, ConstMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Const, ConstMeta]](
       typeId,
       name,
       value
@@ -5822,76 +5906,27 @@ object Const
       name: String,
       value: String
   ): Const = {
-    val ret = Const.createRawRecord
+    val ret = this.createRawRecord
     ret.typeId_=(typeId)
     ret.name_=(name)
     ret.value_=(value)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasTypeId
-    sealed trait HasName
-    sealed trait HasValue
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasTypeId with HasName with HasValue
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Const] (private var obj: Const.Raw) {
-    def typeId(v: String): Const.Builder[State with Builder.HasTypeId] = {
-      obj.typeId_=(v)
-      this.asInstanceOf[Const.Builder[State with Builder.HasTypeId]]
-    }
-
-    def name(v: String): Const.Builder[State with Builder.HasName] = {
-      obj.name_=(v)
-      this.asInstanceOf[Const.Builder[State with Builder.HasName]]
-    }
-
-    def value(v: String): Const.Builder[State with Builder.HasValue] = {
-      obj.value_=(v)
-      this.asInstanceOf[Const.Builder[State with Builder.HasValue]]
-    }
-
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasTypeId, ev1: State <:< Builder.HasName, ev2: State <:< Builder.HasValue): Const.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Const.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasTypeId, ev1: State <:< Builder.HasName, ev2: State <:< Builder.HasValue): Const = resultMutable()(ev0, ev1, ev2)
-  }
-
-  def newBuilder: Const.Builder.AllUnspecified = new Builder(Const.createRawRecord)
-
-  implicit val companionProvider: ConstCompanionProvider = new ConstCompanionProvider
 }
 
 class ConstCompanionProvider extends com.foursquare.spindle.CompanionProvider[Const] {
-  type CompanionT = Const.type
-  override def provide: Const.type = Const
+  type CompanionT = ConstMeta
+  override def provide: ConstMeta = Const
 }
 
 
 
 trait Const
 
-    extends JavaConst
-    with com.foursquare.spindle.Record[Const]
+    extends JavaConst[Const, RawConst, ConstMeta]
     with org.apache.thrift.TBase[Const, Const._Fields] {
+
+  override def meta: ConstMeta
 
 
   def typeId: String
@@ -5936,6 +5971,11 @@ trait Const
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Const): Boolean = { this.compare(that) < 0 }
+  override def >(that: Const): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Const): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Const): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Const): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -5947,7 +5987,7 @@ trait Const
       value: String = valueOrNull
   ): Const
 
-  def mutableCopy(): Const.Mutable = {
+  def mutableCopy(): MutableConst = {
     val ret = Const.createRawRecord
 
     if (typeIdIsSet) ret.typeId_=(typeIdOrNull)
@@ -5970,7 +6010,7 @@ trait Const
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Const.Mutable
+  def mutable: MutableConst
 
   def toBuilder(): Const.Builder.AllSpecified = {
     val ret = new Const.Builder(Const.createRawRecord)
@@ -5988,8 +6028,7 @@ trait Const
 }
 
 trait MutableConst extends Const
-  with JavaConstMutable
-  with com.foursquare.spindle.MutableRecord[Const] {
+  with JavaConstMutable[Const, RawConst, ConstMeta] {
   def typeId_=(x: String): Unit
   def typeIdUnset(): Unit
   def name_=(x: String): Unit
@@ -6003,9 +6042,9 @@ trait MutableConst extends Const
       typeId: String = typeIdOrNull,
       name: String = nameOrNull,
       value: String = valueOrNull
-  ): Const.Mutable
+  ): MutableConst
 
-  override def mutable: Const.Mutable = this
+  override def mutable: MutableConst = this
 }
 
 
@@ -6052,11 +6091,11 @@ trait ConstProxy extends Const {
     value = value
   )
 
-  override def mutableCopy(): Const.Mutable = underlying.mutableCopy()
+  override def mutableCopy(): MutableConst = underlying.mutableCopy()
 
   override def mergeCopy(that: Const): Const = underlying.mergeCopy(that)
 
-  override def mutable: Const.Mutable = underlying.mutable
+  override def mutable: MutableConst = underlying.mutable
 
   override def deepCopy(): Const = underlying.deepCopy()
 
@@ -6083,7 +6122,7 @@ trait MutableConstProxy extends MutableConst with ConstProxy {
       typeId: String = typeIdOrNull,
       name: String = nameOrNull,
       value: String = valueOrNull
-  ): Const.Mutable = underlying.copy(
+  ): MutableConst = underlying.copy(
     typeId = typeId,
     name = name,
     value = value
@@ -6095,8 +6134,8 @@ trait MutableConstProxy extends MutableConst with ConstProxy {
 
 
 
-final class RawConst extends JavaConstRaw with MutableConst {
-  override def meta = Const
+final class RawConst extends JavaConstRaw[Const, RawConst, ConstMeta] with MutableConst {
+  override def meta: ConstMeta = Const
 
   // Field #1 - typeId
   private var _typeId: String = null  // Underlying type: String
@@ -6289,7 +6328,7 @@ final class RawConst extends JavaConstRaw with MutableConst {
     }
   }
 
-  override def deepCopy(): Const.Raw = {
+  override def deepCopy(): RawConst = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -6303,8 +6342,8 @@ final class RawConst extends JavaConstRaw with MutableConst {
       typeId: String = typeIdOrNull,
       name: String = nameOrNull,
       value: String = valueOrNull
-  ): Const.Raw = {
-    val ret = new Const.Raw
+  ): RawConst = {
+    val ret = new RawConst
     if (typeId != null) ret.typeId_=(typeId)
     if (name != null) ret.name_=(name)
     if (value != null) ret.value_=(value)
@@ -6320,9 +6359,67 @@ final class RawConst extends JavaConstRaw with MutableConst {
 }
 
 
-object EnumElement
-    extends JavaEnumElementMeta
-    with com.foursquare.spindle.MetaRecord[EnumElement]
+object EnumElement extends EnumElementMeta {
+
+
+  object Builder {
+    sealed trait HasName
+    sealed trait HasValue
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasName with HasValue
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[EnumElement] (private var obj: RawEnumElement) {
+    def name(v: String): EnumElement.Builder[State with Builder.HasName] = {
+      obj.name_=(v)
+      this.asInstanceOf[EnumElement.Builder[State with Builder.HasName]]
+    }
+
+    def value(v: Int): EnumElement.Builder[State with Builder.HasValue] = {
+      obj.value_=(v)
+      this.asInstanceOf[EnumElement.Builder[State with Builder.HasValue]]
+    }
+
+
+    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): EnumElement.Builder[State] = {
+      obj.__annotations_=(v)
+      this
+    }
+
+    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): EnumElement.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.__annotations_=(v)
+        case None => obj.annotationsUnset()
+      }
+      this
+    }
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasValue): MutableEnumElement = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("EnumElement.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasValue): EnumElement = resultMutable()(ev0, ev1)
+  }
+
+  def newBuilder: EnumElement.Builder.AllUnspecified = new Builder(EnumElement.createRawRecord)
+
+  implicit val companionProvider: EnumElementCompanionProvider = new EnumElementCompanionProvider
+}
+
+class EnumElementMeta
+    extends JavaEnumElementMeta[EnumElement, RawEnumElement, EnumElementMeta]
     with com.foursquare.spindle.RecordProvider[EnumElement] {
   override def recordName: String = "EnumElement"
 
@@ -6386,12 +6483,9 @@ object EnumElement
     99.toShort -> _Fields.__annotations
   )
 
-  override type Mutable = MutableEnumElement
-  override type Raw = RawEnumElement
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: EnumElement = createRawRecord
-  override def createRawRecord: EnumElement.Raw = new EnumElement.Raw
+  override def createRawRecord: RawEnumElement = new RawEnumElement
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[EnumElement] = {
@@ -6409,49 +6503,49 @@ object EnumElement
 
   val name =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, EnumElement, EnumElement.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, EnumElement, EnumElementMeta](
       name = "name",
       longName = "name",
       id = 1,
       annotations = Map(),
-      owner = EnumElement,
+      owner = this,
       getter = _.nameOption,
-      setterRaw = (r: EnumElement.Raw, v: String) => { r.name_=(v) },
-      unsetterRaw = (r: EnumElement.Raw) => { r.nameUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[EnumElement], v: String) => { r.asInstanceOf[RawEnumElement].name_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[EnumElement]) => { r.asInstanceOf[RawEnumElement].nameUnset() },
       manifest = manifest[String]
     )
 
   val value =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[Int, EnumElement, EnumElement.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[Int, EnumElement, EnumElementMeta](
       name = "value",
       longName = "value",
       id = 2,
       annotations = Map(),
-      owner = EnumElement,
+      owner = this,
       getter = _.valueOption,
-      setterRaw = (r: EnumElement.Raw, v: Int) => { r.value_=(v) },
-      unsetterRaw = (r: EnumElement.Raw) => { r.valueUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[EnumElement], v: Int) => { r.asInstanceOf[RawEnumElement].value_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[EnumElement]) => { r.asInstanceOf[RawEnumElement].valueUnset() },
       manifest = manifest[Int]
     )
 
   val __annotations =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], EnumElement, EnumElement.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], EnumElement, EnumElementMeta](
       name = "annotations",
       longName = "annotations",
       id = 99,
       annotations = Map(),
-      owner = EnumElement,
+      owner = this,
       getter = _.annotationsOption,
-      setterRaw = (r: EnumElement.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.__annotations_=(v) },
-      unsetterRaw = (r: EnumElement.Raw) => { r.annotationsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[EnumElement], v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.asInstanceOf[RawEnumElement].__annotations_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[EnumElement]) => { r.asInstanceOf[RawEnumElement].annotationsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, EnumElement, EnumElement.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, EnumElement, EnumElement.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, EnumElement, EnumElementMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, EnumElement, EnumElementMeta]](
       name,
       value,
       __annotations
@@ -6463,83 +6557,27 @@ object EnumElement
       value: Int,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
   ): EnumElement = {
-    val ret = EnumElement.createRawRecord
+    val ret = this.createRawRecord
     ret.name_=(name)
     ret.value_=(value)
     ret.__annotations_=(__annotations)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasName
-    sealed trait HasValue
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasName with HasValue
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[EnumElement] (private var obj: EnumElement.Raw) {
-    def name(v: String): EnumElement.Builder[State with Builder.HasName] = {
-      obj.name_=(v)
-      this.asInstanceOf[EnumElement.Builder[State with Builder.HasName]]
-    }
-
-    def value(v: Int): EnumElement.Builder[State with Builder.HasValue] = {
-      obj.value_=(v)
-      this.asInstanceOf[EnumElement.Builder[State with Builder.HasValue]]
-    }
-
-
-    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): EnumElement.Builder[State] = {
-      obj.__annotations_=(v)
-      this
-    }
-
-    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): EnumElement.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.__annotations_=(v)
-        case None => obj.annotationsUnset()
-      }
-      this
-    }
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasValue): EnumElement.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("EnumElement.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasValue): EnumElement = resultMutable()(ev0, ev1)
-  }
-
-  def newBuilder: EnumElement.Builder.AllUnspecified = new Builder(EnumElement.createRawRecord)
-
-  implicit val companionProvider: EnumElementCompanionProvider = new EnumElementCompanionProvider
 }
 
 class EnumElementCompanionProvider extends com.foursquare.spindle.CompanionProvider[EnumElement] {
-  type CompanionT = EnumElement.type
-  override def provide: EnumElement.type = EnumElement
+  type CompanionT = EnumElementMeta
+  override def provide: EnumElementMeta = EnumElement
 }
 
 
 
 trait EnumElement
 
-    extends JavaEnumElement
-    with com.foursquare.spindle.Record[EnumElement]
+    extends JavaEnumElement[EnumElement, RawEnumElement, EnumElementMeta]
     with org.apache.thrift.TBase[EnumElement, EnumElement._Fields] {
+
+  override def meta: EnumElementMeta
 
 
   def name: String
@@ -6585,6 +6623,11 @@ trait EnumElement
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: EnumElement): Boolean = { this.compare(that) < 0 }
+  override def >(that: EnumElement): Boolean = { this.compare(that) > 0 }
+  override def <=(that: EnumElement): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: EnumElement): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: EnumElement): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -6596,7 +6639,7 @@ trait EnumElement
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
   ): EnumElement
 
-  def mutableCopy(): EnumElement.Mutable = {
+  def mutableCopy(): MutableEnumElement = {
     val ret = EnumElement.createRawRecord
 
     if (nameIsSet) ret.name_=(nameOrNull)
@@ -6619,7 +6662,7 @@ trait EnumElement
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: EnumElement.Mutable
+  def mutable: MutableEnumElement
 
   def toBuilder(): EnumElement.Builder.AllSpecified = {
     val ret = new EnumElement.Builder(EnumElement.createRawRecord)
@@ -6637,8 +6680,7 @@ trait EnumElement
 }
 
 trait MutableEnumElement extends EnumElement
-  with JavaEnumElementMutable
-  with com.foursquare.spindle.MutableRecord[EnumElement] {
+  with JavaEnumElementMutable[EnumElement, RawEnumElement, EnumElementMeta] {
   def name_=(x: String): Unit
   def nameUnset(): Unit
   def value_=(x: Int): Unit
@@ -6652,9 +6694,9 @@ trait MutableEnumElement extends EnumElement
       name: String = nameOrNull,
       value: java.lang.Integer = valueOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): EnumElement.Mutable
+  ): MutableEnumElement
 
-  override def mutable: EnumElement.Mutable = this
+  override def mutable: MutableEnumElement = this
 }
 
 
@@ -6701,11 +6743,11 @@ trait EnumElementProxy extends EnumElement {
     __annotations = __annotations
   )
 
-  override def mutableCopy(): EnumElement.Mutable = underlying.mutableCopy()
+  override def mutableCopy(): MutableEnumElement = underlying.mutableCopy()
 
   override def mergeCopy(that: EnumElement): EnumElement = underlying.mergeCopy(that)
 
-  override def mutable: EnumElement.Mutable = underlying.mutable
+  override def mutable: MutableEnumElement = underlying.mutable
 
   override def deepCopy(): EnumElement = underlying.deepCopy()
 
@@ -6732,7 +6774,7 @@ trait MutableEnumElementProxy extends MutableEnumElement with EnumElementProxy {
       name: String = nameOrNull,
       value: java.lang.Integer = valueOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): EnumElement.Mutable = underlying.copy(
+  ): MutableEnumElement = underlying.copy(
     name = name,
     value = value,
     __annotations = __annotations
@@ -6744,8 +6786,8 @@ trait MutableEnumElementProxy extends MutableEnumElement with EnumElementProxy {
 
 
 
-final class RawEnumElement extends JavaEnumElementRaw with MutableEnumElement {
-  override def meta = EnumElement
+final class RawEnumElement extends JavaEnumElementRaw[EnumElement, RawEnumElement, EnumElementMeta] with MutableEnumElement {
+  override def meta: EnumElementMeta = EnumElement
 
   // Field #1 - name
   private var _name: String = null  // Underlying type: String
@@ -6965,7 +7007,7 @@ final class RawEnumElement extends JavaEnumElementRaw with MutableEnumElement {
     }
   }
 
-  override def deepCopy(): EnumElement.Raw = {
+  override def deepCopy(): RawEnumElement = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -6979,8 +7021,8 @@ final class RawEnumElement extends JavaEnumElementRaw with MutableEnumElement {
       name: String = nameOrNull,
       value: java.lang.Integer = valueOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): EnumElement.Raw = {
-    val ret = new EnumElement.Raw
+  ): RawEnumElement = {
+    val ret = new RawEnumElement
     if (name != null) ret.name_=(name)
     if (value != null) ret.value_=(value)
     if (__annotations != null) ret.__annotations_=(__annotations)
@@ -6996,9 +7038,67 @@ final class RawEnumElement extends JavaEnumElementRaw with MutableEnumElement {
 }
 
 
-object Enum
-    extends JavaEnumMeta
-    with com.foursquare.spindle.MetaRecord[Enum]
+object Enum extends EnumMeta {
+
+
+  object Builder {
+    sealed trait HasName
+    sealed trait HasElements
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasName with HasElements
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Enum] (private var obj: RawEnum) {
+    def name(v: String): Enum.Builder[State with Builder.HasName] = {
+      obj.name_=(v)
+      this.asInstanceOf[Enum.Builder[State with Builder.HasName]]
+    }
+
+    def elements(v: scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement]): Enum.Builder[State with Builder.HasElements] = {
+      obj.elements_=(v)
+      this.asInstanceOf[Enum.Builder[State with Builder.HasElements]]
+    }
+
+
+    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Enum.Builder[State] = {
+      obj.__annotations_=(v)
+      this
+    }
+
+    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Enum.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.__annotations_=(v)
+        case None => obj.annotationsUnset()
+      }
+      this
+    }
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasElements): MutableEnum = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Enum.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasElements): Enum = resultMutable()(ev0, ev1)
+  }
+
+  def newBuilder: Enum.Builder.AllUnspecified = new Builder(Enum.createRawRecord)
+
+  implicit val companionProvider: EnumCompanionProvider = new EnumCompanionProvider
+}
+
+class EnumMeta
+    extends JavaEnumMeta[Enum, RawEnum, EnumMeta]
     with com.foursquare.spindle.RecordProvider[Enum] {
   override def recordName: String = "Enum"
 
@@ -7062,12 +7162,9 @@ object Enum
     99.toShort -> _Fields.__annotations
   )
 
-  override type Mutable = MutableEnum
-  override type Raw = RawEnum
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Enum = createRawRecord
-  override def createRawRecord: Enum.Raw = new Enum.Raw
+  override def createRawRecord: RawEnum = new RawEnum
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Enum] = {
@@ -7085,49 +7182,49 @@ object Enum
 
   val name =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Enum, Enum.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Enum, EnumMeta](
       name = "name",
       longName = "name",
       id = 1,
       annotations = Map(),
-      owner = Enum,
+      owner = this,
       getter = _.nameOption,
-      setterRaw = (r: Enum.Raw, v: String) => { r.name_=(v) },
-      unsetterRaw = (r: Enum.Raw) => { r.nameUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Enum], v: String) => { r.asInstanceOf[RawEnum].name_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Enum]) => { r.asInstanceOf[RawEnum].nameUnset() },
       manifest = manifest[String]
     )
 
   val elements =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement], Enum, Enum.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement], Enum, EnumMeta](
       name = "elements",
       longName = "elements",
       id = 2,
       annotations = Map(),
-      owner = Enum,
+      owner = this,
       getter = _.elementsOption,
-      setterRaw = (r: Enum.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement]) => { r.elements_=(v) },
-      unsetterRaw = (r: Enum.Raw) => { r.elementsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Enum], v: scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement]) => { r.asInstanceOf[RawEnum].elements_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Enum]) => { r.asInstanceOf[RawEnum].elementsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement]]
     )
 
   val __annotations =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Enum, Enum.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Enum, EnumMeta](
       name = "annotations",
       longName = "annotations",
       id = 99,
       annotations = Map(),
-      owner = Enum,
+      owner = this,
       getter = _.annotationsOption,
-      setterRaw = (r: Enum.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.__annotations_=(v) },
-      unsetterRaw = (r: Enum.Raw) => { r.annotationsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Enum], v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.asInstanceOf[RawEnum].__annotations_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Enum]) => { r.asInstanceOf[RawEnum].annotationsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Enum, Enum.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Enum, Enum.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Enum, EnumMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Enum, EnumMeta]](
       name,
       elements,
       __annotations
@@ -7139,83 +7236,27 @@ object Enum
       elements: scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement],
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
   ): Enum = {
-    val ret = Enum.createRawRecord
+    val ret = this.createRawRecord
     ret.name_=(name)
     ret.elements_=(elements)
     ret.__annotations_=(__annotations)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasName
-    sealed trait HasElements
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasName with HasElements
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Enum] (private var obj: Enum.Raw) {
-    def name(v: String): Enum.Builder[State with Builder.HasName] = {
-      obj.name_=(v)
-      this.asInstanceOf[Enum.Builder[State with Builder.HasName]]
-    }
-
-    def elements(v: scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement]): Enum.Builder[State with Builder.HasElements] = {
-      obj.elements_=(v)
-      this.asInstanceOf[Enum.Builder[State with Builder.HasElements]]
-    }
-
-
-    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Enum.Builder[State] = {
-      obj.__annotations_=(v)
-      this
-    }
-
-    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Enum.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.__annotations_=(v)
-        case None => obj.annotationsUnset()
-      }
-      this
-    }
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasElements): Enum.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Enum.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasElements): Enum = resultMutable()(ev0, ev1)
-  }
-
-  def newBuilder: Enum.Builder.AllUnspecified = new Builder(Enum.createRawRecord)
-
-  implicit val companionProvider: EnumCompanionProvider = new EnumCompanionProvider
 }
 
 class EnumCompanionProvider extends com.foursquare.spindle.CompanionProvider[Enum] {
-  type CompanionT = Enum.type
-  override def provide: Enum.type = Enum
+  type CompanionT = EnumMeta
+  override def provide: EnumMeta = Enum
 }
 
 
 
 trait Enum
 
-    extends JavaEnum
-    with com.foursquare.spindle.Record[Enum]
+    extends JavaEnum[Enum, RawEnum, EnumMeta]
     with org.apache.thrift.TBase[Enum, Enum._Fields] {
+
+  override def meta: EnumMeta
 
 
   def name: String
@@ -7260,6 +7301,11 @@ trait Enum
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Enum): Boolean = { this.compare(that) < 0 }
+  override def >(that: Enum): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Enum): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Enum): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Enum): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -7271,7 +7317,7 @@ trait Enum
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
   ): Enum
 
-  def mutableCopy(): Enum.Mutable = {
+  def mutableCopy(): MutableEnum = {
     val ret = Enum.createRawRecord
 
     if (nameIsSet) ret.name_=(nameOrNull)
@@ -7294,7 +7340,7 @@ trait Enum
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Enum.Mutable
+  def mutable: MutableEnum
 
   def toBuilder(): Enum.Builder.AllSpecified = {
     val ret = new Enum.Builder(Enum.createRawRecord)
@@ -7312,8 +7358,7 @@ trait Enum
 }
 
 trait MutableEnum extends Enum
-  with JavaEnumMutable
-  with com.foursquare.spindle.MutableRecord[Enum] {
+  with JavaEnumMutable[Enum, RawEnum, EnumMeta] {
   def name_=(x: String): Unit
   def nameUnset(): Unit
   def elements_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement]): Unit
@@ -7327,9 +7372,9 @@ trait MutableEnum extends Enum
       name: String = nameOrNull,
       elements: scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement] = elementsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Enum.Mutable
+  ): MutableEnum
 
-  override def mutable: Enum.Mutable = this
+  override def mutable: MutableEnum = this
 }
 
 
@@ -7376,11 +7421,11 @@ trait EnumProxy extends Enum {
     __annotations = __annotations
   )
 
-  override def mutableCopy(): Enum.Mutable = underlying.mutableCopy()
+  override def mutableCopy(): MutableEnum = underlying.mutableCopy()
 
   override def mergeCopy(that: Enum): Enum = underlying.mergeCopy(that)
 
-  override def mutable: Enum.Mutable = underlying.mutable
+  override def mutable: MutableEnum = underlying.mutable
 
   override def deepCopy(): Enum = underlying.deepCopy()
 
@@ -7407,7 +7452,7 @@ trait MutableEnumProxy extends MutableEnum with EnumProxy {
       name: String = nameOrNull,
       elements: scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement] = elementsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Enum.Mutable = underlying.copy(
+  ): MutableEnum = underlying.copy(
     name = name,
     elements = elements,
     __annotations = __annotations
@@ -7419,8 +7464,8 @@ trait MutableEnumProxy extends MutableEnum with EnumProxy {
 
 
 
-final class RawEnum extends JavaEnumRaw with MutableEnum {
-  override def meta = Enum
+final class RawEnum extends JavaEnumRaw[Enum, RawEnum, EnumMeta] with MutableEnum {
+  override def meta: EnumMeta = Enum
 
   // Field #1 - name
   private var _name: String = null  // Underlying type: String
@@ -7659,7 +7704,7 @@ final class RawEnum extends JavaEnumRaw with MutableEnum {
     }
   }
 
-  override def deepCopy(): Enum.Raw = {
+  override def deepCopy(): RawEnum = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -7673,8 +7718,8 @@ final class RawEnum extends JavaEnumRaw with MutableEnum {
       name: String = nameOrNull,
       elements: scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement] = elementsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Enum.Raw = {
-    val ret = new Enum.Raw
+  ): RawEnum = {
+    val ret = new RawEnum
     if (name != null) ret.name_=(name)
     if (elements != null) ret.elements_=(elements)
     if (__annotations != null) ret.__annotations_=(__annotations)
@@ -7690,9 +7735,99 @@ final class RawEnum extends JavaEnumRaw with MutableEnum {
 }
 
 
-object Field
-    extends JavaFieldMeta
-    with com.foursquare.spindle.MetaRecord[Field]
+object Field extends FieldMeta {
+
+
+  object Builder {
+    sealed trait HasIdentifier
+    sealed trait HasName
+    sealed trait HasTypeId
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasIdentifier with HasName with HasTypeId
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Field] (private var obj: RawField) {
+    def identifier(v: Short): Field.Builder[State with Builder.HasIdentifier] = {
+      obj.identifier_=(v)
+      this.asInstanceOf[Field.Builder[State with Builder.HasIdentifier]]
+    }
+
+    def name(v: String): Field.Builder[State with Builder.HasName] = {
+      obj.name_=(v)
+      this.asInstanceOf[Field.Builder[State with Builder.HasName]]
+    }
+
+    def typeId(v: String): Field.Builder[State with Builder.HasTypeId] = {
+      obj.typeId_=(v)
+      this.asInstanceOf[Field.Builder[State with Builder.HasTypeId]]
+    }
+
+
+    def requiredness(v: com.twitter.thrift.descriptors.Requiredness): Field.Builder[State] = {
+      obj.requiredness_=(v)
+      this
+    }
+
+    def requiredness(vOpt: Option[com.twitter.thrift.descriptors.Requiredness]): Field.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.requiredness_=(v)
+        case None => obj.requirednessUnset()
+      }
+      this
+    }
+
+    def defaultValue(v: String): Field.Builder[State] = {
+      obj.defaultValue_=(v)
+      this
+    }
+
+    def defaultValue(vOpt: Option[String]): Field.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.defaultValue_=(v)
+        case None => obj.defaultValueUnset()
+      }
+      this
+    }
+
+    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Field.Builder[State] = {
+      obj.__annotations_=(v)
+      this
+    }
+
+    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Field.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.__annotations_=(v)
+        case None => obj.annotationsUnset()
+      }
+      this
+    }
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasIdentifier, ev1: State <:< Builder.HasName, ev2: State <:< Builder.HasTypeId): MutableField = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Field.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasIdentifier, ev1: State <:< Builder.HasName, ev2: State <:< Builder.HasTypeId): Field = resultMutable()(ev0, ev1, ev2)
+  }
+
+  def newBuilder: Field.Builder.AllUnspecified = new Builder(Field.createRawRecord)
+
+  implicit val companionProvider: FieldCompanionProvider = new FieldCompanionProvider
+}
+
+class FieldMeta
+    extends JavaFieldMeta[Field, RawField, FieldMeta]
     with com.foursquare.spindle.RecordProvider[Field] {
   override def recordName: String = "Field"
 
@@ -7795,12 +7930,9 @@ object Field
     99.toShort -> _Fields.__annotations
   )
 
-  override type Mutable = MutableField
-  override type Raw = RawField
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Field = createRawRecord
-  override def createRawRecord: Field.Raw = new Field.Raw
+  override def createRawRecord: RawField = new RawField
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Field] = {
@@ -7818,91 +7950,91 @@ object Field
 
   val identifier =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[Short, Field, Field.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[Short, Field, FieldMeta](
       name = "identifier",
       longName = "identifier",
       id = 1,
       annotations = Map(),
-      owner = Field,
+      owner = this,
       getter = _.identifierOption,
-      setterRaw = (r: Field.Raw, v: Short) => { r.identifier_=(v) },
-      unsetterRaw = (r: Field.Raw) => { r.identifierUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Field], v: Short) => { r.asInstanceOf[RawField].identifier_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Field]) => { r.asInstanceOf[RawField].identifierUnset() },
       manifest = manifest[Short]
     )
 
   val name =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Field, Field.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Field, FieldMeta](
       name = "name",
       longName = "name",
       id = 2,
       annotations = Map(),
-      owner = Field,
+      owner = this,
       getter = _.nameOption,
-      setterRaw = (r: Field.Raw, v: String) => { r.name_=(v) },
-      unsetterRaw = (r: Field.Raw) => { r.nameUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Field], v: String) => { r.asInstanceOf[RawField].name_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Field]) => { r.asInstanceOf[RawField].nameUnset() },
       manifest = manifest[String]
     )
 
   val typeId =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Field, Field.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Field, FieldMeta](
       name = "typeId",
       longName = "typeId",
       id = 3,
       annotations = Map(),
-      owner = Field,
+      owner = this,
       getter = _.typeIdOption,
-      setterRaw = (r: Field.Raw, v: String) => { r.typeId_=(v) },
-      unsetterRaw = (r: Field.Raw) => { r.typeIdUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Field], v: String) => { r.asInstanceOf[RawField].typeId_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Field]) => { r.asInstanceOf[RawField].typeIdUnset() },
       manifest = manifest[String]
     )
 
   val requiredness =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.Requiredness, Field, Field.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.Requiredness, Field, FieldMeta](
       name = "requiredness",
       longName = "requiredness",
       id = 4,
       annotations = Map(),
-      owner = Field,
+      owner = this,
       getter = _.requirednessOption,
-      setterRaw = (r: Field.Raw, v: com.twitter.thrift.descriptors.Requiredness) => { r.requiredness_=(v) },
-      unsetterRaw = (r: Field.Raw) => { r.requirednessUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Field], v: com.twitter.thrift.descriptors.Requiredness) => { r.asInstanceOf[RawField].requiredness_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Field]) => { r.asInstanceOf[RawField].requirednessUnset() },
       manifest = manifest[com.twitter.thrift.descriptors.Requiredness]
     )
 
   val defaultValue =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Field, Field.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Field, FieldMeta](
       name = "defaultValue",
       longName = "defaultValue",
       id = 5,
       annotations = Map(),
-      owner = Field,
+      owner = this,
       getter = _.defaultValueOption,
-      setterRaw = (r: Field.Raw, v: String) => { r.defaultValue_=(v) },
-      unsetterRaw = (r: Field.Raw) => { r.defaultValueUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Field], v: String) => { r.asInstanceOf[RawField].defaultValue_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Field]) => { r.asInstanceOf[RawField].defaultValueUnset() },
       manifest = manifest[String]
     )
 
   val __annotations =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Field, Field.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Field, FieldMeta](
       name = "annotations",
       longName = "annotations",
       id = 99,
       annotations = Map(),
-      owner = Field,
+      owner = this,
       getter = _.annotationsOption,
-      setterRaw = (r: Field.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.__annotations_=(v) },
-      unsetterRaw = (r: Field.Raw) => { r.annotationsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Field], v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.asInstanceOf[RawField].__annotations_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Field]) => { r.asInstanceOf[RawField].annotationsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Field, Field.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Field, Field.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Field, FieldMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Field, FieldMeta]](
       identifier,
       name,
       typeId,
@@ -7920,7 +8052,7 @@ object Field
       defaultValue: String,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
   ): Field = {
-    val ret = Field.createRawRecord
+    val ret = this.createRawRecord
     ret.identifier_=(identifier)
     ret.name_=(name)
     ret.typeId_=(typeId)
@@ -7929,109 +8061,21 @@ object Field
     ret.__annotations_=(__annotations)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasIdentifier
-    sealed trait HasName
-    sealed trait HasTypeId
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasIdentifier with HasName with HasTypeId
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Field] (private var obj: Field.Raw) {
-    def identifier(v: Short): Field.Builder[State with Builder.HasIdentifier] = {
-      obj.identifier_=(v)
-      this.asInstanceOf[Field.Builder[State with Builder.HasIdentifier]]
-    }
-
-    def name(v: String): Field.Builder[State with Builder.HasName] = {
-      obj.name_=(v)
-      this.asInstanceOf[Field.Builder[State with Builder.HasName]]
-    }
-
-    def typeId(v: String): Field.Builder[State with Builder.HasTypeId] = {
-      obj.typeId_=(v)
-      this.asInstanceOf[Field.Builder[State with Builder.HasTypeId]]
-    }
-
-
-    def requiredness(v: com.twitter.thrift.descriptors.Requiredness): Field.Builder[State] = {
-      obj.requiredness_=(v)
-      this
-    }
-
-    def requiredness(vOpt: Option[com.twitter.thrift.descriptors.Requiredness]): Field.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.requiredness_=(v)
-        case None => obj.requirednessUnset()
-      }
-      this
-    }
-
-    def defaultValue(v: String): Field.Builder[State] = {
-      obj.defaultValue_=(v)
-      this
-    }
-
-    def defaultValue(vOpt: Option[String]): Field.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.defaultValue_=(v)
-        case None => obj.defaultValueUnset()
-      }
-      this
-    }
-
-    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Field.Builder[State] = {
-      obj.__annotations_=(v)
-      this
-    }
-
-    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Field.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.__annotations_=(v)
-        case None => obj.annotationsUnset()
-      }
-      this
-    }
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasIdentifier, ev1: State <:< Builder.HasName, ev2: State <:< Builder.HasTypeId): Field.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Field.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasIdentifier, ev1: State <:< Builder.HasName, ev2: State <:< Builder.HasTypeId): Field = resultMutable()(ev0, ev1, ev2)
-  }
-
-  def newBuilder: Field.Builder.AllUnspecified = new Builder(Field.createRawRecord)
-
-  implicit val companionProvider: FieldCompanionProvider = new FieldCompanionProvider
 }
 
 class FieldCompanionProvider extends com.foursquare.spindle.CompanionProvider[Field] {
-  type CompanionT = Field.type
-  override def provide: Field.type = Field
+  type CompanionT = FieldMeta
+  override def provide: FieldMeta = Field
 }
 
 
 
 trait Field
 
-    extends JavaField
-    with com.foursquare.spindle.Record[Field]
+    extends JavaField[Field, RawField, FieldMeta]
     with org.apache.thrift.TBase[Field, Field._Fields] {
+
+  override def meta: FieldMeta
 
   def identifier: Short
   def identifierOption: Option[Short]
@@ -8109,6 +8153,11 @@ trait Field
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Field): Boolean = { this.compare(that) < 0 }
+  override def >(that: Field): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Field): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Field): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Field): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -8123,7 +8172,7 @@ trait Field
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
   ): Field
 
-  def mutableCopy(): Field.Mutable = {
+  def mutableCopy(): MutableField = {
     val ret = Field.createRawRecord
 
     if (identifierIsSet) ret.identifier_=(identifierOrDefault)
@@ -8152,7 +8201,7 @@ trait Field
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Field.Mutable
+  def mutable: MutableField
 
   def toBuilder(): Field.Builder.AllSpecified = {
     val ret = new Field.Builder(Field.createRawRecord)
@@ -8176,8 +8225,7 @@ trait Field
 }
 
 trait MutableField extends Field
-  with JavaFieldMutable
-  with com.foursquare.spindle.MutableRecord[Field] {
+  with JavaFieldMutable[Field, RawField, FieldMeta] {
   def identifier_=(x: Short): Unit
   def identifierUnset(): Unit
   def name_=(x: String): Unit
@@ -8200,9 +8248,9 @@ trait MutableField extends Field
       requiredness: com.twitter.thrift.descriptors.Requiredness = requirednessOrNull,
       defaultValue: String = defaultValueOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Field.Mutable
+  ): MutableField
 
-  override def mutable: Field.Mutable = this
+  override def mutable: MutableField = this
 }
 
 
@@ -8272,11 +8320,11 @@ trait FieldProxy extends Field {
     __annotations = __annotations
   )
 
-  override def mutableCopy(): Field.Mutable = underlying.mutableCopy()
+  override def mutableCopy(): MutableField = underlying.mutableCopy()
 
   override def mergeCopy(that: Field): Field = underlying.mergeCopy(that)
 
-  override def mutable: Field.Mutable = underlying.mutable
+  override def mutable: MutableField = underlying.mutable
 
   override def deepCopy(): Field = underlying.deepCopy()
 
@@ -8312,7 +8360,7 @@ trait MutableFieldProxy extends MutableField with FieldProxy {
       requiredness: com.twitter.thrift.descriptors.Requiredness = requirednessOrNull,
       defaultValue: String = defaultValueOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Field.Mutable = underlying.copy(
+  ): MutableField = underlying.copy(
     identifier = identifier,
     name = name,
     typeId = typeId,
@@ -8327,8 +8375,8 @@ trait MutableFieldProxy extends MutableField with FieldProxy {
 
 
 
-final class RawField extends JavaFieldRaw with MutableField {
-  override def meta = Field
+final class RawField extends JavaFieldRaw[Field, RawField, FieldMeta] with MutableField {
+  override def meta: FieldMeta = Field
 
   // Field #1 - identifier
   private var _identifier: Short = 0  // Underlying type: Short
@@ -8645,7 +8693,7 @@ final class RawField extends JavaFieldRaw with MutableField {
     }
   }
 
-  override def deepCopy(): Field.Raw = {
+  override def deepCopy(): RawField = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -8662,8 +8710,8 @@ final class RawField extends JavaFieldRaw with MutableField {
       requiredness: com.twitter.thrift.descriptors.Requiredness = requirednessOrNull,
       defaultValue: String = defaultValueOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Field.Raw = {
-    val ret = new Field.Raw
+  ): RawField = {
+    val ret = new RawField
     if (identifier != null) ret.identifier_=(identifier)
     if (name != null) ret.name_=(name)
     if (typeId != null) ret.typeId_=(typeId)
@@ -8682,9 +8730,67 @@ final class RawField extends JavaFieldRaw with MutableField {
 }
 
 
-object Struct
-    extends JavaStructMeta
-    with com.foursquare.spindle.MetaRecord[Struct]
+object Struct extends StructMeta {
+
+
+  object Builder {
+    sealed trait HasName
+    sealed trait HasFields
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasName with HasFields
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Struct] (private var obj: RawStruct) {
+    def name(v: String): Struct.Builder[State with Builder.HasName] = {
+      obj.name_=(v)
+      this.asInstanceOf[Struct.Builder[State with Builder.HasName]]
+    }
+
+    def __fields(v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Struct.Builder[State with Builder.HasFields] = {
+      obj.__fields_=(v)
+      this.asInstanceOf[Struct.Builder[State with Builder.HasFields]]
+    }
+
+
+    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Struct.Builder[State] = {
+      obj.__annotations_=(v)
+      this
+    }
+
+    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Struct.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.__annotations_=(v)
+        case None => obj.annotationsUnset()
+      }
+      this
+    }
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFields): MutableStruct = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Struct.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFields): Struct = resultMutable()(ev0, ev1)
+  }
+
+  def newBuilder: Struct.Builder.AllUnspecified = new Builder(Struct.createRawRecord)
+
+  implicit val companionProvider: StructCompanionProvider = new StructCompanionProvider
+}
+
+class StructMeta
+    extends JavaStructMeta[Struct, RawStruct, StructMeta]
     with com.foursquare.spindle.RecordProvider[Struct] {
   override def recordName: String = "Struct"
 
@@ -8748,12 +8854,9 @@ object Struct
     99.toShort -> _Fields.__annotations
   )
 
-  override type Mutable = MutableStruct
-  override type Raw = RawStruct
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Struct = createRawRecord
-  override def createRawRecord: Struct.Raw = new Struct.Raw
+  override def createRawRecord: RawStruct = new RawStruct
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Struct] = {
@@ -8771,49 +8874,49 @@ object Struct
 
   val name =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Struct, Struct.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Struct, StructMeta](
       name = "name",
       longName = "name",
       id = 1,
       annotations = Map(),
-      owner = Struct,
+      owner = this,
       getter = _.nameOption,
-      setterRaw = (r: Struct.Raw, v: String) => { r.name_=(v) },
-      unsetterRaw = (r: Struct.Raw) => { r.nameUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Struct], v: String) => { r.asInstanceOf[RawStruct].name_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Struct]) => { r.asInstanceOf[RawStruct].nameUnset() },
       manifest = manifest[String]
     )
 
   val __fields =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Struct, Struct.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Struct, StructMeta](
       name = "fields",
       longName = "fields",
       id = 2,
       annotations = Map(),
-      owner = Struct,
+      owner = this,
       getter = _.fieldsOption,
-      setterRaw = (r: Struct.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]) => { r.__fields_=(v) },
-      unsetterRaw = (r: Struct.Raw) => { r.fieldsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Struct], v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]) => { r.asInstanceOf[RawStruct].__fields_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Struct]) => { r.asInstanceOf[RawStruct].fieldsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Field]]
     )
 
   val __annotations =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Struct, Struct.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Struct, StructMeta](
       name = "annotations",
       longName = "annotations",
       id = 99,
       annotations = Map(),
-      owner = Struct,
+      owner = this,
       getter = _.annotationsOption,
-      setterRaw = (r: Struct.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.__annotations_=(v) },
-      unsetterRaw = (r: Struct.Raw) => { r.annotationsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Struct], v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.asInstanceOf[RawStruct].__annotations_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Struct]) => { r.asInstanceOf[RawStruct].annotationsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Struct, Struct.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Struct, Struct.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Struct, StructMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Struct, StructMeta]](
       name,
       __fields,
       __annotations
@@ -8825,83 +8928,27 @@ object Struct
       __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field],
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
   ): Struct = {
-    val ret = Struct.createRawRecord
+    val ret = this.createRawRecord
     ret.name_=(name)
     ret.__fields_=(__fields)
     ret.__annotations_=(__annotations)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasName
-    sealed trait HasFields
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasName with HasFields
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Struct] (private var obj: Struct.Raw) {
-    def name(v: String): Struct.Builder[State with Builder.HasName] = {
-      obj.name_=(v)
-      this.asInstanceOf[Struct.Builder[State with Builder.HasName]]
-    }
-
-    def __fields(v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Struct.Builder[State with Builder.HasFields] = {
-      obj.__fields_=(v)
-      this.asInstanceOf[Struct.Builder[State with Builder.HasFields]]
-    }
-
-
-    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Struct.Builder[State] = {
-      obj.__annotations_=(v)
-      this
-    }
-
-    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Struct.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.__annotations_=(v)
-        case None => obj.annotationsUnset()
-      }
-      this
-    }
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFields): Struct.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Struct.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFields): Struct = resultMutable()(ev0, ev1)
-  }
-
-  def newBuilder: Struct.Builder.AllUnspecified = new Builder(Struct.createRawRecord)
-
-  implicit val companionProvider: StructCompanionProvider = new StructCompanionProvider
 }
 
 class StructCompanionProvider extends com.foursquare.spindle.CompanionProvider[Struct] {
-  type CompanionT = Struct.type
-  override def provide: Struct.type = Struct
+  type CompanionT = StructMeta
+  override def provide: StructMeta = Struct
 }
 
 
 
 trait Struct
 
-    extends JavaStruct
-    with com.foursquare.spindle.Record[Struct]
+    extends JavaStruct[Struct, RawStruct, StructMeta]
     with org.apache.thrift.TBase[Struct, Struct._Fields] {
+
+  override def meta: StructMeta
 
 
   def name: String
@@ -8946,6 +8993,11 @@ trait Struct
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Struct): Boolean = { this.compare(that) < 0 }
+  override def >(that: Struct): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Struct): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Struct): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Struct): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -8957,7 +9009,7 @@ trait Struct
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
   ): Struct
 
-  def mutableCopy(): Struct.Mutable = {
+  def mutableCopy(): MutableStruct = {
     val ret = Struct.createRawRecord
 
     if (nameIsSet) ret.name_=(nameOrNull)
@@ -8980,7 +9032,7 @@ trait Struct
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Struct.Mutable
+  def mutable: MutableStruct
 
   def toBuilder(): Struct.Builder.AllSpecified = {
     val ret = new Struct.Builder(Struct.createRawRecord)
@@ -8998,8 +9050,7 @@ trait Struct
 }
 
 trait MutableStruct extends Struct
-  with JavaStructMutable
-  with com.foursquare.spindle.MutableRecord[Struct] {
+  with JavaStructMutable[Struct, RawStruct, StructMeta] {
   def name_=(x: String): Unit
   def nameUnset(): Unit
   def __fields_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Unit
@@ -9013,9 +9064,9 @@ trait MutableStruct extends Struct
       name: String = nameOrNull,
       __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = fieldsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Struct.Mutable
+  ): MutableStruct
 
-  override def mutable: Struct.Mutable = this
+  override def mutable: MutableStruct = this
 }
 
 
@@ -9062,11 +9113,11 @@ trait StructProxy extends Struct {
     __annotations = __annotations
   )
 
-  override def mutableCopy(): Struct.Mutable = underlying.mutableCopy()
+  override def mutableCopy(): MutableStruct = underlying.mutableCopy()
 
   override def mergeCopy(that: Struct): Struct = underlying.mergeCopy(that)
 
-  override def mutable: Struct.Mutable = underlying.mutable
+  override def mutable: MutableStruct = underlying.mutable
 
   override def deepCopy(): Struct = underlying.deepCopy()
 
@@ -9093,7 +9144,7 @@ trait MutableStructProxy extends MutableStruct with StructProxy {
       name: String = nameOrNull,
       __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = fieldsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Struct.Mutable = underlying.copy(
+  ): MutableStruct = underlying.copy(
     name = name,
     __fields = __fields,
     __annotations = __annotations
@@ -9105,8 +9156,8 @@ trait MutableStructProxy extends MutableStruct with StructProxy {
 
 
 
-final class RawStruct extends JavaStructRaw with MutableStruct {
-  override def meta = Struct
+final class RawStruct extends JavaStructRaw[Struct, RawStruct, StructMeta] with MutableStruct {
+  override def meta: StructMeta = Struct
 
   // Field #1 - name
   private var _name: String = null  // Underlying type: String
@@ -9345,7 +9396,7 @@ final class RawStruct extends JavaStructRaw with MutableStruct {
     }
   }
 
-  override def deepCopy(): Struct.Raw = {
+  override def deepCopy(): RawStruct = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -9359,8 +9410,8 @@ final class RawStruct extends JavaStructRaw with MutableStruct {
       name: String = nameOrNull,
       __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = fieldsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Struct.Raw = {
-    val ret = new Struct.Raw
+  ): RawStruct = {
+    val ret = new RawStruct
     if (name != null) ret.name_=(name)
     if (__fields != null) ret.__fields_=(__fields)
     if (__annotations != null) ret.__annotations_=(__annotations)
@@ -9376,9 +9427,67 @@ final class RawStruct extends JavaStructRaw with MutableStruct {
 }
 
 
-object Union
-    extends JavaUnionMeta
-    with com.foursquare.spindle.MetaRecord[Union]
+object Union extends UnionMeta {
+
+
+  object Builder {
+    sealed trait HasName
+    sealed trait HasFields
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasName with HasFields
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Union] (private var obj: RawUnion) {
+    def name(v: String): Union.Builder[State with Builder.HasName] = {
+      obj.name_=(v)
+      this.asInstanceOf[Union.Builder[State with Builder.HasName]]
+    }
+
+    def __fields(v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Union.Builder[State with Builder.HasFields] = {
+      obj.__fields_=(v)
+      this.asInstanceOf[Union.Builder[State with Builder.HasFields]]
+    }
+
+
+    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Union.Builder[State] = {
+      obj.__annotations_=(v)
+      this
+    }
+
+    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Union.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.__annotations_=(v)
+        case None => obj.annotationsUnset()
+      }
+      this
+    }
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFields): MutableUnion = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Union.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFields): Union = resultMutable()(ev0, ev1)
+  }
+
+  def newBuilder: Union.Builder.AllUnspecified = new Builder(Union.createRawRecord)
+
+  implicit val companionProvider: UnionCompanionProvider = new UnionCompanionProvider
+}
+
+class UnionMeta
+    extends JavaUnionMeta[Union, RawUnion, UnionMeta]
     with com.foursquare.spindle.RecordProvider[Union] {
   override def recordName: String = "Union"
 
@@ -9442,12 +9551,9 @@ object Union
     99.toShort -> _Fields.__annotations
   )
 
-  override type Mutable = MutableUnion
-  override type Raw = RawUnion
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Union = createRawRecord
-  override def createRawRecord: Union.Raw = new Union.Raw
+  override def createRawRecord: RawUnion = new RawUnion
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Union] = {
@@ -9465,49 +9571,49 @@ object Union
 
   val name =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Union, Union.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Union, UnionMeta](
       name = "name",
       longName = "name",
       id = 1,
       annotations = Map(),
-      owner = Union,
+      owner = this,
       getter = _.nameOption,
-      setterRaw = (r: Union.Raw, v: String) => { r.name_=(v) },
-      unsetterRaw = (r: Union.Raw) => { r.nameUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Union], v: String) => { r.asInstanceOf[RawUnion].name_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Union]) => { r.asInstanceOf[RawUnion].nameUnset() },
       manifest = manifest[String]
     )
 
   val __fields =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Union, Union.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Union, UnionMeta](
       name = "fields",
       longName = "fields",
       id = 2,
       annotations = Map(),
-      owner = Union,
+      owner = this,
       getter = _.fieldsOption,
-      setterRaw = (r: Union.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]) => { r.__fields_=(v) },
-      unsetterRaw = (r: Union.Raw) => { r.fieldsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Union], v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]) => { r.asInstanceOf[RawUnion].__fields_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Union]) => { r.asInstanceOf[RawUnion].fieldsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Field]]
     )
 
   val __annotations =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Union, Union.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Union, UnionMeta](
       name = "annotations",
       longName = "annotations",
       id = 99,
       annotations = Map(),
-      owner = Union,
+      owner = this,
       getter = _.annotationsOption,
-      setterRaw = (r: Union.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.__annotations_=(v) },
-      unsetterRaw = (r: Union.Raw) => { r.annotationsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Union], v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.asInstanceOf[RawUnion].__annotations_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Union]) => { r.asInstanceOf[RawUnion].annotationsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Union, Union.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Union, Union.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Union, UnionMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Union, UnionMeta]](
       name,
       __fields,
       __annotations
@@ -9519,83 +9625,27 @@ object Union
       __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field],
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
   ): Union = {
-    val ret = Union.createRawRecord
+    val ret = this.createRawRecord
     ret.name_=(name)
     ret.__fields_=(__fields)
     ret.__annotations_=(__annotations)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasName
-    sealed trait HasFields
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasName with HasFields
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Union] (private var obj: Union.Raw) {
-    def name(v: String): Union.Builder[State with Builder.HasName] = {
-      obj.name_=(v)
-      this.asInstanceOf[Union.Builder[State with Builder.HasName]]
-    }
-
-    def __fields(v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Union.Builder[State with Builder.HasFields] = {
-      obj.__fields_=(v)
-      this.asInstanceOf[Union.Builder[State with Builder.HasFields]]
-    }
-
-
-    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Union.Builder[State] = {
-      obj.__annotations_=(v)
-      this
-    }
-
-    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Union.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.__annotations_=(v)
-        case None => obj.annotationsUnset()
-      }
-      this
-    }
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFields): Union.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Union.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFields): Union = resultMutable()(ev0, ev1)
-  }
-
-  def newBuilder: Union.Builder.AllUnspecified = new Builder(Union.createRawRecord)
-
-  implicit val companionProvider: UnionCompanionProvider = new UnionCompanionProvider
 }
 
 class UnionCompanionProvider extends com.foursquare.spindle.CompanionProvider[Union] {
-  type CompanionT = Union.type
-  override def provide: Union.type = Union
+  type CompanionT = UnionMeta
+  override def provide: UnionMeta = Union
 }
 
 
 
 trait Union
 
-    extends JavaUnion
-    with com.foursquare.spindle.Record[Union]
+    extends JavaUnion[Union, RawUnion, UnionMeta]
     with org.apache.thrift.TBase[Union, Union._Fields] {
+
+  override def meta: UnionMeta
 
 
   def name: String
@@ -9640,6 +9690,11 @@ trait Union
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Union): Boolean = { this.compare(that) < 0 }
+  override def >(that: Union): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Union): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Union): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Union): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -9651,7 +9706,7 @@ trait Union
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
   ): Union
 
-  def mutableCopy(): Union.Mutable = {
+  def mutableCopy(): MutableUnion = {
     val ret = Union.createRawRecord
 
     if (nameIsSet) ret.name_=(nameOrNull)
@@ -9674,7 +9729,7 @@ trait Union
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Union.Mutable
+  def mutable: MutableUnion
 
   def toBuilder(): Union.Builder.AllSpecified = {
     val ret = new Union.Builder(Union.createRawRecord)
@@ -9692,8 +9747,7 @@ trait Union
 }
 
 trait MutableUnion extends Union
-  with JavaUnionMutable
-  with com.foursquare.spindle.MutableRecord[Union] {
+  with JavaUnionMutable[Union, RawUnion, UnionMeta] {
   def name_=(x: String): Unit
   def nameUnset(): Unit
   def __fields_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Unit
@@ -9707,9 +9761,9 @@ trait MutableUnion extends Union
       name: String = nameOrNull,
       __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = fieldsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Union.Mutable
+  ): MutableUnion
 
-  override def mutable: Union.Mutable = this
+  override def mutable: MutableUnion = this
 }
 
 
@@ -9756,11 +9810,11 @@ trait UnionProxy extends Union {
     __annotations = __annotations
   )
 
-  override def mutableCopy(): Union.Mutable = underlying.mutableCopy()
+  override def mutableCopy(): MutableUnion = underlying.mutableCopy()
 
   override def mergeCopy(that: Union): Union = underlying.mergeCopy(that)
 
-  override def mutable: Union.Mutable = underlying.mutable
+  override def mutable: MutableUnion = underlying.mutable
 
   override def deepCopy(): Union = underlying.deepCopy()
 
@@ -9787,7 +9841,7 @@ trait MutableUnionProxy extends MutableUnion with UnionProxy {
       name: String = nameOrNull,
       __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = fieldsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Union.Mutable = underlying.copy(
+  ): MutableUnion = underlying.copy(
     name = name,
     __fields = __fields,
     __annotations = __annotations
@@ -9799,8 +9853,8 @@ trait MutableUnionProxy extends MutableUnion with UnionProxy {
 
 
 
-final class RawUnion extends JavaUnionRaw with MutableUnion {
-  override def meta = Union
+final class RawUnion extends JavaUnionRaw[Union, RawUnion, UnionMeta] with MutableUnion {
+  override def meta: UnionMeta = Union
 
   // Field #1 - name
   private var _name: String = null  // Underlying type: String
@@ -10039,7 +10093,7 @@ final class RawUnion extends JavaUnionRaw with MutableUnion {
     }
   }
 
-  override def deepCopy(): Union.Raw = {
+  override def deepCopy(): RawUnion = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -10053,8 +10107,8 @@ final class RawUnion extends JavaUnionRaw with MutableUnion {
       name: String = nameOrNull,
       __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = fieldsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Union.Raw = {
-    val ret = new Union.Raw
+  ): RawUnion = {
+    val ret = new RawUnion
     if (name != null) ret.name_=(name)
     if (__fields != null) ret.__fields_=(__fields)
     if (__annotations != null) ret.__annotations_=(__annotations)
@@ -10070,9 +10124,67 @@ final class RawUnion extends JavaUnionRaw with MutableUnion {
 }
 
 
-object Exception
-    extends JavaExceptionMeta
-    with com.foursquare.spindle.MetaRecord[Exception]
+object Exception extends ExceptionMeta {
+
+
+  object Builder {
+    sealed trait HasName
+    sealed trait HasFields
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasName with HasFields
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Exception] (private var obj: RawException) {
+    def name(v: String): Exception.Builder[State with Builder.HasName] = {
+      obj.name_=(v)
+      this.asInstanceOf[Exception.Builder[State with Builder.HasName]]
+    }
+
+    def __fields(v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Exception.Builder[State with Builder.HasFields] = {
+      obj.__fields_=(v)
+      this.asInstanceOf[Exception.Builder[State with Builder.HasFields]]
+    }
+
+
+    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Exception.Builder[State] = {
+      obj.__annotations_=(v)
+      this
+    }
+
+    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Exception.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.__annotations_=(v)
+        case None => obj.annotationsUnset()
+      }
+      this
+    }
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFields): MutableException = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Exception.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFields): Exception = resultMutable()(ev0, ev1)
+  }
+
+  def newBuilder: Exception.Builder.AllUnspecified = new Builder(Exception.createRawRecord)
+
+  implicit val companionProvider: ExceptionCompanionProvider = new ExceptionCompanionProvider
+}
+
+class ExceptionMeta
+    extends JavaExceptionMeta[Exception, RawException, ExceptionMeta]
     with com.foursquare.spindle.RecordProvider[Exception] {
   override def recordName: String = "Exception"
 
@@ -10136,12 +10248,9 @@ object Exception
     99.toShort -> _Fields.__annotations
   )
 
-  override type Mutable = MutableException
-  override type Raw = RawException
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Exception = createRawRecord
-  override def createRawRecord: Exception.Raw = new Exception.Raw
+  override def createRawRecord: RawException = new RawException
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Exception] = {
@@ -10159,49 +10268,49 @@ object Exception
 
   val name =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Exception, Exception.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Exception, ExceptionMeta](
       name = "name",
       longName = "name",
       id = 1,
       annotations = Map(),
-      owner = Exception,
+      owner = this,
       getter = _.nameOption,
-      setterRaw = (r: Exception.Raw, v: String) => { r.name_=(v) },
-      unsetterRaw = (r: Exception.Raw) => { r.nameUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Exception], v: String) => { r.asInstanceOf[RawException].name_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Exception]) => { r.asInstanceOf[RawException].nameUnset() },
       manifest = manifest[String]
     )
 
   val __fields =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Exception, Exception.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Exception, ExceptionMeta](
       name = "fields",
       longName = "fields",
       id = 2,
       annotations = Map(),
-      owner = Exception,
+      owner = this,
       getter = _.fieldsOption,
-      setterRaw = (r: Exception.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]) => { r.__fields_=(v) },
-      unsetterRaw = (r: Exception.Raw) => { r.fieldsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Exception], v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]) => { r.asInstanceOf[RawException].__fields_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Exception]) => { r.asInstanceOf[RawException].fieldsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Field]]
     )
 
   val __annotations =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Exception, Exception.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Exception, ExceptionMeta](
       name = "annotations",
       longName = "annotations",
       id = 99,
       annotations = Map(),
-      owner = Exception,
+      owner = this,
       getter = _.annotationsOption,
-      setterRaw = (r: Exception.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.__annotations_=(v) },
-      unsetterRaw = (r: Exception.Raw) => { r.annotationsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Exception], v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.asInstanceOf[RawException].__annotations_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Exception]) => { r.asInstanceOf[RawException].annotationsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Exception, Exception.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Exception, Exception.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Exception, ExceptionMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Exception, ExceptionMeta]](
       name,
       __fields,
       __annotations
@@ -10213,83 +10322,27 @@ object Exception
       __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field],
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
   ): Exception = {
-    val ret = Exception.createRawRecord
+    val ret = this.createRawRecord
     ret.name_=(name)
     ret.__fields_=(__fields)
     ret.__annotations_=(__annotations)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasName
-    sealed trait HasFields
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasName with HasFields
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Exception] (private var obj: Exception.Raw) {
-    def name(v: String): Exception.Builder[State with Builder.HasName] = {
-      obj.name_=(v)
-      this.asInstanceOf[Exception.Builder[State with Builder.HasName]]
-    }
-
-    def __fields(v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Exception.Builder[State with Builder.HasFields] = {
-      obj.__fields_=(v)
-      this.asInstanceOf[Exception.Builder[State with Builder.HasFields]]
-    }
-
-
-    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Exception.Builder[State] = {
-      obj.__annotations_=(v)
-      this
-    }
-
-    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Exception.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.__annotations_=(v)
-        case None => obj.annotationsUnset()
-      }
-      this
-    }
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFields): Exception.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Exception.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFields): Exception = resultMutable()(ev0, ev1)
-  }
-
-  def newBuilder: Exception.Builder.AllUnspecified = new Builder(Exception.createRawRecord)
-
-  implicit val companionProvider: ExceptionCompanionProvider = new ExceptionCompanionProvider
 }
 
 class ExceptionCompanionProvider extends com.foursquare.spindle.CompanionProvider[Exception] {
-  type CompanionT = Exception.type
-  override def provide: Exception.type = Exception
+  type CompanionT = ExceptionMeta
+  override def provide: ExceptionMeta = Exception
 }
 
 
 
 trait Exception
 
-    extends JavaException
-    with com.foursquare.spindle.Record[Exception]
+    extends JavaException[Exception, RawException, ExceptionMeta]
     with org.apache.thrift.TBase[Exception, Exception._Fields] {
+
+  override def meta: ExceptionMeta
 
 
   def name: String
@@ -10334,6 +10387,11 @@ trait Exception
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Exception): Boolean = { this.compare(that) < 0 }
+  override def >(that: Exception): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Exception): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Exception): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Exception): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -10345,7 +10403,7 @@ trait Exception
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
   ): Exception
 
-  def mutableCopy(): Exception.Mutable = {
+  def mutableCopy(): MutableException = {
     val ret = Exception.createRawRecord
 
     if (nameIsSet) ret.name_=(nameOrNull)
@@ -10368,7 +10426,7 @@ trait Exception
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Exception.Mutable
+  def mutable: MutableException
 
   def toBuilder(): Exception.Builder.AllSpecified = {
     val ret = new Exception.Builder(Exception.createRawRecord)
@@ -10386,8 +10444,7 @@ trait Exception
 }
 
 trait MutableException extends Exception
-  with JavaExceptionMutable
-  with com.foursquare.spindle.MutableRecord[Exception] {
+  with JavaExceptionMutable[Exception, RawException, ExceptionMeta] {
   def name_=(x: String): Unit
   def nameUnset(): Unit
   def __fields_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Unit
@@ -10401,9 +10458,9 @@ trait MutableException extends Exception
       name: String = nameOrNull,
       __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = fieldsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Exception.Mutable
+  ): MutableException
 
-  override def mutable: Exception.Mutable = this
+  override def mutable: MutableException = this
 }
 
 
@@ -10450,11 +10507,11 @@ trait ExceptionProxy extends Exception {
     __annotations = __annotations
   )
 
-  override def mutableCopy(): Exception.Mutable = underlying.mutableCopy()
+  override def mutableCopy(): MutableException = underlying.mutableCopy()
 
   override def mergeCopy(that: Exception): Exception = underlying.mergeCopy(that)
 
-  override def mutable: Exception.Mutable = underlying.mutable
+  override def mutable: MutableException = underlying.mutable
 
   override def deepCopy(): Exception = underlying.deepCopy()
 
@@ -10481,7 +10538,7 @@ trait MutableExceptionProxy extends MutableException with ExceptionProxy {
       name: String = nameOrNull,
       __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = fieldsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Exception.Mutable = underlying.copy(
+  ): MutableException = underlying.copy(
     name = name,
     __fields = __fields,
     __annotations = __annotations
@@ -10493,8 +10550,8 @@ trait MutableExceptionProxy extends MutableException with ExceptionProxy {
 
 
 
-final class RawException extends JavaExceptionRaw with MutableException {
-  override def meta = Exception
+final class RawException extends JavaExceptionRaw[Exception, RawException, ExceptionMeta] with MutableException {
+  override def meta: ExceptionMeta = Exception
 
   // Field #1 - name
   private var _name: String = null  // Underlying type: String
@@ -10733,7 +10790,7 @@ final class RawException extends JavaExceptionRaw with MutableException {
     }
   }
 
-  override def deepCopy(): Exception.Raw = {
+  override def deepCopy(): RawException = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -10747,8 +10804,8 @@ final class RawException extends JavaExceptionRaw with MutableException {
       name: String = nameOrNull,
       __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = fieldsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Exception.Raw = {
-    val ret = new Exception.Raw
+  ): RawException = {
+    val ret = new RawException
     if (name != null) ret.name_=(name)
     if (__fields != null) ret.__fields_=(__fields)
     if (__annotations != null) ret.__annotations_=(__annotations)
@@ -10764,9 +10821,99 @@ final class RawException extends JavaExceptionRaw with MutableException {
 }
 
 
-object Function
-    extends JavaFunctionMeta
-    with com.foursquare.spindle.MetaRecord[Function]
+object Function extends FunctionMeta {
+
+
+  object Builder {
+    sealed trait HasName
+    sealed trait HasArgz
+    sealed trait HasThrowz
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasName with HasArgz with HasThrowz
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Function] (private var obj: RawFunction) {
+    def name(v: String): Function.Builder[State with Builder.HasName] = {
+      obj.name_=(v)
+      this.asInstanceOf[Function.Builder[State with Builder.HasName]]
+    }
+
+    def argz(v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Function.Builder[State with Builder.HasArgz] = {
+      obj.argz_=(v)
+      this.asInstanceOf[Function.Builder[State with Builder.HasArgz]]
+    }
+
+    def throwz(v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Function.Builder[State with Builder.HasThrowz] = {
+      obj.throwz_=(v)
+      this.asInstanceOf[Function.Builder[State with Builder.HasThrowz]]
+    }
+
+
+    def returnTypeId(v: String): Function.Builder[State] = {
+      obj.returnTypeId_=(v)
+      this
+    }
+
+    def returnTypeId(vOpt: Option[String]): Function.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.returnTypeId_=(v)
+        case None => obj.returnTypeIdUnset()
+      }
+      this
+    }
+
+    def oneWay(v: Boolean): Function.Builder[State] = {
+      obj.oneWay_=(v)
+      this
+    }
+
+    def oneWay(vOpt: Option[Boolean]): Function.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.oneWay_=(v)
+        case None => obj.oneWayUnset()
+      }
+      this
+    }
+
+    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Function.Builder[State] = {
+      obj.__annotations_=(v)
+      this
+    }
+
+    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Function.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.__annotations_=(v)
+        case None => obj.annotationsUnset()
+      }
+      this
+    }
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasArgz, ev2: State <:< Builder.HasThrowz): MutableFunction = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Function.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasArgz, ev2: State <:< Builder.HasThrowz): Function = resultMutable()(ev0, ev1, ev2)
+  }
+
+  def newBuilder: Function.Builder.AllUnspecified = new Builder(Function.createRawRecord)
+
+  implicit val companionProvider: FunctionCompanionProvider = new FunctionCompanionProvider
+}
+
+class FunctionMeta
+    extends JavaFunctionMeta[Function, RawFunction, FunctionMeta]
     with com.foursquare.spindle.RecordProvider[Function] {
   override def recordName: String = "Function"
 
@@ -10869,12 +11016,9 @@ object Function
     99.toShort -> _Fields.__annotations
   )
 
-  override type Mutable = MutableFunction
-  override type Raw = RawFunction
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Function = createRawRecord
-  override def createRawRecord: Function.Raw = new Function.Raw
+  override def createRawRecord: RawFunction = new RawFunction
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Function] = {
@@ -10892,91 +11036,91 @@ object Function
 
   val name =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Function, Function.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Function, FunctionMeta](
       name = "name",
       longName = "name",
       id = 1,
       annotations = Map(),
-      owner = Function,
+      owner = this,
       getter = _.nameOption,
-      setterRaw = (r: Function.Raw, v: String) => { r.name_=(v) },
-      unsetterRaw = (r: Function.Raw) => { r.nameUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Function], v: String) => { r.asInstanceOf[RawFunction].name_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Function]) => { r.asInstanceOf[RawFunction].nameUnset() },
       manifest = manifest[String]
     )
 
   val returnTypeId =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Function, Function.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Function, FunctionMeta](
       name = "returnTypeId",
       longName = "returnTypeId",
       id = 2,
       annotations = Map(),
-      owner = Function,
+      owner = this,
       getter = _.returnTypeIdOption,
-      setterRaw = (r: Function.Raw, v: String) => { r.returnTypeId_=(v) },
-      unsetterRaw = (r: Function.Raw) => { r.returnTypeIdUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Function], v: String) => { r.asInstanceOf[RawFunction].returnTypeId_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Function]) => { r.asInstanceOf[RawFunction].returnTypeIdUnset() },
       manifest = manifest[String]
     )
 
   val oneWay =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[Boolean, Function, Function.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[Boolean, Function, FunctionMeta](
       name = "oneWay",
       longName = "oneWay",
       id = 3,
       annotations = Map(),
-      owner = Function,
+      owner = this,
       getter = _.oneWayOption,
-      setterRaw = (r: Function.Raw, v: Boolean) => { r.oneWay_=(v) },
-      unsetterRaw = (r: Function.Raw) => { r.oneWayUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Function], v: Boolean) => { r.asInstanceOf[RawFunction].oneWay_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Function]) => { r.asInstanceOf[RawFunction].oneWayUnset() },
       manifest = manifest[Boolean]
     )
 
   val argz =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Function, Function.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Function, FunctionMeta](
       name = "argz",
       longName = "argz",
       id = 4,
       annotations = Map(),
-      owner = Function,
+      owner = this,
       getter = _.argzOption,
-      setterRaw = (r: Function.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]) => { r.argz_=(v) },
-      unsetterRaw = (r: Function.Raw) => { r.argzUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Function], v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]) => { r.asInstanceOf[RawFunction].argz_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Function]) => { r.asInstanceOf[RawFunction].argzUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Field]]
     )
 
   val throwz =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Function, Function.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Field], Function, FunctionMeta](
       name = "throwz",
       longName = "throwz",
       id = 5,
       annotations = Map(),
-      owner = Function,
+      owner = this,
       getter = _.throwzOption,
-      setterRaw = (r: Function.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]) => { r.throwz_=(v) },
-      unsetterRaw = (r: Function.Raw) => { r.throwzUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Function], v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]) => { r.asInstanceOf[RawFunction].throwz_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Function]) => { r.asInstanceOf[RawFunction].throwzUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Field]]
     )
 
   val __annotations =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Function, Function.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Function, FunctionMeta](
       name = "annotations",
       longName = "annotations",
       id = 99,
       annotations = Map(),
-      owner = Function,
+      owner = this,
       getter = _.annotationsOption,
-      setterRaw = (r: Function.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.__annotations_=(v) },
-      unsetterRaw = (r: Function.Raw) => { r.annotationsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Function], v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.asInstanceOf[RawFunction].__annotations_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Function]) => { r.asInstanceOf[RawFunction].annotationsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Function, Function.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Function, Function.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Function, FunctionMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Function, FunctionMeta]](
       name,
       returnTypeId,
       oneWay,
@@ -10994,7 +11138,7 @@ object Function
       throwz: scala.collection.Seq[com.twitter.thrift.descriptors.Field],
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
   ): Function = {
-    val ret = Function.createRawRecord
+    val ret = this.createRawRecord
     ret.name_=(name)
     ret.returnTypeId_=(returnTypeId)
     ret.oneWay_=(oneWay)
@@ -11003,109 +11147,21 @@ object Function
     ret.__annotations_=(__annotations)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasName
-    sealed trait HasArgz
-    sealed trait HasThrowz
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasName with HasArgz with HasThrowz
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Function] (private var obj: Function.Raw) {
-    def name(v: String): Function.Builder[State with Builder.HasName] = {
-      obj.name_=(v)
-      this.asInstanceOf[Function.Builder[State with Builder.HasName]]
-    }
-
-    def argz(v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Function.Builder[State with Builder.HasArgz] = {
-      obj.argz_=(v)
-      this.asInstanceOf[Function.Builder[State with Builder.HasArgz]]
-    }
-
-    def throwz(v: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Function.Builder[State with Builder.HasThrowz] = {
-      obj.throwz_=(v)
-      this.asInstanceOf[Function.Builder[State with Builder.HasThrowz]]
-    }
-
-
-    def returnTypeId(v: String): Function.Builder[State] = {
-      obj.returnTypeId_=(v)
-      this
-    }
-
-    def returnTypeId(vOpt: Option[String]): Function.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.returnTypeId_=(v)
-        case None => obj.returnTypeIdUnset()
-      }
-      this
-    }
-
-    def oneWay(v: Boolean): Function.Builder[State] = {
-      obj.oneWay_=(v)
-      this
-    }
-
-    def oneWay(vOpt: Option[Boolean]): Function.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.oneWay_=(v)
-        case None => obj.oneWayUnset()
-      }
-      this
-    }
-
-    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Function.Builder[State] = {
-      obj.__annotations_=(v)
-      this
-    }
-
-    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Function.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.__annotations_=(v)
-        case None => obj.annotationsUnset()
-      }
-      this
-    }
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasArgz, ev2: State <:< Builder.HasThrowz): Function.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Function.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasArgz, ev2: State <:< Builder.HasThrowz): Function = resultMutable()(ev0, ev1, ev2)
-  }
-
-  def newBuilder: Function.Builder.AllUnspecified = new Builder(Function.createRawRecord)
-
-  implicit val companionProvider: FunctionCompanionProvider = new FunctionCompanionProvider
 }
 
 class FunctionCompanionProvider extends com.foursquare.spindle.CompanionProvider[Function] {
-  type CompanionT = Function.type
-  override def provide: Function.type = Function
+  type CompanionT = FunctionMeta
+  override def provide: FunctionMeta = Function
 }
 
 
 
 trait Function
 
-    extends JavaFunction
-    with com.foursquare.spindle.Record[Function]
+    extends JavaFunction[Function, RawFunction, FunctionMeta]
     with org.apache.thrift.TBase[Function, Function._Fields] {
+
+  override def meta: FunctionMeta
 
 
   def name: String
@@ -11185,6 +11241,11 @@ trait Function
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Function): Boolean = { this.compare(that) < 0 }
+  override def >(that: Function): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Function): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Function): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Function): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -11199,7 +11260,7 @@ trait Function
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
   ): Function
 
-  def mutableCopy(): Function.Mutable = {
+  def mutableCopy(): MutableFunction = {
     val ret = Function.createRawRecord
 
     if (nameIsSet) ret.name_=(nameOrNull)
@@ -11228,7 +11289,7 @@ trait Function
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Function.Mutable
+  def mutable: MutableFunction
 
   def toBuilder(): Function.Builder.AllSpecified = {
     val ret = new Function.Builder(Function.createRawRecord)
@@ -11252,8 +11313,7 @@ trait Function
 }
 
 trait MutableFunction extends Function
-  with JavaFunctionMutable
-  with com.foursquare.spindle.MutableRecord[Function] {
+  with JavaFunctionMutable[Function, RawFunction, FunctionMeta] {
   def name_=(x: String): Unit
   def nameUnset(): Unit
   def returnTypeId_=(x: String): Unit
@@ -11276,9 +11336,9 @@ trait MutableFunction extends Function
       argz: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = argzOrNull,
       throwz: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = throwzOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Function.Mutable
+  ): MutableFunction
 
-  override def mutable: Function.Mutable = this
+  override def mutable: MutableFunction = this
 }
 
 
@@ -11350,11 +11410,11 @@ trait FunctionProxy extends Function {
     __annotations = __annotations
   )
 
-  override def mutableCopy(): Function.Mutable = underlying.mutableCopy()
+  override def mutableCopy(): MutableFunction = underlying.mutableCopy()
 
   override def mergeCopy(that: Function): Function = underlying.mergeCopy(that)
 
-  override def mutable: Function.Mutable = underlying.mutable
+  override def mutable: MutableFunction = underlying.mutable
 
   override def deepCopy(): Function = underlying.deepCopy()
 
@@ -11390,7 +11450,7 @@ trait MutableFunctionProxy extends MutableFunction with FunctionProxy {
       argz: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = argzOrNull,
       throwz: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = throwzOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Function.Mutable = underlying.copy(
+  ): MutableFunction = underlying.copy(
     name = name,
     returnTypeId = returnTypeId,
     oneWay = oneWay,
@@ -11405,8 +11465,8 @@ trait MutableFunctionProxy extends MutableFunction with FunctionProxy {
 
 
 
-final class RawFunction extends JavaFunctionRaw with MutableFunction {
-  override def meta = Function
+final class RawFunction extends JavaFunctionRaw[Function, RawFunction, FunctionMeta] with MutableFunction {
+  override def meta: FunctionMeta = Function
 
   // Field #1 - name
   private var _name: String = null  // Underlying type: String
@@ -11770,7 +11830,7 @@ final class RawFunction extends JavaFunctionRaw with MutableFunction {
     }
   }
 
-  override def deepCopy(): Function.Raw = {
+  override def deepCopy(): RawFunction = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -11787,8 +11847,8 @@ final class RawFunction extends JavaFunctionRaw with MutableFunction {
       argz: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = argzOrNull,
       throwz: scala.collection.Seq[com.twitter.thrift.descriptors.Field] = throwzOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Function.Raw = {
-    val ret = new Function.Raw
+  ): RawFunction = {
+    val ret = new RawFunction
     if (name != null) ret.name_=(name)
     if (returnTypeId != null) ret.returnTypeId_=(returnTypeId)
     if (oneWay != null) ret.oneWay_=(oneWay)
@@ -11807,9 +11867,80 @@ final class RawFunction extends JavaFunctionRaw with MutableFunction {
 }
 
 
-object Service
-    extends JavaServiceMeta
-    with com.foursquare.spindle.MetaRecord[Service]
+object Service extends ServiceMeta {
+
+
+  object Builder {
+    sealed trait HasName
+    sealed trait HasFunctions
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasName with HasFunctions
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Service] (private var obj: RawService) {
+    def name(v: String): Service.Builder[State with Builder.HasName] = {
+      obj.name_=(v)
+      this.asInstanceOf[Service.Builder[State with Builder.HasName]]
+    }
+
+    def functions(v: scala.collection.Seq[com.twitter.thrift.descriptors.Function]): Service.Builder[State with Builder.HasFunctions] = {
+      obj.functions_=(v)
+      this.asInstanceOf[Service.Builder[State with Builder.HasFunctions]]
+    }
+
+
+    def extendz(v: String): Service.Builder[State] = {
+      obj.extendz_=(v)
+      this
+    }
+
+    def extendz(vOpt: Option[String]): Service.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.extendz_=(v)
+        case None => obj.extendzUnset()
+      }
+      this
+    }
+
+    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Service.Builder[State] = {
+      obj.__annotations_=(v)
+      this
+    }
+
+    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Service.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.__annotations_=(v)
+        case None => obj.annotationsUnset()
+      }
+      this
+    }
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFunctions): MutableService = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Service.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFunctions): Service = resultMutable()(ev0, ev1)
+  }
+
+  def newBuilder: Service.Builder.AllUnspecified = new Builder(Service.createRawRecord)
+
+  implicit val companionProvider: ServiceCompanionProvider = new ServiceCompanionProvider
+}
+
+class ServiceMeta
+    extends JavaServiceMeta[Service, RawService, ServiceMeta]
     with com.foursquare.spindle.RecordProvider[Service] {
   override def recordName: String = "Service"
 
@@ -11886,12 +12017,9 @@ object Service
     99.toShort -> _Fields.__annotations
   )
 
-  override type Mutable = MutableService
-  override type Raw = RawService
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Service = createRawRecord
-  override def createRawRecord: Service.Raw = new Service.Raw
+  override def createRawRecord: RawService = new RawService
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Service] = {
@@ -11909,63 +12037,63 @@ object Service
 
   val name =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Service, Service.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Service, ServiceMeta](
       name = "name",
       longName = "name",
       id = 1,
       annotations = Map(),
-      owner = Service,
+      owner = this,
       getter = _.nameOption,
-      setterRaw = (r: Service.Raw, v: String) => { r.name_=(v) },
-      unsetterRaw = (r: Service.Raw) => { r.nameUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Service], v: String) => { r.asInstanceOf[RawService].name_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Service]) => { r.asInstanceOf[RawService].nameUnset() },
       manifest = manifest[String]
     )
 
   val extendz =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[String, Service, Service.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[String, Service, ServiceMeta](
       name = "extendz",
       longName = "extendz",
       id = 2,
       annotations = Map(),
-      owner = Service,
+      owner = this,
       getter = _.extendzOption,
-      setterRaw = (r: Service.Raw, v: String) => { r.extendz_=(v) },
-      unsetterRaw = (r: Service.Raw) => { r.extendzUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Service], v: String) => { r.asInstanceOf[RawService].extendz_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Service]) => { r.asInstanceOf[RawService].extendzUnset() },
       manifest = manifest[String]
     )
 
   val functions =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Function], Service, Service.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Function], Service, ServiceMeta](
       name = "functions",
       longName = "functions",
       id = 3,
       annotations = Map(),
-      owner = Service,
+      owner = this,
       getter = _.functionsOption,
-      setterRaw = (r: Service.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Function]) => { r.functions_=(v) },
-      unsetterRaw = (r: Service.Raw) => { r.functionsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Service], v: scala.collection.Seq[com.twitter.thrift.descriptors.Function]) => { r.asInstanceOf[RawService].functions_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Service]) => { r.asInstanceOf[RawService].functionsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Function]]
     )
 
   val __annotations =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Service, Service.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation], Service, ServiceMeta](
       name = "annotations",
       longName = "annotations",
       id = 99,
       annotations = Map(),
-      owner = Service,
+      owner = this,
       getter = _.annotationsOption,
-      setterRaw = (r: Service.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.__annotations_=(v) },
-      unsetterRaw = (r: Service.Raw) => { r.annotationsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Service], v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]) => { r.asInstanceOf[RawService].__annotations_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Service]) => { r.asInstanceOf[RawService].annotationsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Service, Service.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Service, Service.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Service, ServiceMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Service, ServiceMeta]](
       name,
       extendz,
       functions,
@@ -11979,97 +12107,28 @@ object Service
       functions: scala.collection.Seq[com.twitter.thrift.descriptors.Function],
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
   ): Service = {
-    val ret = Service.createRawRecord
+    val ret = this.createRawRecord
     ret.name_=(name)
     ret.extendz_=(extendz)
     ret.functions_=(functions)
     ret.__annotations_=(__annotations)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasName
-    sealed trait HasFunctions
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasName with HasFunctions
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Service] (private var obj: Service.Raw) {
-    def name(v: String): Service.Builder[State with Builder.HasName] = {
-      obj.name_=(v)
-      this.asInstanceOf[Service.Builder[State with Builder.HasName]]
-    }
-
-    def functions(v: scala.collection.Seq[com.twitter.thrift.descriptors.Function]): Service.Builder[State with Builder.HasFunctions] = {
-      obj.functions_=(v)
-      this.asInstanceOf[Service.Builder[State with Builder.HasFunctions]]
-    }
-
-
-    def extendz(v: String): Service.Builder[State] = {
-      obj.extendz_=(v)
-      this
-    }
-
-    def extendz(vOpt: Option[String]): Service.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.extendz_=(v)
-        case None => obj.extendzUnset()
-      }
-      this
-    }
-
-    def __annotations(v: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Service.Builder[State] = {
-      obj.__annotations_=(v)
-      this
-    }
-
-    def __annotations(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]): Service.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.__annotations_=(v)
-        case None => obj.annotationsUnset()
-      }
-      this
-    }
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFunctions): Service.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Service.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasName, ev1: State <:< Builder.HasFunctions): Service = resultMutable()(ev0, ev1)
-  }
-
-  def newBuilder: Service.Builder.AllUnspecified = new Builder(Service.createRawRecord)
-
-  implicit val companionProvider: ServiceCompanionProvider = new ServiceCompanionProvider
 }
 
 class ServiceCompanionProvider extends com.foursquare.spindle.CompanionProvider[Service] {
-  type CompanionT = Service.type
-  override def provide: Service.type = Service
+  type CompanionT = ServiceMeta
+  override def provide: ServiceMeta = Service
 }
 
 
 
 trait Service
 
-    extends JavaService
-    with com.foursquare.spindle.Record[Service]
+    extends JavaService[Service, RawService, ServiceMeta]
     with org.apache.thrift.TBase[Service, Service._Fields] {
+
+  override def meta: ServiceMeta
 
 
   def name: String
@@ -12124,6 +12183,11 @@ trait Service
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Service): Boolean = { this.compare(that) < 0 }
+  override def >(that: Service): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Service): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Service): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Service): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -12136,7 +12200,7 @@ trait Service
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
   ): Service
 
-  def mutableCopy(): Service.Mutable = {
+  def mutableCopy(): MutableService = {
     val ret = Service.createRawRecord
 
     if (nameIsSet) ret.name_=(nameOrNull)
@@ -12161,7 +12225,7 @@ trait Service
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Service.Mutable
+  def mutable: MutableService
 
   def toBuilder(): Service.Builder.AllSpecified = {
     val ret = new Service.Builder(Service.createRawRecord)
@@ -12181,8 +12245,7 @@ trait Service
 }
 
 trait MutableService extends Service
-  with JavaServiceMutable
-  with com.foursquare.spindle.MutableRecord[Service] {
+  with JavaServiceMutable[Service, RawService, ServiceMeta] {
   def name_=(x: String): Unit
   def nameUnset(): Unit
   def extendz_=(x: String): Unit
@@ -12199,9 +12262,9 @@ trait MutableService extends Service
       extendz: String = extendzOrNull,
       functions: scala.collection.Seq[com.twitter.thrift.descriptors.Function] = functionsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Service.Mutable
+  ): MutableService
 
-  override def mutable: Service.Mutable = this
+  override def mutable: MutableService = this
 }
 
 
@@ -12255,11 +12318,11 @@ trait ServiceProxy extends Service {
     __annotations = __annotations
   )
 
-  override def mutableCopy(): Service.Mutable = underlying.mutableCopy()
+  override def mutableCopy(): MutableService = underlying.mutableCopy()
 
   override def mergeCopy(that: Service): Service = underlying.mergeCopy(that)
 
-  override def mutable: Service.Mutable = underlying.mutable
+  override def mutable: MutableService = underlying.mutable
 
   override def deepCopy(): Service = underlying.deepCopy()
 
@@ -12289,7 +12352,7 @@ trait MutableServiceProxy extends MutableService with ServiceProxy {
       extendz: String = extendzOrNull,
       functions: scala.collection.Seq[com.twitter.thrift.descriptors.Function] = functionsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Service.Mutable = underlying.copy(
+  ): MutableService = underlying.copy(
     name = name,
     extendz = extendz,
     functions = functions,
@@ -12302,8 +12365,8 @@ trait MutableServiceProxy extends MutableService with ServiceProxy {
 
 
 
-final class RawService extends JavaServiceRaw with MutableService {
-  override def meta = Service
+final class RawService extends JavaServiceRaw[Service, RawService, ServiceMeta] with MutableService {
+  override def meta: ServiceMeta = Service
 
   // Field #1 - name
   private var _name: String = null  // Underlying type: String
@@ -12574,7 +12637,7 @@ final class RawService extends JavaServiceRaw with MutableService {
     }
   }
 
-  override def deepCopy(): Service.Raw = {
+  override def deepCopy(): RawService = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -12589,8 +12652,8 @@ final class RawService extends JavaServiceRaw with MutableService {
       extendz: String = extendzOrNull,
       functions: scala.collection.Seq[com.twitter.thrift.descriptors.Function] = functionsOrNull,
       __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = annotationsOrNull
-  ): Service.Raw = {
-    val ret = new Service.Raw
+  ): RawService = {
+    val ret = new RawService
     if (name != null) ret.name_=(name)
     if (extendz != null) ret.extendz_=(extendz)
     if (functions != null) ret.functions_=(functions)
@@ -12607,9 +12670,165 @@ final class RawService extends JavaServiceRaw with MutableService {
 }
 
 
-object Program
-    extends JavaProgramMeta
-    with com.foursquare.spindle.MetaRecord[Program]
+object Program extends ProgramMeta {
+
+
+  object Builder {
+    sealed trait HasTypeRegistry
+
+    sealed trait MaybeSpecified
+    sealed class Specified extends MaybeSpecified
+    sealed class Unspecified extends MaybeSpecified
+
+    type HasAll = HasTypeRegistry
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[Program] (private var obj: RawProgram) {
+    def typeRegistry(v: com.twitter.thrift.descriptors.TypeRegistry): Program.Builder[State with Builder.HasTypeRegistry] = {
+      obj.typeRegistry_=(v)
+      this.asInstanceOf[Program.Builder[State with Builder.HasTypeRegistry]]
+    }
+
+
+    def namespaces(v: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]): Program.Builder[State] = {
+      obj.namespaces_=(v)
+      this
+    }
+
+    def namespaces(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]]): Program.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.namespaces_=(v)
+        case None => obj.namespacesUnset()
+      }
+      this
+    }
+
+    def includes(v: scala.collection.Seq[com.twitter.thrift.descriptors.Include]): Program.Builder[State] = {
+      obj.includes_=(v)
+      this
+    }
+
+    def includes(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Include]]): Program.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.includes_=(v)
+        case None => obj.includesUnset()
+      }
+      this
+    }
+
+    def constants(v: scala.collection.Seq[com.twitter.thrift.descriptors.Const]): Program.Builder[State] = {
+      obj.constants_=(v)
+      this
+    }
+
+    def constants(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Const]]): Program.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.constants_=(v)
+        case None => obj.constantsUnset()
+      }
+      this
+    }
+
+    def enums(v: scala.collection.Seq[com.twitter.thrift.descriptors.Enum]): Program.Builder[State] = {
+      obj.enums_=(v)
+      this
+    }
+
+    def enums(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Enum]]): Program.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.enums_=(v)
+        case None => obj.enumsUnset()
+      }
+      this
+    }
+
+    def typedefs(v: scala.collection.Seq[com.twitter.thrift.descriptors.Typedef]): Program.Builder[State] = {
+      obj.typedefs_=(v)
+      this
+    }
+
+    def typedefs(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Typedef]]): Program.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.typedefs_=(v)
+        case None => obj.typedefsUnset()
+      }
+      this
+    }
+
+    def structs(v: scala.collection.Seq[com.twitter.thrift.descriptors.Struct]): Program.Builder[State] = {
+      obj.structs_=(v)
+      this
+    }
+
+    def structs(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Struct]]): Program.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.structs_=(v)
+        case None => obj.structsUnset()
+      }
+      this
+    }
+
+    def unions(v: scala.collection.Seq[com.twitter.thrift.descriptors.Union]): Program.Builder[State] = {
+      obj.unions_=(v)
+      this
+    }
+
+    def unions(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Union]]): Program.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.unions_=(v)
+        case None => obj.unionsUnset()
+      }
+      this
+    }
+
+    def exceptions(v: scala.collection.Seq[com.twitter.thrift.descriptors.Exception]): Program.Builder[State] = {
+      obj.exceptions_=(v)
+      this
+    }
+
+    def exceptions(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Exception]]): Program.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.exceptions_=(v)
+        case None => obj.exceptionsUnset()
+      }
+      this
+    }
+
+    def services(v: scala.collection.Seq[com.twitter.thrift.descriptors.Service]): Program.Builder[State] = {
+      obj.services_=(v)
+      this
+    }
+
+    def services(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Service]]): Program.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.services_=(v)
+        case None => obj.servicesUnset()
+      }
+      this
+    }
+
+    def resultMutable()(implicit ev0: State <:< Builder.HasTypeRegistry): MutableProgram = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("Program.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result()(implicit ev0: State <:< Builder.HasTypeRegistry): Program = resultMutable()(ev0)
+  }
+
+  def newBuilder: Program.Builder.AllUnspecified = new Builder(Program.createRawRecord)
+
+  implicit val companionProvider: ProgramCompanionProvider = new ProgramCompanionProvider
+}
+
+class ProgramMeta
+    extends JavaProgramMeta[Program, RawProgram, ProgramMeta]
     with com.foursquare.spindle.RecordProvider[Program] {
   override def recordName: String = "Program"
 
@@ -12764,12 +12983,9 @@ object Program
     98.toShort -> _Fields.typeRegistry
   )
 
-  override type Mutable = MutableProgram
-  override type Raw = RawProgram
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: Program = createRawRecord
-  override def createRawRecord: Program.Raw = new Program.Raw
+  override def createRawRecord: RawProgram = new RawProgram
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[Program] = {
@@ -12787,147 +13003,147 @@ object Program
 
   val namespaces =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Namespace], Program, Program.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Namespace], Program, ProgramMeta](
       name = "namespaces",
       longName = "namespaces",
       id = 1,
       annotations = Map(),
-      owner = Program,
+      owner = this,
       getter = _.namespacesOption,
-      setterRaw = (r: Program.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]) => { r.namespaces_=(v) },
-      unsetterRaw = (r: Program.Raw) => { r.namespacesUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Program], v: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]) => { r.asInstanceOf[RawProgram].namespaces_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Program]) => { r.asInstanceOf[RawProgram].namespacesUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]]
     )
 
   val includes =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Include], Program, Program.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Include], Program, ProgramMeta](
       name = "includes",
       longName = "includes",
       id = 2,
       annotations = Map(),
-      owner = Program,
+      owner = this,
       getter = _.includesOption,
-      setterRaw = (r: Program.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Include]) => { r.includes_=(v) },
-      unsetterRaw = (r: Program.Raw) => { r.includesUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Program], v: scala.collection.Seq[com.twitter.thrift.descriptors.Include]) => { r.asInstanceOf[RawProgram].includes_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Program]) => { r.asInstanceOf[RawProgram].includesUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Include]]
     )
 
   val constants =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Const], Program, Program.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Const], Program, ProgramMeta](
       name = "constants",
       longName = "constants",
       id = 3,
       annotations = Map(),
-      owner = Program,
+      owner = this,
       getter = _.constantsOption,
-      setterRaw = (r: Program.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Const]) => { r.constants_=(v) },
-      unsetterRaw = (r: Program.Raw) => { r.constantsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Program], v: scala.collection.Seq[com.twitter.thrift.descriptors.Const]) => { r.asInstanceOf[RawProgram].constants_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Program]) => { r.asInstanceOf[RawProgram].constantsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Const]]
     )
 
   val enums =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Enum], Program, Program.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Enum], Program, ProgramMeta](
       name = "enums",
       longName = "enums",
       id = 4,
       annotations = Map(),
-      owner = Program,
+      owner = this,
       getter = _.enumsOption,
-      setterRaw = (r: Program.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Enum]) => { r.enums_=(v) },
-      unsetterRaw = (r: Program.Raw) => { r.enumsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Program], v: scala.collection.Seq[com.twitter.thrift.descriptors.Enum]) => { r.asInstanceOf[RawProgram].enums_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Program]) => { r.asInstanceOf[RawProgram].enumsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Enum]]
     )
 
   val typedefs =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Typedef], Program, Program.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Typedef], Program, ProgramMeta](
       name = "typedefs",
       longName = "typedefs",
       id = 5,
       annotations = Map(),
-      owner = Program,
+      owner = this,
       getter = _.typedefsOption,
-      setterRaw = (r: Program.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Typedef]) => { r.typedefs_=(v) },
-      unsetterRaw = (r: Program.Raw) => { r.typedefsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Program], v: scala.collection.Seq[com.twitter.thrift.descriptors.Typedef]) => { r.asInstanceOf[RawProgram].typedefs_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Program]) => { r.asInstanceOf[RawProgram].typedefsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Typedef]]
     )
 
   val structs =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Struct], Program, Program.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Struct], Program, ProgramMeta](
       name = "structs",
       longName = "structs",
       id = 6,
       annotations = Map(),
-      owner = Program,
+      owner = this,
       getter = _.structsOption,
-      setterRaw = (r: Program.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Struct]) => { r.structs_=(v) },
-      unsetterRaw = (r: Program.Raw) => { r.structsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Program], v: scala.collection.Seq[com.twitter.thrift.descriptors.Struct]) => { r.asInstanceOf[RawProgram].structs_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Program]) => { r.asInstanceOf[RawProgram].structsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Struct]]
     )
 
   val unions =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Union], Program, Program.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Union], Program, ProgramMeta](
       name = "unions",
       longName = "unions",
       id = 7,
       annotations = Map(),
-      owner = Program,
+      owner = this,
       getter = _.unionsOption,
-      setterRaw = (r: Program.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Union]) => { r.unions_=(v) },
-      unsetterRaw = (r: Program.Raw) => { r.unionsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Program], v: scala.collection.Seq[com.twitter.thrift.descriptors.Union]) => { r.asInstanceOf[RawProgram].unions_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Program]) => { r.asInstanceOf[RawProgram].unionsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Union]]
     )
 
   val exceptions =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Exception], Program, Program.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Exception], Program, ProgramMeta](
       name = "exceptions",
       longName = "exceptions",
       id = 8,
       annotations = Map(),
-      owner = Program,
+      owner = this,
       getter = _.exceptionsOption,
-      setterRaw = (r: Program.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Exception]) => { r.exceptions_=(v) },
-      unsetterRaw = (r: Program.Raw) => { r.exceptionsUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Program], v: scala.collection.Seq[com.twitter.thrift.descriptors.Exception]) => { r.asInstanceOf[RawProgram].exceptions_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Program]) => { r.asInstanceOf[RawProgram].exceptionsUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Exception]]
     )
 
   val services =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Service], Program, Program.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[scala.collection.Seq[com.twitter.thrift.descriptors.Service], Program, ProgramMeta](
       name = "services",
       longName = "services",
       id = 9,
       annotations = Map(),
-      owner = Program,
+      owner = this,
       getter = _.servicesOption,
-      setterRaw = (r: Program.Raw, v: scala.collection.Seq[com.twitter.thrift.descriptors.Service]) => { r.services_=(v) },
-      unsetterRaw = (r: Program.Raw) => { r.servicesUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Program], v: scala.collection.Seq[com.twitter.thrift.descriptors.Service]) => { r.asInstanceOf[RawProgram].services_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Program]) => { r.asInstanceOf[RawProgram].servicesUnset() },
       manifest = manifest[scala.collection.Seq[com.twitter.thrift.descriptors.Service]]
     )
 
   val typeRegistry =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.TypeRegistry, Program, Program.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.TypeRegistry, Program, ProgramMeta](
       name = "typeRegistry",
       longName = "typeRegistry",
       id = 98,
       annotations = Map(),
-      owner = Program,
+      owner = this,
       getter = _.typeRegistryOption,
-      setterRaw = (r: Program.Raw, v: com.twitter.thrift.descriptors.TypeRegistry) => { r.typeRegistry_=(v) },
-      unsetterRaw = (r: Program.Raw) => { r.typeRegistryUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[Program], v: com.twitter.thrift.descriptors.TypeRegistry) => { r.asInstanceOf[RawProgram].typeRegistry_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Program]) => { r.asInstanceOf[RawProgram].typeRegistryUnset() },
       manifest = manifest[com.twitter.thrift.descriptors.TypeRegistry]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Program, Program.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, Program, Program.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, Program, ProgramMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, Program, ProgramMeta]](
       namespaces,
       includes,
       constants,
@@ -12953,7 +13169,7 @@ object Program
       services: scala.collection.Seq[com.twitter.thrift.descriptors.Service],
       typeRegistry: com.twitter.thrift.descriptors.TypeRegistry
   ): Program = {
-    val ret = Program.createRawRecord
+    val ret = this.createRawRecord
     ret.namespaces_=(namespaces)
     ret.includes_=(includes)
     ret.constants_=(constants)
@@ -12966,175 +13182,21 @@ object Program
     ret.typeRegistry_=(typeRegistry)
     ret
   }
-
-
-
-  object Builder {
-    sealed trait HasTypeRegistry
-
-    sealed trait MaybeSpecified
-    sealed class Specified extends MaybeSpecified
-    sealed class Unspecified extends MaybeSpecified
-
-    type HasAll = HasTypeRegistry
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[Program] (private var obj: Program.Raw) {
-    def typeRegistry(v: com.twitter.thrift.descriptors.TypeRegistry): Program.Builder[State with Builder.HasTypeRegistry] = {
-      obj.typeRegistry_=(v)
-      this.asInstanceOf[Program.Builder[State with Builder.HasTypeRegistry]]
-    }
-
-
-    def namespaces(v: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]): Program.Builder[State] = {
-      obj.namespaces_=(v)
-      this
-    }
-
-    def namespaces(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]]): Program.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.namespaces_=(v)
-        case None => obj.namespacesUnset()
-      }
-      this
-    }
-
-    def includes(v: scala.collection.Seq[com.twitter.thrift.descriptors.Include]): Program.Builder[State] = {
-      obj.includes_=(v)
-      this
-    }
-
-    def includes(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Include]]): Program.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.includes_=(v)
-        case None => obj.includesUnset()
-      }
-      this
-    }
-
-    def constants(v: scala.collection.Seq[com.twitter.thrift.descriptors.Const]): Program.Builder[State] = {
-      obj.constants_=(v)
-      this
-    }
-
-    def constants(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Const]]): Program.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.constants_=(v)
-        case None => obj.constantsUnset()
-      }
-      this
-    }
-
-    def enums(v: scala.collection.Seq[com.twitter.thrift.descriptors.Enum]): Program.Builder[State] = {
-      obj.enums_=(v)
-      this
-    }
-
-    def enums(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Enum]]): Program.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.enums_=(v)
-        case None => obj.enumsUnset()
-      }
-      this
-    }
-
-    def typedefs(v: scala.collection.Seq[com.twitter.thrift.descriptors.Typedef]): Program.Builder[State] = {
-      obj.typedefs_=(v)
-      this
-    }
-
-    def typedefs(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Typedef]]): Program.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.typedefs_=(v)
-        case None => obj.typedefsUnset()
-      }
-      this
-    }
-
-    def structs(v: scala.collection.Seq[com.twitter.thrift.descriptors.Struct]): Program.Builder[State] = {
-      obj.structs_=(v)
-      this
-    }
-
-    def structs(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Struct]]): Program.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.structs_=(v)
-        case None => obj.structsUnset()
-      }
-      this
-    }
-
-    def unions(v: scala.collection.Seq[com.twitter.thrift.descriptors.Union]): Program.Builder[State] = {
-      obj.unions_=(v)
-      this
-    }
-
-    def unions(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Union]]): Program.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.unions_=(v)
-        case None => obj.unionsUnset()
-      }
-      this
-    }
-
-    def exceptions(v: scala.collection.Seq[com.twitter.thrift.descriptors.Exception]): Program.Builder[State] = {
-      obj.exceptions_=(v)
-      this
-    }
-
-    def exceptions(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Exception]]): Program.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.exceptions_=(v)
-        case None => obj.exceptionsUnset()
-      }
-      this
-    }
-
-    def services(v: scala.collection.Seq[com.twitter.thrift.descriptors.Service]): Program.Builder[State] = {
-      obj.services_=(v)
-      this
-    }
-
-    def services(vOpt: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Service]]): Program.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.services_=(v)
-        case None => obj.servicesUnset()
-      }
-      this
-    }
-
-    def resultMutable()(implicit ev0: State <:< Builder.HasTypeRegistry): Program.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("Program.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result()(implicit ev0: State <:< Builder.HasTypeRegistry): Program = resultMutable()(ev0)
-  }
-
-  def newBuilder: Program.Builder.AllUnspecified = new Builder(Program.createRawRecord)
-
-  implicit val companionProvider: ProgramCompanionProvider = new ProgramCompanionProvider
 }
 
 class ProgramCompanionProvider extends com.foursquare.spindle.CompanionProvider[Program] {
-  type CompanionT = Program.type
-  override def provide: Program.type = Program
+  type CompanionT = ProgramMeta
+  override def provide: ProgramMeta = Program
 }
 
 
 
 trait Program
 
-    extends JavaProgram
-    with com.foursquare.spindle.Record[Program]
+    extends JavaProgram[Program, RawProgram, ProgramMeta]
     with org.apache.thrift.TBase[Program, Program._Fields] {
+
+  override def meta: ProgramMeta
 
   def namespaces: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]
   def namespacesOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]]
@@ -13263,6 +13325,11 @@ trait Program
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: Program): Boolean = { this.compare(that) < 0 }
+  override def >(that: Program): Boolean = { this.compare(that) > 0 }
+  override def <=(that: Program): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: Program): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: Program): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -13281,7 +13348,7 @@ trait Program
       typeRegistry: com.twitter.thrift.descriptors.TypeRegistry = typeRegistryOrNull
   ): Program
 
-  def mutableCopy(): Program.Mutable = {
+  def mutableCopy(): MutableProgram = {
     val ret = Program.createRawRecord
 
     if (namespacesIsSet) ret.namespaces_=(namespacesOrNull)
@@ -13318,7 +13385,7 @@ trait Program
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: Program.Mutable
+  def mutable: MutableProgram
 
   def toBuilder(): Program.Builder.AllSpecified = {
     val ret = new Program.Builder(Program.createRawRecord)
@@ -13350,8 +13417,7 @@ trait Program
 }
 
 trait MutableProgram extends Program
-  with JavaProgramMutable
-  with com.foursquare.spindle.MutableRecord[Program] {
+  with JavaProgramMutable[Program, RawProgram, ProgramMeta] {
   def namespaces_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]): Unit
   def namespacesUnset(): Unit
   def includes_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.Include]): Unit
@@ -13386,9 +13452,9 @@ trait MutableProgram extends Program
       exceptions: scala.collection.Seq[com.twitter.thrift.descriptors.Exception] = exceptionsOrNull,
       services: scala.collection.Seq[com.twitter.thrift.descriptors.Service] = servicesOrNull,
       typeRegistry: com.twitter.thrift.descriptors.TypeRegistry = typeRegistryOrNull
-  ): Program.Mutable
+  ): MutableProgram
 
-  override def mutable: Program.Mutable = this
+  override def mutable: MutableProgram = this
 }
 
 
@@ -13498,11 +13564,11 @@ trait ProgramProxy extends Program {
     typeRegistry = typeRegistry
   )
 
-  override def mutableCopy(): Program.Mutable = underlying.mutableCopy()
+  override def mutableCopy(): MutableProgram = underlying.mutableCopy()
 
   override def mergeCopy(that: Program): Program = underlying.mergeCopy(that)
 
-  override def mutable: Program.Mutable = underlying.mutable
+  override def mutable: MutableProgram = underlying.mutable
 
   override def deepCopy(): Program = underlying.deepCopy()
 
@@ -13550,7 +13616,7 @@ trait MutableProgramProxy extends MutableProgram with ProgramProxy {
       exceptions: scala.collection.Seq[com.twitter.thrift.descriptors.Exception] = exceptionsOrNull,
       services: scala.collection.Seq[com.twitter.thrift.descriptors.Service] = servicesOrNull,
       typeRegistry: com.twitter.thrift.descriptors.TypeRegistry = typeRegistryOrNull
-  ): Program.Mutable = underlying.copy(
+  ): MutableProgram = underlying.copy(
     namespaces = namespaces,
     includes = includes,
     constants = constants,
@@ -13569,8 +13635,8 @@ trait MutableProgramProxy extends MutableProgram with ProgramProxy {
 
 
 
-final class RawProgram extends JavaProgramRaw with MutableProgram {
-  override def meta = Program
+final class RawProgram extends JavaProgramRaw[Program, RawProgram, ProgramMeta] with MutableProgram {
+  override def meta: ProgramMeta = Program
 
   // Field #1 - namespaces
   private var _namespaces: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace] = null  // Underlying type: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]
@@ -14205,7 +14271,7 @@ final class RawProgram extends JavaProgramRaw with MutableProgram {
     }
   }
 
-  override def deepCopy(): Program.Raw = {
+  override def deepCopy(): RawProgram = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -14226,8 +14292,8 @@ final class RawProgram extends JavaProgramRaw with MutableProgram {
       exceptions: scala.collection.Seq[com.twitter.thrift.descriptors.Exception] = exceptionsOrNull,
       services: scala.collection.Seq[com.twitter.thrift.descriptors.Service] = servicesOrNull,
       typeRegistry: com.twitter.thrift.descriptors.TypeRegistry = typeRegistryOrNull
-  ): Program.Raw = {
-    val ret = new Program.Raw
+  ): RawProgram = {
+    val ret = new RawProgram
     if (namespaces != null) ret.namespaces_=(namespaces)
     if (includes != null) ret.includes_=(includes)
     if (constants != null) ret.constants_=(constants)
@@ -14252,9 +14318,77 @@ final class RawProgram extends JavaProgramRaw with MutableProgram {
 
 
 
-object SimpleContainerType
-    extends JavaSimpleContainerTypeMeta
-    with com.foursquare.spindle.MetaRecord[SimpleContainerType]
+object SimpleContainerType extends SimpleContainerTypeMeta {
+
+
+  object Builder {
+
+    type HasAll = Any
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[SimpleContainerType] (private var obj: RawSimpleContainerType) {
+
+    def listType(v: com.twitter.thrift.descriptors.ListType): SimpleContainerType.Builder[State] = {
+      obj.listType_=(v)
+      this
+    }
+
+    def listType(vOpt: Option[com.twitter.thrift.descriptors.ListType]): SimpleContainerType.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.listType_=(v)
+        case None => obj.listTypeUnset()
+      }
+      this
+    }
+
+    def setType(v: com.twitter.thrift.descriptors.SetType): SimpleContainerType.Builder[State] = {
+      obj.setType_=(v)
+      this
+    }
+
+    def setType(vOpt: Option[com.twitter.thrift.descriptors.SetType]): SimpleContainerType.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.setType_=(v)
+        case None => obj.setTypeUnset()
+      }
+      this
+    }
+
+    def mapType(v: com.twitter.thrift.descriptors.MapType): SimpleContainerType.Builder[State] = {
+      obj.mapType_=(v)
+      this
+    }
+
+    def mapType(vOpt: Option[com.twitter.thrift.descriptors.MapType]): SimpleContainerType.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.mapType_=(v)
+        case None => obj.mapTypeUnset()
+      }
+      this
+    }
+
+    def resultMutable(): MutableSimpleContainerType = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("SimpleContainerType.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result(): SimpleContainerType = resultMutable()
+  }
+
+  def newBuilder: SimpleContainerType.Builder.AllUnspecified = new Builder(SimpleContainerType.createRawRecord)
+
+  implicit val companionProvider: SimpleContainerTypeCompanionProvider = new SimpleContainerTypeCompanionProvider
+}
+
+class SimpleContainerTypeMeta
+    extends JavaSimpleContainerTypeMeta[SimpleContainerType, RawSimpleContainerType, SimpleContainerTypeMeta]
     with com.foursquare.spindle.RecordProvider[SimpleContainerType] {
   override def recordName: String = "SimpleContainerType"
 
@@ -14318,12 +14452,9 @@ object SimpleContainerType
     3.toShort -> _Fields.mapType
   )
 
-  override type Mutable = MutableSimpleContainerType
-  override type Raw = RawSimpleContainerType
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: SimpleContainerType = createRawRecord
-  override def createRawRecord: SimpleContainerType.Raw = new SimpleContainerType.Raw
+  override def createRawRecord: RawSimpleContainerType = new RawSimpleContainerType
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[SimpleContainerType] = {
@@ -14339,49 +14470,49 @@ object SimpleContainerType
 
   val listType =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.ListType, SimpleContainerType, SimpleContainerType.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.ListType, SimpleContainerType, SimpleContainerTypeMeta](
       name = "listType",
       longName = "listType",
       id = 1,
       annotations = Map(),
-      owner = SimpleContainerType,
+      owner = this,
       getter = _.listTypeOption,
-      setterRaw = (r: SimpleContainerType.Raw, v: com.twitter.thrift.descriptors.ListType) => { r.listType_=(v) },
-      unsetterRaw = (r: SimpleContainerType.Raw) => { r.listTypeUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleContainerType], v: com.twitter.thrift.descriptors.ListType) => { r.asInstanceOf[RawSimpleContainerType].listType_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleContainerType]) => { r.asInstanceOf[RawSimpleContainerType].listTypeUnset() },
       manifest = manifest[com.twitter.thrift.descriptors.ListType]
     )
 
   val setType =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SetType, SimpleContainerType, SimpleContainerType.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SetType, SimpleContainerType, SimpleContainerTypeMeta](
       name = "setType",
       longName = "setType",
       id = 2,
       annotations = Map(),
-      owner = SimpleContainerType,
+      owner = this,
       getter = _.setTypeOption,
-      setterRaw = (r: SimpleContainerType.Raw, v: com.twitter.thrift.descriptors.SetType) => { r.setType_=(v) },
-      unsetterRaw = (r: SimpleContainerType.Raw) => { r.setTypeUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleContainerType], v: com.twitter.thrift.descriptors.SetType) => { r.asInstanceOf[RawSimpleContainerType].setType_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleContainerType]) => { r.asInstanceOf[RawSimpleContainerType].setTypeUnset() },
       manifest = manifest[com.twitter.thrift.descriptors.SetType]
     )
 
   val mapType =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.MapType, SimpleContainerType, SimpleContainerType.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.MapType, SimpleContainerType, SimpleContainerTypeMeta](
       name = "mapType",
       longName = "mapType",
       id = 3,
       annotations = Map(),
-      owner = SimpleContainerType,
+      owner = this,
       getter = _.mapTypeOption,
-      setterRaw = (r: SimpleContainerType.Raw, v: com.twitter.thrift.descriptors.MapType) => { r.mapType_=(v) },
-      unsetterRaw = (r: SimpleContainerType.Raw) => { r.mapTypeUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleContainerType], v: com.twitter.thrift.descriptors.MapType) => { r.asInstanceOf[RawSimpleContainerType].mapType_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleContainerType]) => { r.asInstanceOf[RawSimpleContainerType].mapTypeUnset() },
       manifest = manifest[com.twitter.thrift.descriptors.MapType]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, SimpleContainerType, SimpleContainerType.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, SimpleContainerType, SimpleContainerType.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, SimpleContainerType, SimpleContainerTypeMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, SimpleContainerType, SimpleContainerTypeMeta]](
       listType,
       setType,
       mapType
@@ -14393,93 +14524,27 @@ object SimpleContainerType
       setType: com.twitter.thrift.descriptors.SetType,
       mapType: com.twitter.thrift.descriptors.MapType
   ): SimpleContainerType = {
-    val ret = SimpleContainerType.createRawRecord
+    val ret = this.createRawRecord
     ret.listType_=(listType)
     ret.setType_=(setType)
     ret.mapType_=(mapType)
     ret
   }
-
-
-
-  object Builder {
-
-    type HasAll = Any
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[SimpleContainerType] (private var obj: SimpleContainerType.Raw) {
-
-    def listType(v: com.twitter.thrift.descriptors.ListType): SimpleContainerType.Builder[State] = {
-      obj.listType_=(v)
-      this
-    }
-
-    def listType(vOpt: Option[com.twitter.thrift.descriptors.ListType]): SimpleContainerType.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.listType_=(v)
-        case None => obj.listTypeUnset()
-      }
-      this
-    }
-
-    def setType(v: com.twitter.thrift.descriptors.SetType): SimpleContainerType.Builder[State] = {
-      obj.setType_=(v)
-      this
-    }
-
-    def setType(vOpt: Option[com.twitter.thrift.descriptors.SetType]): SimpleContainerType.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.setType_=(v)
-        case None => obj.setTypeUnset()
-      }
-      this
-    }
-
-    def mapType(v: com.twitter.thrift.descriptors.MapType): SimpleContainerType.Builder[State] = {
-      obj.mapType_=(v)
-      this
-    }
-
-    def mapType(vOpt: Option[com.twitter.thrift.descriptors.MapType]): SimpleContainerType.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.mapType_=(v)
-        case None => obj.mapTypeUnset()
-      }
-      this
-    }
-
-    def resultMutable(): SimpleContainerType.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("SimpleContainerType.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result(): SimpleContainerType = resultMutable()
-  }
-
-  def newBuilder: SimpleContainerType.Builder.AllUnspecified = new Builder(SimpleContainerType.createRawRecord)
-
-  implicit val companionProvider: SimpleContainerTypeCompanionProvider = new SimpleContainerTypeCompanionProvider
 }
 
 class SimpleContainerTypeCompanionProvider extends com.foursquare.spindle.CompanionProvider[SimpleContainerType] {
-  type CompanionT = SimpleContainerType.type
-  override def provide: SimpleContainerType.type = SimpleContainerType
+  type CompanionT = SimpleContainerTypeMeta
+  override def provide: SimpleContainerTypeMeta = SimpleContainerType
 }
 
 
 
 trait SimpleContainerType
 
-    extends JavaSimpleContainerType
-    with com.foursquare.spindle.Record[SimpleContainerType]
+    extends JavaSimpleContainerType[SimpleContainerType, RawSimpleContainerType, SimpleContainerTypeMeta]
     with org.apache.thrift.TBase[SimpleContainerType, SimpleContainerType._Fields] {
+
+  override def meta: SimpleContainerTypeMeta
 
   def listTypeOption: Option[com.twitter.thrift.descriptors.ListType]
   def listTypeOrNull: com.twitter.thrift.descriptors.ListType
@@ -14518,6 +14583,11 @@ trait SimpleContainerType
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: SimpleContainerType): Boolean = { this.compare(that) < 0 }
+  override def >(that: SimpleContainerType): Boolean = { this.compare(that) > 0 }
+  override def <=(that: SimpleContainerType): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: SimpleContainerType): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: SimpleContainerType): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -14529,7 +14599,7 @@ trait SimpleContainerType
       mapType: com.twitter.thrift.descriptors.MapType = mapTypeOrNull
   ): SimpleContainerType
 
-  def mutableCopy(): SimpleContainerType.Mutable = {
+  def mutableCopy(): MutableSimpleContainerType = {
     val ret = SimpleContainerType.createRawRecord
 
     if (listTypeIsSet) ret.listType_=(listTypeOrNull)
@@ -14552,7 +14622,7 @@ trait SimpleContainerType
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: SimpleContainerType.Mutable
+  def mutable: MutableSimpleContainerType
 
   def toBuilder(): SimpleContainerType.Builder.AllSpecified = {
     val ret = new SimpleContainerType.Builder(SimpleContainerType.createRawRecord)
@@ -14570,8 +14640,7 @@ trait SimpleContainerType
 }
 
 trait MutableSimpleContainerType extends SimpleContainerType
-  with JavaSimpleContainerTypeMutable
-  with com.foursquare.spindle.MutableRecord[SimpleContainerType] {
+  with JavaSimpleContainerTypeMutable[SimpleContainerType, RawSimpleContainerType, SimpleContainerTypeMeta] {
   def listType_=(x: com.twitter.thrift.descriptors.ListType): Unit
   def listTypeUnset(): Unit
   def setType_=(x: com.twitter.thrift.descriptors.SetType): Unit
@@ -14585,17 +14654,17 @@ trait MutableSimpleContainerType extends SimpleContainerType
       listType: com.twitter.thrift.descriptors.ListType = listTypeOrNull,
       setType: com.twitter.thrift.descriptors.SetType = setTypeOrNull,
       mapType: com.twitter.thrift.descriptors.MapType = mapTypeOrNull
-  ): SimpleContainerType.Mutable
+  ): MutableSimpleContainerType
 
-  override def mutable: SimpleContainerType.Mutable = this
+  override def mutable: MutableSimpleContainerType = this
 }
 
 
 
 
 
-final class RawSimpleContainerType extends JavaSimpleContainerTypeRaw with MutableSimpleContainerType {
-  override def meta = SimpleContainerType
+final class RawSimpleContainerType extends JavaSimpleContainerTypeRaw[SimpleContainerType, RawSimpleContainerType, SimpleContainerTypeMeta] with MutableSimpleContainerType {
+  override def meta: SimpleContainerTypeMeta = SimpleContainerType
 
   // Field #1 - listType
   private var _listType: com.twitter.thrift.descriptors.ListType = null  // Underlying type: com.twitter.thrift.descriptors.ListType
@@ -14797,7 +14866,7 @@ final class RawSimpleContainerType extends JavaSimpleContainerTypeRaw with Mutab
     }
   }
 
-  override def deepCopy(): SimpleContainerType.Raw = {
+  override def deepCopy(): RawSimpleContainerType = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -14811,8 +14880,8 @@ final class RawSimpleContainerType extends JavaSimpleContainerTypeRaw with Mutab
       listType: com.twitter.thrift.descriptors.ListType = listTypeOrNull,
       setType: com.twitter.thrift.descriptors.SetType = setTypeOrNull,
       mapType: com.twitter.thrift.descriptors.MapType = mapTypeOrNull
-  ): SimpleContainerType.Raw = {
-    val ret = new SimpleContainerType.Raw
+  ): RawSimpleContainerType = {
+    val ret = new RawSimpleContainerType
     if (listType != null) ret.listType_=(listType)
     if (setType != null) ret.setType_=(setType)
     if (mapType != null) ret.mapType_=(mapType)
@@ -14829,9 +14898,77 @@ final class RawSimpleContainerType extends JavaSimpleContainerTypeRaw with Mutab
 
 
 
-object SimpleType
-    extends JavaSimpleTypeMeta
-    with com.foursquare.spindle.MetaRecord[SimpleType]
+object SimpleType extends SimpleTypeMeta {
+
+
+  object Builder {
+
+    type HasAll = Any
+    type AllSpecified = Builder[HasAll]
+    type AllUnspecified = Builder[Any]
+  }
+
+  class Builder[+State] private[SimpleType] (private var obj: RawSimpleType) {
+
+    def baseType(v: com.twitter.thrift.descriptors.BaseType): SimpleType.Builder[State] = {
+      obj.baseType_=(v)
+      this
+    }
+
+    def baseType(vOpt: Option[com.twitter.thrift.descriptors.BaseType]): SimpleType.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.baseType_=(v)
+        case None => obj.baseTypeUnset()
+      }
+      this
+    }
+
+    def containerType(v: com.twitter.thrift.descriptors.ContainerType): SimpleType.Builder[State] = {
+      obj.containerType_=(v)
+      this
+    }
+
+    def containerType(vOpt: Option[com.twitter.thrift.descriptors.ContainerType]): SimpleType.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.containerType_=(v)
+        case None => obj.containerTypeUnset()
+      }
+      this
+    }
+
+    def typeref(v: com.twitter.thrift.descriptors.Typeref): SimpleType.Builder[State] = {
+      obj.typeref_=(v)
+      this
+    }
+
+    def typeref(vOpt: Option[com.twitter.thrift.descriptors.Typeref]): SimpleType.Builder[State] = {
+      vOpt match {
+        case Some(v) => obj.typeref_=(v)
+        case None => obj.typerefUnset()
+      }
+      this
+    }
+
+    def resultMutable(): MutableSimpleType = {
+      if (obj != null) {
+        val ret = obj
+        obj = null
+        ret
+      } else {
+        throw new IllegalStateException("SimpleType.Builder.result invoked multiple times. Use a new Builder.")
+      }
+    }
+
+    def result(): SimpleType = resultMutable()
+  }
+
+  def newBuilder: SimpleType.Builder.AllUnspecified = new Builder(SimpleType.createRawRecord)
+
+  implicit val companionProvider: SimpleTypeCompanionProvider = new SimpleTypeCompanionProvider
+}
+
+class SimpleTypeMeta
+    extends JavaSimpleTypeMeta[SimpleType, RawSimpleType, SimpleTypeMeta]
     with com.foursquare.spindle.RecordProvider[SimpleType] {
   override def recordName: String = "SimpleType"
 
@@ -14895,12 +15032,9 @@ object SimpleType
     3.toShort -> _Fields.typeref
   )
 
-  override type Mutable = MutableSimpleType
-  override type Raw = RawSimpleType
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: SimpleType = createRawRecord
-  override def createRawRecord: SimpleType.Raw = new SimpleType.Raw
+  override def createRawRecord: RawSimpleType = new RawSimpleType
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[SimpleType] = {
@@ -14916,49 +15050,49 @@ object SimpleType
 
   val baseType =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.BaseType, SimpleType, SimpleType.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.BaseType, SimpleType, SimpleTypeMeta](
       name = "baseType",
       longName = "baseType",
       id = 1,
       annotations = Map(),
-      owner = SimpleType,
+      owner = this,
       getter = _.baseTypeOption,
-      setterRaw = (r: SimpleType.Raw, v: com.twitter.thrift.descriptors.BaseType) => { r.baseType_=(v) },
-      unsetterRaw = (r: SimpleType.Raw) => { r.baseTypeUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleType], v: com.twitter.thrift.descriptors.BaseType) => { r.asInstanceOf[RawSimpleType].baseType_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleType]) => { r.asInstanceOf[RawSimpleType].baseTypeUnset() },
       manifest = manifest[com.twitter.thrift.descriptors.BaseType]
     )
 
   val containerType =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.ContainerType, SimpleType, SimpleType.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.ContainerType, SimpleType, SimpleTypeMeta](
       name = "containerType",
       longName = "containerType",
       id = 2,
       annotations = Map(),
-      owner = SimpleType,
+      owner = this,
       getter = _.containerTypeOption,
-      setterRaw = (r: SimpleType.Raw, v: com.twitter.thrift.descriptors.ContainerType) => { r.containerType_=(v) },
-      unsetterRaw = (r: SimpleType.Raw) => { r.containerTypeUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleType], v: com.twitter.thrift.descriptors.ContainerType) => { r.asInstanceOf[RawSimpleType].containerType_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleType]) => { r.asInstanceOf[RawSimpleType].containerTypeUnset() },
       manifest = manifest[com.twitter.thrift.descriptors.ContainerType]
     )
 
   val typeref =
 
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.Typeref, SimpleType, SimpleType.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.Typeref, SimpleType, SimpleTypeMeta](
       name = "typeref",
       longName = "typeref",
       id = 3,
       annotations = Map(),
-      owner = SimpleType,
+      owner = this,
       getter = _.typerefOption,
-      setterRaw = (r: SimpleType.Raw, v: com.twitter.thrift.descriptors.Typeref) => { r.typeref_=(v) },
-      unsetterRaw = (r: SimpleType.Raw) => { r.typerefUnset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleType], v: com.twitter.thrift.descriptors.Typeref) => { r.asInstanceOf[RawSimpleType].typeref_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleType]) => { r.asInstanceOf[RawSimpleType].typerefUnset() },
       manifest = manifest[com.twitter.thrift.descriptors.Typeref]
     )
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, SimpleType, SimpleType.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, SimpleType, SimpleType.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, SimpleType, SimpleTypeMeta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, SimpleType, SimpleTypeMeta]](
       baseType,
       containerType,
       typeref
@@ -14970,93 +15104,27 @@ object SimpleType
       containerType: com.twitter.thrift.descriptors.ContainerType,
       typeref: com.twitter.thrift.descriptors.Typeref
   ): SimpleType = {
-    val ret = SimpleType.createRawRecord
+    val ret = this.createRawRecord
     ret.baseType_=(baseType)
     ret.containerType_=(containerType)
     ret.typeref_=(typeref)
     ret
   }
-
-
-
-  object Builder {
-
-    type HasAll = Any
-    type AllSpecified = Builder[HasAll]
-    type AllUnspecified = Builder[Any]
-  }
-
-  class Builder[+State] private[SimpleType] (private var obj: SimpleType.Raw) {
-
-    def baseType(v: com.twitter.thrift.descriptors.BaseType): SimpleType.Builder[State] = {
-      obj.baseType_=(v)
-      this
-    }
-
-    def baseType(vOpt: Option[com.twitter.thrift.descriptors.BaseType]): SimpleType.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.baseType_=(v)
-        case None => obj.baseTypeUnset()
-      }
-      this
-    }
-
-    def containerType(v: com.twitter.thrift.descriptors.ContainerType): SimpleType.Builder[State] = {
-      obj.containerType_=(v)
-      this
-    }
-
-    def containerType(vOpt: Option[com.twitter.thrift.descriptors.ContainerType]): SimpleType.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.containerType_=(v)
-        case None => obj.containerTypeUnset()
-      }
-      this
-    }
-
-    def typeref(v: com.twitter.thrift.descriptors.Typeref): SimpleType.Builder[State] = {
-      obj.typeref_=(v)
-      this
-    }
-
-    def typeref(vOpt: Option[com.twitter.thrift.descriptors.Typeref]): SimpleType.Builder[State] = {
-      vOpt match {
-        case Some(v) => obj.typeref_=(v)
-        case None => obj.typerefUnset()
-      }
-      this
-    }
-
-    def resultMutable(): SimpleType.Mutable = {
-      if (obj != null) {
-        val ret = obj
-        obj = null
-        ret
-      } else {
-        throw new IllegalStateException("SimpleType.Builder.result invoked multiple times. Use a new Builder.")
-      }
-    }
-
-    def result(): SimpleType = resultMutable()
-  }
-
-  def newBuilder: SimpleType.Builder.AllUnspecified = new Builder(SimpleType.createRawRecord)
-
-  implicit val companionProvider: SimpleTypeCompanionProvider = new SimpleTypeCompanionProvider
 }
 
 class SimpleTypeCompanionProvider extends com.foursquare.spindle.CompanionProvider[SimpleType] {
-  type CompanionT = SimpleType.type
-  override def provide: SimpleType.type = SimpleType
+  type CompanionT = SimpleTypeMeta
+  override def provide: SimpleTypeMeta = SimpleType
 }
 
 
 
 trait SimpleType
 
-    extends JavaSimpleType
-    with com.foursquare.spindle.Record[SimpleType]
+    extends JavaSimpleType[SimpleType, RawSimpleType, SimpleTypeMeta]
     with org.apache.thrift.TBase[SimpleType, SimpleType._Fields] {
+
+  override def meta: SimpleTypeMeta
 
   def baseTypeOption: Option[com.twitter.thrift.descriptors.BaseType]
   def baseTypeOrNull: com.twitter.thrift.descriptors.BaseType
@@ -15095,6 +15163,11 @@ trait SimpleType
       cmp != 0 }) cmp
     else 0
   }
+  override def <(that: SimpleType): Boolean = { this.compare(that) < 0 }
+  override def >(that: SimpleType): Boolean = { this.compare(that) > 0 }
+  override def <=(that: SimpleType): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: SimpleType): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: SimpleType): Int = compare(that)
 
   def write(oprot: org.apache.thrift.protocol.TProtocol): Unit
 
@@ -15106,7 +15179,7 @@ trait SimpleType
       typeref: com.twitter.thrift.descriptors.Typeref = typerefOrNull
   ): SimpleType
 
-  def mutableCopy(): SimpleType.Mutable = {
+  def mutableCopy(): MutableSimpleType = {
     val ret = SimpleType.createRawRecord
 
     if (baseTypeIsSet) ret.baseType_=(baseTypeOrNull)
@@ -15129,7 +15202,7 @@ trait SimpleType
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: SimpleType.Mutable
+  def mutable: MutableSimpleType
 
   def toBuilder(): SimpleType.Builder.AllSpecified = {
     val ret = new SimpleType.Builder(SimpleType.createRawRecord)
@@ -15147,8 +15220,7 @@ trait SimpleType
 }
 
 trait MutableSimpleType extends SimpleType
-  with JavaSimpleTypeMutable
-  with com.foursquare.spindle.MutableRecord[SimpleType] {
+  with JavaSimpleTypeMutable[SimpleType, RawSimpleType, SimpleTypeMeta] {
   def baseType_=(x: com.twitter.thrift.descriptors.BaseType): Unit
   def baseTypeUnset(): Unit
   def containerType_=(x: com.twitter.thrift.descriptors.ContainerType): Unit
@@ -15162,17 +15234,17 @@ trait MutableSimpleType extends SimpleType
       baseType: com.twitter.thrift.descriptors.BaseType = baseTypeOrNull,
       containerType: com.twitter.thrift.descriptors.ContainerType = containerTypeOrNull,
       typeref: com.twitter.thrift.descriptors.Typeref = typerefOrNull
-  ): SimpleType.Mutable
+  ): MutableSimpleType
 
-  override def mutable: SimpleType.Mutable = this
+  override def mutable: MutableSimpleType = this
 }
 
 
 
 
 
-final class RawSimpleType extends JavaSimpleTypeRaw with MutableSimpleType {
-  override def meta = SimpleType
+final class RawSimpleType extends JavaSimpleTypeRaw[SimpleType, RawSimpleType, SimpleTypeMeta] with MutableSimpleType {
+  override def meta: SimpleTypeMeta = SimpleType
 
   // Field #1 - baseType
   private var _baseType: com.twitter.thrift.descriptors.BaseType = null  // Underlying type: com.twitter.thrift.descriptors.BaseType
@@ -15374,7 +15446,7 @@ final class RawSimpleType extends JavaSimpleTypeRaw with MutableSimpleType {
     }
   }
 
-  override def deepCopy(): SimpleType.Raw = {
+  override def deepCopy(): RawSimpleType = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)
@@ -15388,8 +15460,8 @@ final class RawSimpleType extends JavaSimpleTypeRaw with MutableSimpleType {
       baseType: com.twitter.thrift.descriptors.BaseType = baseTypeOrNull,
       containerType: com.twitter.thrift.descriptors.ContainerType = containerTypeOrNull,
       typeref: com.twitter.thrift.descriptors.Typeref = typerefOrNull
-  ): SimpleType.Raw = {
-    val ret = new SimpleType.Raw
+  ): RawSimpleType = {
+    val ret = new RawSimpleType
     if (baseType != null) ret.baseType_=(baseType)
     if (containerType != null) ret.containerType_=(containerType)
     if (typeref != null) ret.typeref_=(typeref)

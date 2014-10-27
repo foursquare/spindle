@@ -4,4 +4,10 @@
   import com.foursquare.spindle.codegen.runtime.{PrimitiveRenderType, StructLike}
 %>
 <%@ val cls: StructLike %>
-public static abstract class Java${cls.name}Meta { }
+public static abstract class Java${cls.name}Meta<
+  ${cls.name}T extends com.foursquare.spindle.Record<${cls.name}T>,
+  ${cls.name}Raw extends com.foursquare.spindle.MutableRecord<${cls.name}T>,
+  ${cls.name}Meta extends Java${cls.name}Meta<${cls.name}T, ${cls.name}Raw, ${cls.name}Meta>
+> implements com.foursquare.spindle.MetaRecord<${cls.name}T, ${cls.name}Meta> {
+
+}

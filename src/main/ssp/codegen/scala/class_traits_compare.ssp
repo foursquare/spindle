@@ -19,3 +19,8 @@
 #end
     else 0
   }
+  override def <(that: ${cls.name}): Boolean = { this.compare(that) < 0 }
+  override def >(that: ${cls.name}): Boolean = { this.compare(that) > 0 }
+  override def <=(that: ${cls.name}): Boolean = { this.compare(that) <= 0 }
+  override def >=(that: ${cls.name}): Boolean = { this.compare(that) >= 0 }
+  override def compareTo(that: ${cls.name}): Int = compare(that)

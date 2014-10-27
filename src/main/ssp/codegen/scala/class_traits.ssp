@@ -10,16 +10,16 @@
 trait ${cls.name}
 #if (cls.isException)
     extends RuntimeException
-    with Java${cls.name}
-    with com.foursquare.spindle.Record[${cls.name}]
+    with Java${cls.name}[${cls.name}, Raw${cls.name}, ${cls.name}Meta]
 #else
-    extends Java${cls.name}
-    with com.foursquare.spindle.Record[${cls.name}]
+    extends Java${cls.name}[${cls.name}, Raw${cls.name}, ${cls.name}Meta]
 #end
 #for (pkField <- cls.primaryKeyField)
     with com.foursquare.spindle.HasPrimaryKey[${pkField.renderType.text}, ${cls.name}]
 #end
     with org.apache.thrift.TBase[${cls.name}, ${cls.name}._Fields] {
+
+  override def meta: ${cls.name}Meta
 
 #for (field <- cls.fields)
 <% render(field.renderType.fieldDefTemplate, Map("field" -> field)) %>

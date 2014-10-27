@@ -78,7 +78,7 @@ class WireCompatibilityTest {
     val sNestedCollections = testStructNestedCollections()
 
     // Test reading via versions of the struct missing one field.
-    val structsMissingOneField: List[MetaRecord[_]] = List(
+    val structsMissingOneField: List[MetaRecord[_, _]] = List(
       TestStructNoBool,
       TestStructNoByte,
       TestStructNoI16,
@@ -168,7 +168,7 @@ class WireCompatibilityTest {
     testReadingUnknownField(StructWithOldEnumField, StructWithNewEnumField, testEnumStruct())
 
     // "new" vs. "old" here mean "struct with all fields" vs. "struct without some fields".
-    def testReadingUnknownField(oldMeta: MetaRecord[_], newMeta: MetaRecord[_], newObj: TBase[_, _],
+    def testReadingUnknownField(oldMeta: MetaRecord[_, _], newMeta: MetaRecord[_, _], newObj: TBase[_, _],
         expectedRoundTrippedObj: Option[TBase[_, _]] = None, expectedRoundTrippedObjSameProto: Option[TBase[_, _]] = None) {
       // Write the object out.
       val newBuf = doWrite(srcProtocol, newObj)

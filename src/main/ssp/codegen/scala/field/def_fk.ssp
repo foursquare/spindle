@@ -4,7 +4,7 @@
   import com.foursquare.spindle.codegen.runtime.ScalaField
 %>
 <%@ val field: ScalaField %>
-  def ${field.name}Fk[R <: com.foursquare.spindle.Record[R] with com.foursquare.spindle.HasPrimaryKey[${field.renderType.text}, R]](meta: com.foursquare.spindle.MetaRecord[R]): Option[R]
+  def ${field.name}Fk[R <: com.foursquare.spindle.Record[R] with com.foursquare.spindle.HasPrimaryKey[${field.renderType.text}, R]](meta: com.foursquare.spindle.MetaRecord[R, _]): Option[R]
   def ${field.name}UntypedFk(meta: com.foursquare.spindle.UntypedMetaRecord): Option[com.foursquare.spindle.UntypedRecord with com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]]
   def ${field.name}GetObj: Option[com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]]
   def ${field.name}SetObj(x: com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]): Unit

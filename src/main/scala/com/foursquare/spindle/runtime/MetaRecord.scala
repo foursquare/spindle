@@ -10,12 +10,10 @@ trait UntypedMetaRecord {
   def untypedIfInstanceFrom(x: AnyRef): Option[UntypedRecord]
 }
 
-trait MetaRecord[R <: Record[R]] extends UntypedMetaRecord {
-  type Mutable <: R
-  type Raw <: R
-
-  def createRawRecord: Raw with MutableRecord[R]
-  def fields: Seq[FieldDescriptor[_, R, this.type]]
+trait MetaRecord[R <: Record[R], M <: MetaRecord[R, M]] extends UntypedMetaRecord {
+  def createRecord: R
+  def createRawRecord: MutableRecord[R]
+  def fields: Seq[FieldDescriptor[_, R, M]]
   def ifInstanceFrom(x: AnyRef): Option[R]
 }
 

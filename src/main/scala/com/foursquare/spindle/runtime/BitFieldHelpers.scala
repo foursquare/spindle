@@ -19,25 +19,25 @@ object BitFieldHelpers {
     ((1 << (bitIndex + 16)) & bitfield) != 0
   }
 
-  def bitFieldToStruct[R <: Record[R]](bitfield: Int, meta: MetaRecord[R]): R = {
+  def bitFieldToStruct[R <: Record[R]](bitfield: Int, meta: MetaRecord[R, _]): R = {
     verifyMeta(meta, 16)
 
     val result = meta.createRawRecord
 
-    meta.fields.foreach((field: FieldDescriptor[_, _, meta.type]) => {
-      val setter = field.setterRaw.asInstanceOf[(meta.type#Raw, Boolean) => Unit]
+    meta.fields.foreach((field: FieldDescriptor[_, _, _]) => {
+      val setter = field.setterRaw.asInstanceOf[(MutableRecord[R], Boolean) => Unit]
       if (getIsSet(bitfield, field.id - 1)) {
         setter(result, getValue(bitfield, field.id - 1))
       }
     })
 
-    result
+    result.asInstanceOf[R]
   }
 
   def structToBitField(struct: Record[_]): Int = {
     val meta = struct.meta
     verifyMeta(meta, 16)
-    meta.fields.map((field: FieldDescriptor[_, _, meta.type]) => {
+    meta.fields.map((field: FieldDescriptor[_, _, _]) => {
       val getter = field.getter.asInstanceOf[struct.type => Option[Boolean]]
       val bitIndex = (field.id - 1)
       val valueOpt = getter(struct)
@@ -67,25 +67,25 @@ object BitFieldHelpers {
     ((1L << (bitIndex + 32)) & bitfield) != 0
   }
 
-  def longBitFieldToStruct[R <: Record[R]](bitfield: Long, meta: MetaRecord[R]): R = {
+  def longBitFieldToStruct[R <: Record[R]](bitfield: Long, meta: MetaRecord[R, _]): R = {
     verifyMeta(meta, 31)
 
     val result = meta.createRawRecord
 
-    meta.fields.foreach((field: FieldDescriptor[_, _, meta.type]) => {
-      val setter = field.setterRaw.asInstanceOf[(meta.type#Raw, Boolean) => Unit]
+    meta.fields.foreach((field: FieldDescriptor[_, _, _]) => {
+      val setter = field.setterRaw.asInstanceOf[(MutableRecord[R], Boolean) => Unit]
       if (getLongIsSet(bitfield, field.id - 1)) {
         setter(result, getLongValue(bitfield, field.id - 1))
       }
     })
 
-    result
+    result.asInstanceOf[R]
   }
 
   def structToLongBitField(struct: Record[_]): Long = {
     val meta = struct.meta
     verifyMeta(meta, 31)
-    meta.fields.map((field: FieldDescriptor[_, _, meta.type]) => {
+    meta.fields.map((field: FieldDescriptor[_, _, _]) => {
       val getter = field.getter.asInstanceOf[struct.type => Option[Boolean]]
       val bitIndex = (field.id - 1)
       val valueOpt = getter(struct)
@@ -104,23 +104,23 @@ object BitFieldHelpers {
     ((1 << bitIndex) & bitfield) != 0
   }
 
-  def bitFieldToStructNoSetBits[R <: Record[R]](bitfield: Int, meta: MetaRecord[R]): R = {
+  def bitFieldToStructNoSetBits[R <: Record[R]](bitfield: Int, meta: MetaRecord[R, _]): R = {
     verifyMeta(meta, 32)
 
     val result = meta.createRawRecord
 
-    meta.fields.foreach((field: FieldDescriptor[_, _, meta.type]) => {
-      val setter = field.setterRaw.asInstanceOf[(meta.type#Raw, Boolean) => Unit]
+    meta.fields.foreach((field: FieldDescriptor[_, _, _]) => {
+      val setter = field.setterRaw.asInstanceOf[(MutableRecord[R], Boolean) => Unit]
       setter(result, getValueNoSetBits(bitfield, field.id - 1))
     })
 
-    result
+    result.asInstanceOf[R]
   }
 
   def structToBitFieldNoSetBits(struct: Record[_]): Int = {
     val meta = struct.meta
     verifyMeta(meta, 32)
-    meta.fields.map((field: FieldDescriptor[_, _, meta.type]) => {
+    meta.fields.map((field: FieldDescriptor[_, _, _]) => {
       val getter = field.getter.asInstanceOf[struct.type => Option[Boolean]]
       val bitIndex = (field.id - 1)
       val value = getter(struct) match {
@@ -137,23 +137,23 @@ object BitFieldHelpers {
     ((1L << bitIndex) & bitfield) != 0
   }
 
-  def longBitFieldToStructNoSetBits[R <: Record[R]](bitfield: Long, meta: MetaRecord[R]): R = {
+  def longBitFieldToStructNoSetBits[R <: Record[R]](bitfield: Long, meta: MetaRecord[R, _]): R = {
     verifyMeta(meta, 64)
 
     val result = meta.createRawRecord
 
-    meta.fields.foreach((field: FieldDescriptor[_, _, meta.type]) => {
-      val setter = field.setterRaw.asInstanceOf[(meta.type#Raw, Boolean) => Unit]
+    meta.fields.foreach((field: FieldDescriptor[_, _, _]) => {
+      val setter = field.setterRaw.asInstanceOf[(MutableRecord[R], Boolean) => Unit]
       setter(result, getLongValueNoSetBits(bitfield, field.id - 1))
     })
 
-    result
+    result.asInstanceOf[R]
   }
 
   def structToLongBitFieldNoSetBits(struct: Record[_]): Long = {
     val meta = struct.meta
     verifyMeta(meta, 64)
-    meta.fields.map((field: FieldDescriptor[_, _, meta.type]) => {
+    meta.fields.map((field: FieldDescriptor[_, _, _]) => {
       val getter = field.getter.asInstanceOf[struct.type => Option[Boolean]]
       val bitIndex = (field.id - 1)
       val value = getter(struct) match {
@@ -165,7 +165,7 @@ object BitFieldHelpers {
     }).foldLeft(0L)(_ | _)
   }
 
-  private def verifyMeta(meta: MetaRecord[_], availableBits: Int) = {
+  private def verifyMeta(meta: MetaRecord[_, _], availableBits: Int) = {
     assert(meta.fields.forall((f: UntypedFieldDescriptor) => f.unsafeManifest == manifest[Boolean]))
     assert(meta.fields.forall((f: UntypedFieldDescriptor) => f.id >= 1 && f.id <= availableBits))
     assert(meta.fields.size <= availableBits)

@@ -21,177 +21,801 @@ public static interface JavaRequiredness {
   public int getValue();
 }
 
-public static abstract class JavaIncludeMeta { }
-
-public static interface JavaInclude { }
-
-public static interface JavaIncludeMutable extends JavaInclude { }
-
-public static abstract class JavaIncludeRaw implements JavaIncludeMutable { }
-public static abstract class JavaNamespaceMeta { }
-
-public static interface JavaNamespace { }
-
-public static interface JavaNamespaceMutable extends JavaNamespace { }
-
-public static abstract class JavaNamespaceRaw implements JavaNamespaceMutable { }
-public static abstract class JavaAnnotationMeta { }
-
-public static interface JavaAnnotation { }
-
-public static interface JavaAnnotationMutable extends JavaAnnotation { }
-
-public static abstract class JavaAnnotationRaw implements JavaAnnotationMutable { }
-public static abstract class JavaBaseTypeMeta { }
-
-public static interface JavaBaseType { }
-
-public static interface JavaBaseTypeMutable extends JavaBaseType { }
-
-public static abstract class JavaBaseTypeRaw implements JavaBaseTypeMutable { }
-public static abstract class JavaListTypeMeta { }
-
-public static interface JavaListType { }
-
-public static interface JavaListTypeMutable extends JavaListType { }
-
-public static abstract class JavaListTypeRaw implements JavaListTypeMutable { }
-public static abstract class JavaSetTypeMeta { }
-
-public static interface JavaSetType { }
-
-public static interface JavaSetTypeMutable extends JavaSetType { }
-
-public static abstract class JavaSetTypeRaw implements JavaSetTypeMutable { }
-public static abstract class JavaMapTypeMeta { }
-
-public static interface JavaMapType { }
-
-public static interface JavaMapTypeMutable extends JavaMapType { }
-
-public static abstract class JavaMapTypeRaw implements JavaMapTypeMutable { }
-public static abstract class JavaContainerTypeMeta { }
-
-public static interface JavaContainerType { }
-
-public static interface JavaContainerTypeMutable extends JavaContainerType { }
-
-public static abstract class JavaContainerTypeRaw implements JavaContainerTypeMutable { }
-public static abstract class JavaTyperefMeta { }
-
-public static interface JavaTyperef { }
-
-public static interface JavaTyperefMutable extends JavaTyperef { }
-
-public static abstract class JavaTyperefRaw implements JavaTyperefMutable { }
-public static abstract class JavaTypeMeta { }
-
-public static interface JavaType { }
-
-public static interface JavaTypeMutable extends JavaType { }
-
-public static abstract class JavaTypeRaw implements JavaTypeMutable { }
-public static abstract class JavaTypedefMeta { }
-
-public static interface JavaTypedef { }
-
-public static interface JavaTypedefMutable extends JavaTypedef { }
-
-public static abstract class JavaTypedefRaw implements JavaTypedefMutable { }
-public static abstract class JavaTypeRegistryMeta { }
-
-public static interface JavaTypeRegistry { }
-
-public static interface JavaTypeRegistryMutable extends JavaTypeRegistry { }
-
-public static abstract class JavaTypeRegistryRaw implements JavaTypeRegistryMutable { }
-public static abstract class JavaConstMeta { }
-
-public static interface JavaConst { }
-
-public static interface JavaConstMutable extends JavaConst { }
-
-public static abstract class JavaConstRaw implements JavaConstMutable { }
-public static abstract class JavaEnumElementMeta { }
-
-public static interface JavaEnumElement { }
-
-public static interface JavaEnumElementMutable extends JavaEnumElement { }
-
-public static abstract class JavaEnumElementRaw implements JavaEnumElementMutable { }
-public static abstract class JavaEnumMeta { }
-
-public static interface JavaEnum { }
-
-public static interface JavaEnumMutable extends JavaEnum { }
-
-public static abstract class JavaEnumRaw implements JavaEnumMutable { }
-public static abstract class JavaFieldMeta { }
-
-public static interface JavaField { }
-
-public static interface JavaFieldMutable extends JavaField { }
-
-public static abstract class JavaFieldRaw implements JavaFieldMutable { }
-public static abstract class JavaStructMeta { }
-
-public static interface JavaStruct { }
-
-public static interface JavaStructMutable extends JavaStruct { }
-
-public static abstract class JavaStructRaw implements JavaStructMutable { }
-public static abstract class JavaUnionMeta { }
-
-public static interface JavaUnion { }
-
-public static interface JavaUnionMutable extends JavaUnion { }
-
-public static abstract class JavaUnionRaw implements JavaUnionMutable { }
-public static abstract class JavaExceptionMeta { }
-
-public static interface JavaException { }
-
-public static interface JavaExceptionMutable extends JavaException { }
-
-public static abstract class JavaExceptionRaw implements JavaExceptionMutable { }
-public static abstract class JavaFunctionMeta { }
-
-public static interface JavaFunction { }
-
-public static interface JavaFunctionMutable extends JavaFunction { }
-
-public static abstract class JavaFunctionRaw implements JavaFunctionMutable { }
-public static abstract class JavaServiceMeta { }
-
-public static interface JavaService { }
-
-public static interface JavaServiceMutable extends JavaService { }
-
-public static abstract class JavaServiceRaw implements JavaServiceMutable { }
-public static abstract class JavaProgramMeta { }
-
-public static interface JavaProgram { }
-
-public static interface JavaProgramMutable extends JavaProgram { }
-
-public static abstract class JavaProgramRaw implements JavaProgramMutable { }
-
-
-public static abstract class JavaSimpleContainerTypeMeta { }
-
-public static interface JavaSimpleContainerType { }
-
-public static interface JavaSimpleContainerTypeMutable extends JavaSimpleContainerType { }
-
-public static abstract class JavaSimpleContainerTypeRaw implements JavaSimpleContainerTypeMutable { }
-
-public static abstract class JavaSimpleTypeMeta { }
-
-public static interface JavaSimpleType { }
-
-public static interface JavaSimpleTypeMutable extends JavaSimpleType { }
-
-public static abstract class JavaSimpleTypeRaw implements JavaSimpleTypeMutable { }
+public static abstract class JavaIncludeMeta<
+  IncludeT extends com.foursquare.spindle.Record<IncludeT>,
+  IncludeRaw extends com.foursquare.spindle.MutableRecord<IncludeT>,
+  IncludeMeta extends JavaIncludeMeta<IncludeT, IncludeRaw, IncludeMeta>
+> implements com.foursquare.spindle.MetaRecord<IncludeT, IncludeMeta> {
+
+}
+
+public static interface JavaInclude<
+  IncludeT extends com.foursquare.spindle.Record<IncludeT>,
+  IncludeRaw extends com.foursquare.spindle.MutableRecord<IncludeT>,
+  IncludeMeta extends JavaIncludeMeta<IncludeT, IncludeRaw, IncludeMeta>
+> extends com.foursquare.spindle.Record<IncludeT> {
+
+}
+
+public static interface JavaIncludeMutable<
+  IncludeT extends com.foursquare.spindle.Record<IncludeT>,
+  IncludeRaw extends com.foursquare.spindle.MutableRecord<IncludeT>,
+  IncludeMeta extends JavaIncludeMeta<IncludeT, IncludeRaw, IncludeMeta>
+> extends JavaInclude<IncludeT, IncludeRaw, IncludeMeta>,
+  com.foursquare.spindle.MutableRecord<IncludeT> {
+
+}
+
+public static abstract class JavaIncludeRaw<
+  IncludeT extends com.foursquare.spindle.Record<IncludeT>,
+  IncludeRaw extends com.foursquare.spindle.MutableRecord<IncludeT>,
+  IncludeMeta extends JavaIncludeMeta<IncludeT, IncludeRaw, IncludeMeta>
+> implements com.foursquare.spindle.Record<IncludeT>,
+  JavaIncludeMutable<IncludeT, IncludeRaw, IncludeMeta> {
+
+}
+public static abstract class JavaNamespaceMeta<
+  NamespaceT extends com.foursquare.spindle.Record<NamespaceT>,
+  NamespaceRaw extends com.foursquare.spindle.MutableRecord<NamespaceT>,
+  NamespaceMeta extends JavaNamespaceMeta<NamespaceT, NamespaceRaw, NamespaceMeta>
+> implements com.foursquare.spindle.MetaRecord<NamespaceT, NamespaceMeta> {
+
+}
+
+public static interface JavaNamespace<
+  NamespaceT extends com.foursquare.spindle.Record<NamespaceT>,
+  NamespaceRaw extends com.foursquare.spindle.MutableRecord<NamespaceT>,
+  NamespaceMeta extends JavaNamespaceMeta<NamespaceT, NamespaceRaw, NamespaceMeta>
+> extends com.foursquare.spindle.Record<NamespaceT> {
+
+}
+
+public static interface JavaNamespaceMutable<
+  NamespaceT extends com.foursquare.spindle.Record<NamespaceT>,
+  NamespaceRaw extends com.foursquare.spindle.MutableRecord<NamespaceT>,
+  NamespaceMeta extends JavaNamespaceMeta<NamespaceT, NamespaceRaw, NamespaceMeta>
+> extends JavaNamespace<NamespaceT, NamespaceRaw, NamespaceMeta>,
+  com.foursquare.spindle.MutableRecord<NamespaceT> {
+
+}
+
+public static abstract class JavaNamespaceRaw<
+  NamespaceT extends com.foursquare.spindle.Record<NamespaceT>,
+  NamespaceRaw extends com.foursquare.spindle.MutableRecord<NamespaceT>,
+  NamespaceMeta extends JavaNamespaceMeta<NamespaceT, NamespaceRaw, NamespaceMeta>
+> implements com.foursquare.spindle.Record<NamespaceT>,
+  JavaNamespaceMutable<NamespaceT, NamespaceRaw, NamespaceMeta> {
+
+}
+public static abstract class JavaAnnotationMeta<
+  AnnotationT extends com.foursquare.spindle.Record<AnnotationT>,
+  AnnotationRaw extends com.foursquare.spindle.MutableRecord<AnnotationT>,
+  AnnotationMeta extends JavaAnnotationMeta<AnnotationT, AnnotationRaw, AnnotationMeta>
+> implements com.foursquare.spindle.MetaRecord<AnnotationT, AnnotationMeta> {
+
+}
+
+public static interface JavaAnnotation<
+  AnnotationT extends com.foursquare.spindle.Record<AnnotationT>,
+  AnnotationRaw extends com.foursquare.spindle.MutableRecord<AnnotationT>,
+  AnnotationMeta extends JavaAnnotationMeta<AnnotationT, AnnotationRaw, AnnotationMeta>
+> extends com.foursquare.spindle.Record<AnnotationT> {
+
+}
+
+public static interface JavaAnnotationMutable<
+  AnnotationT extends com.foursquare.spindle.Record<AnnotationT>,
+  AnnotationRaw extends com.foursquare.spindle.MutableRecord<AnnotationT>,
+  AnnotationMeta extends JavaAnnotationMeta<AnnotationT, AnnotationRaw, AnnotationMeta>
+> extends JavaAnnotation<AnnotationT, AnnotationRaw, AnnotationMeta>,
+  com.foursquare.spindle.MutableRecord<AnnotationT> {
+
+}
+
+public static abstract class JavaAnnotationRaw<
+  AnnotationT extends com.foursquare.spindle.Record<AnnotationT>,
+  AnnotationRaw extends com.foursquare.spindle.MutableRecord<AnnotationT>,
+  AnnotationMeta extends JavaAnnotationMeta<AnnotationT, AnnotationRaw, AnnotationMeta>
+> implements com.foursquare.spindle.Record<AnnotationT>,
+  JavaAnnotationMutable<AnnotationT, AnnotationRaw, AnnotationMeta> {
+
+}
+public static abstract class JavaBaseTypeMeta<
+  BaseTypeT extends com.foursquare.spindle.Record<BaseTypeT>,
+  BaseTypeRaw extends com.foursquare.spindle.MutableRecord<BaseTypeT>,
+  BaseTypeMeta extends JavaBaseTypeMeta<BaseTypeT, BaseTypeRaw, BaseTypeMeta>
+> implements com.foursquare.spindle.MetaRecord<BaseTypeT, BaseTypeMeta> {
+
+}
+
+public static interface JavaBaseType<
+  BaseTypeT extends com.foursquare.spindle.Record<BaseTypeT>,
+  BaseTypeRaw extends com.foursquare.spindle.MutableRecord<BaseTypeT>,
+  BaseTypeMeta extends JavaBaseTypeMeta<BaseTypeT, BaseTypeRaw, BaseTypeMeta>
+> extends com.foursquare.spindle.Record<BaseTypeT> {
+
+}
+
+public static interface JavaBaseTypeMutable<
+  BaseTypeT extends com.foursquare.spindle.Record<BaseTypeT>,
+  BaseTypeRaw extends com.foursquare.spindle.MutableRecord<BaseTypeT>,
+  BaseTypeMeta extends JavaBaseTypeMeta<BaseTypeT, BaseTypeRaw, BaseTypeMeta>
+> extends JavaBaseType<BaseTypeT, BaseTypeRaw, BaseTypeMeta>,
+  com.foursquare.spindle.MutableRecord<BaseTypeT> {
+
+}
+
+public static abstract class JavaBaseTypeRaw<
+  BaseTypeT extends com.foursquare.spindle.Record<BaseTypeT>,
+  BaseTypeRaw extends com.foursquare.spindle.MutableRecord<BaseTypeT>,
+  BaseTypeMeta extends JavaBaseTypeMeta<BaseTypeT, BaseTypeRaw, BaseTypeMeta>
+> implements com.foursquare.spindle.Record<BaseTypeT>,
+  JavaBaseTypeMutable<BaseTypeT, BaseTypeRaw, BaseTypeMeta> {
+
+}
+public static abstract class JavaListTypeMeta<
+  ListTypeT extends com.foursquare.spindle.Record<ListTypeT>,
+  ListTypeRaw extends com.foursquare.spindle.MutableRecord<ListTypeT>,
+  ListTypeMeta extends JavaListTypeMeta<ListTypeT, ListTypeRaw, ListTypeMeta>
+> implements com.foursquare.spindle.MetaRecord<ListTypeT, ListTypeMeta> {
+
+}
+
+public static interface JavaListType<
+  ListTypeT extends com.foursquare.spindle.Record<ListTypeT>,
+  ListTypeRaw extends com.foursquare.spindle.MutableRecord<ListTypeT>,
+  ListTypeMeta extends JavaListTypeMeta<ListTypeT, ListTypeRaw, ListTypeMeta>
+> extends com.foursquare.spindle.Record<ListTypeT> {
+
+}
+
+public static interface JavaListTypeMutable<
+  ListTypeT extends com.foursquare.spindle.Record<ListTypeT>,
+  ListTypeRaw extends com.foursquare.spindle.MutableRecord<ListTypeT>,
+  ListTypeMeta extends JavaListTypeMeta<ListTypeT, ListTypeRaw, ListTypeMeta>
+> extends JavaListType<ListTypeT, ListTypeRaw, ListTypeMeta>,
+  com.foursquare.spindle.MutableRecord<ListTypeT> {
+
+}
+
+public static abstract class JavaListTypeRaw<
+  ListTypeT extends com.foursquare.spindle.Record<ListTypeT>,
+  ListTypeRaw extends com.foursquare.spindle.MutableRecord<ListTypeT>,
+  ListTypeMeta extends JavaListTypeMeta<ListTypeT, ListTypeRaw, ListTypeMeta>
+> implements com.foursquare.spindle.Record<ListTypeT>,
+  JavaListTypeMutable<ListTypeT, ListTypeRaw, ListTypeMeta> {
+
+}
+public static abstract class JavaSetTypeMeta<
+  SetTypeT extends com.foursquare.spindle.Record<SetTypeT>,
+  SetTypeRaw extends com.foursquare.spindle.MutableRecord<SetTypeT>,
+  SetTypeMeta extends JavaSetTypeMeta<SetTypeT, SetTypeRaw, SetTypeMeta>
+> implements com.foursquare.spindle.MetaRecord<SetTypeT, SetTypeMeta> {
+
+}
+
+public static interface JavaSetType<
+  SetTypeT extends com.foursquare.spindle.Record<SetTypeT>,
+  SetTypeRaw extends com.foursquare.spindle.MutableRecord<SetTypeT>,
+  SetTypeMeta extends JavaSetTypeMeta<SetTypeT, SetTypeRaw, SetTypeMeta>
+> extends com.foursquare.spindle.Record<SetTypeT> {
+
+}
+
+public static interface JavaSetTypeMutable<
+  SetTypeT extends com.foursquare.spindle.Record<SetTypeT>,
+  SetTypeRaw extends com.foursquare.spindle.MutableRecord<SetTypeT>,
+  SetTypeMeta extends JavaSetTypeMeta<SetTypeT, SetTypeRaw, SetTypeMeta>
+> extends JavaSetType<SetTypeT, SetTypeRaw, SetTypeMeta>,
+  com.foursquare.spindle.MutableRecord<SetTypeT> {
+
+}
+
+public static abstract class JavaSetTypeRaw<
+  SetTypeT extends com.foursquare.spindle.Record<SetTypeT>,
+  SetTypeRaw extends com.foursquare.spindle.MutableRecord<SetTypeT>,
+  SetTypeMeta extends JavaSetTypeMeta<SetTypeT, SetTypeRaw, SetTypeMeta>
+> implements com.foursquare.spindle.Record<SetTypeT>,
+  JavaSetTypeMutable<SetTypeT, SetTypeRaw, SetTypeMeta> {
+
+}
+public static abstract class JavaMapTypeMeta<
+  MapTypeT extends com.foursquare.spindle.Record<MapTypeT>,
+  MapTypeRaw extends com.foursquare.spindle.MutableRecord<MapTypeT>,
+  MapTypeMeta extends JavaMapTypeMeta<MapTypeT, MapTypeRaw, MapTypeMeta>
+> implements com.foursquare.spindle.MetaRecord<MapTypeT, MapTypeMeta> {
+
+}
+
+public static interface JavaMapType<
+  MapTypeT extends com.foursquare.spindle.Record<MapTypeT>,
+  MapTypeRaw extends com.foursquare.spindle.MutableRecord<MapTypeT>,
+  MapTypeMeta extends JavaMapTypeMeta<MapTypeT, MapTypeRaw, MapTypeMeta>
+> extends com.foursquare.spindle.Record<MapTypeT> {
+
+}
+
+public static interface JavaMapTypeMutable<
+  MapTypeT extends com.foursquare.spindle.Record<MapTypeT>,
+  MapTypeRaw extends com.foursquare.spindle.MutableRecord<MapTypeT>,
+  MapTypeMeta extends JavaMapTypeMeta<MapTypeT, MapTypeRaw, MapTypeMeta>
+> extends JavaMapType<MapTypeT, MapTypeRaw, MapTypeMeta>,
+  com.foursquare.spindle.MutableRecord<MapTypeT> {
+
+}
+
+public static abstract class JavaMapTypeRaw<
+  MapTypeT extends com.foursquare.spindle.Record<MapTypeT>,
+  MapTypeRaw extends com.foursquare.spindle.MutableRecord<MapTypeT>,
+  MapTypeMeta extends JavaMapTypeMeta<MapTypeT, MapTypeRaw, MapTypeMeta>
+> implements com.foursquare.spindle.Record<MapTypeT>,
+  JavaMapTypeMutable<MapTypeT, MapTypeRaw, MapTypeMeta> {
+
+}
+public static abstract class JavaContainerTypeMeta<
+  ContainerTypeT extends com.foursquare.spindle.Record<ContainerTypeT>,
+  ContainerTypeRaw extends com.foursquare.spindle.MutableRecord<ContainerTypeT>,
+  ContainerTypeMeta extends JavaContainerTypeMeta<ContainerTypeT, ContainerTypeRaw, ContainerTypeMeta>
+> implements com.foursquare.spindle.MetaRecord<ContainerTypeT, ContainerTypeMeta> {
+
+}
+
+public static interface JavaContainerType<
+  ContainerTypeT extends com.foursquare.spindle.Record<ContainerTypeT>,
+  ContainerTypeRaw extends com.foursquare.spindle.MutableRecord<ContainerTypeT>,
+  ContainerTypeMeta extends JavaContainerTypeMeta<ContainerTypeT, ContainerTypeRaw, ContainerTypeMeta>
+> extends com.foursquare.spindle.Record<ContainerTypeT> {
+
+}
+
+public static interface JavaContainerTypeMutable<
+  ContainerTypeT extends com.foursquare.spindle.Record<ContainerTypeT>,
+  ContainerTypeRaw extends com.foursquare.spindle.MutableRecord<ContainerTypeT>,
+  ContainerTypeMeta extends JavaContainerTypeMeta<ContainerTypeT, ContainerTypeRaw, ContainerTypeMeta>
+> extends JavaContainerType<ContainerTypeT, ContainerTypeRaw, ContainerTypeMeta>,
+  com.foursquare.spindle.MutableRecord<ContainerTypeT> {
+
+}
+
+public static abstract class JavaContainerTypeRaw<
+  ContainerTypeT extends com.foursquare.spindle.Record<ContainerTypeT>,
+  ContainerTypeRaw extends com.foursquare.spindle.MutableRecord<ContainerTypeT>,
+  ContainerTypeMeta extends JavaContainerTypeMeta<ContainerTypeT, ContainerTypeRaw, ContainerTypeMeta>
+> implements com.foursquare.spindle.Record<ContainerTypeT>,
+  JavaContainerTypeMutable<ContainerTypeT, ContainerTypeRaw, ContainerTypeMeta> {
+
+}
+public static abstract class JavaTyperefMeta<
+  TyperefT extends com.foursquare.spindle.Record<TyperefT>,
+  TyperefRaw extends com.foursquare.spindle.MutableRecord<TyperefT>,
+  TyperefMeta extends JavaTyperefMeta<TyperefT, TyperefRaw, TyperefMeta>
+> implements com.foursquare.spindle.MetaRecord<TyperefT, TyperefMeta> {
+
+}
+
+public static interface JavaTyperef<
+  TyperefT extends com.foursquare.spindle.Record<TyperefT>,
+  TyperefRaw extends com.foursquare.spindle.MutableRecord<TyperefT>,
+  TyperefMeta extends JavaTyperefMeta<TyperefT, TyperefRaw, TyperefMeta>
+> extends com.foursquare.spindle.Record<TyperefT> {
+
+}
+
+public static interface JavaTyperefMutable<
+  TyperefT extends com.foursquare.spindle.Record<TyperefT>,
+  TyperefRaw extends com.foursquare.spindle.MutableRecord<TyperefT>,
+  TyperefMeta extends JavaTyperefMeta<TyperefT, TyperefRaw, TyperefMeta>
+> extends JavaTyperef<TyperefT, TyperefRaw, TyperefMeta>,
+  com.foursquare.spindle.MutableRecord<TyperefT> {
+
+}
+
+public static abstract class JavaTyperefRaw<
+  TyperefT extends com.foursquare.spindle.Record<TyperefT>,
+  TyperefRaw extends com.foursquare.spindle.MutableRecord<TyperefT>,
+  TyperefMeta extends JavaTyperefMeta<TyperefT, TyperefRaw, TyperefMeta>
+> implements com.foursquare.spindle.Record<TyperefT>,
+  JavaTyperefMutable<TyperefT, TyperefRaw, TyperefMeta> {
+
+}
+public static abstract class JavaTypeMeta<
+  TypeT extends com.foursquare.spindle.Record<TypeT>,
+  TypeRaw extends com.foursquare.spindle.MutableRecord<TypeT>,
+  TypeMeta extends JavaTypeMeta<TypeT, TypeRaw, TypeMeta>
+> implements com.foursquare.spindle.MetaRecord<TypeT, TypeMeta> {
+
+}
+
+public static interface JavaType<
+  TypeT extends com.foursquare.spindle.Record<TypeT>,
+  TypeRaw extends com.foursquare.spindle.MutableRecord<TypeT>,
+  TypeMeta extends JavaTypeMeta<TypeT, TypeRaw, TypeMeta>
+> extends com.foursquare.spindle.Record<TypeT> {
+
+}
+
+public static interface JavaTypeMutable<
+  TypeT extends com.foursquare.spindle.Record<TypeT>,
+  TypeRaw extends com.foursquare.spindle.MutableRecord<TypeT>,
+  TypeMeta extends JavaTypeMeta<TypeT, TypeRaw, TypeMeta>
+> extends JavaType<TypeT, TypeRaw, TypeMeta>,
+  com.foursquare.spindle.MutableRecord<TypeT> {
+
+}
+
+public static abstract class JavaTypeRaw<
+  TypeT extends com.foursquare.spindle.Record<TypeT>,
+  TypeRaw extends com.foursquare.spindle.MutableRecord<TypeT>,
+  TypeMeta extends JavaTypeMeta<TypeT, TypeRaw, TypeMeta>
+> implements com.foursquare.spindle.Record<TypeT>,
+  JavaTypeMutable<TypeT, TypeRaw, TypeMeta> {
+
+}
+public static abstract class JavaTypedefMeta<
+  TypedefT extends com.foursquare.spindle.Record<TypedefT>,
+  TypedefRaw extends com.foursquare.spindle.MutableRecord<TypedefT>,
+  TypedefMeta extends JavaTypedefMeta<TypedefT, TypedefRaw, TypedefMeta>
+> implements com.foursquare.spindle.MetaRecord<TypedefT, TypedefMeta> {
+
+}
+
+public static interface JavaTypedef<
+  TypedefT extends com.foursquare.spindle.Record<TypedefT>,
+  TypedefRaw extends com.foursquare.spindle.MutableRecord<TypedefT>,
+  TypedefMeta extends JavaTypedefMeta<TypedefT, TypedefRaw, TypedefMeta>
+> extends com.foursquare.spindle.Record<TypedefT> {
+
+}
+
+public static interface JavaTypedefMutable<
+  TypedefT extends com.foursquare.spindle.Record<TypedefT>,
+  TypedefRaw extends com.foursquare.spindle.MutableRecord<TypedefT>,
+  TypedefMeta extends JavaTypedefMeta<TypedefT, TypedefRaw, TypedefMeta>
+> extends JavaTypedef<TypedefT, TypedefRaw, TypedefMeta>,
+  com.foursquare.spindle.MutableRecord<TypedefT> {
+
+}
+
+public static abstract class JavaTypedefRaw<
+  TypedefT extends com.foursquare.spindle.Record<TypedefT>,
+  TypedefRaw extends com.foursquare.spindle.MutableRecord<TypedefT>,
+  TypedefMeta extends JavaTypedefMeta<TypedefT, TypedefRaw, TypedefMeta>
+> implements com.foursquare.spindle.Record<TypedefT>,
+  JavaTypedefMutable<TypedefT, TypedefRaw, TypedefMeta> {
+
+}
+public static abstract class JavaTypeRegistryMeta<
+  TypeRegistryT extends com.foursquare.spindle.Record<TypeRegistryT>,
+  TypeRegistryRaw extends com.foursquare.spindle.MutableRecord<TypeRegistryT>,
+  TypeRegistryMeta extends JavaTypeRegistryMeta<TypeRegistryT, TypeRegistryRaw, TypeRegistryMeta>
+> implements com.foursquare.spindle.MetaRecord<TypeRegistryT, TypeRegistryMeta> {
+
+}
+
+public static interface JavaTypeRegistry<
+  TypeRegistryT extends com.foursquare.spindle.Record<TypeRegistryT>,
+  TypeRegistryRaw extends com.foursquare.spindle.MutableRecord<TypeRegistryT>,
+  TypeRegistryMeta extends JavaTypeRegistryMeta<TypeRegistryT, TypeRegistryRaw, TypeRegistryMeta>
+> extends com.foursquare.spindle.Record<TypeRegistryT> {
+
+}
+
+public static interface JavaTypeRegistryMutable<
+  TypeRegistryT extends com.foursquare.spindle.Record<TypeRegistryT>,
+  TypeRegistryRaw extends com.foursquare.spindle.MutableRecord<TypeRegistryT>,
+  TypeRegistryMeta extends JavaTypeRegistryMeta<TypeRegistryT, TypeRegistryRaw, TypeRegistryMeta>
+> extends JavaTypeRegistry<TypeRegistryT, TypeRegistryRaw, TypeRegistryMeta>,
+  com.foursquare.spindle.MutableRecord<TypeRegistryT> {
+
+}
+
+public static abstract class JavaTypeRegistryRaw<
+  TypeRegistryT extends com.foursquare.spindle.Record<TypeRegistryT>,
+  TypeRegistryRaw extends com.foursquare.spindle.MutableRecord<TypeRegistryT>,
+  TypeRegistryMeta extends JavaTypeRegistryMeta<TypeRegistryT, TypeRegistryRaw, TypeRegistryMeta>
+> implements com.foursquare.spindle.Record<TypeRegistryT>,
+  JavaTypeRegistryMutable<TypeRegistryT, TypeRegistryRaw, TypeRegistryMeta> {
+
+}
+public static abstract class JavaConstMeta<
+  ConstT extends com.foursquare.spindle.Record<ConstT>,
+  ConstRaw extends com.foursquare.spindle.MutableRecord<ConstT>,
+  ConstMeta extends JavaConstMeta<ConstT, ConstRaw, ConstMeta>
+> implements com.foursquare.spindle.MetaRecord<ConstT, ConstMeta> {
+
+}
+
+public static interface JavaConst<
+  ConstT extends com.foursquare.spindle.Record<ConstT>,
+  ConstRaw extends com.foursquare.spindle.MutableRecord<ConstT>,
+  ConstMeta extends JavaConstMeta<ConstT, ConstRaw, ConstMeta>
+> extends com.foursquare.spindle.Record<ConstT> {
+
+}
+
+public static interface JavaConstMutable<
+  ConstT extends com.foursquare.spindle.Record<ConstT>,
+  ConstRaw extends com.foursquare.spindle.MutableRecord<ConstT>,
+  ConstMeta extends JavaConstMeta<ConstT, ConstRaw, ConstMeta>
+> extends JavaConst<ConstT, ConstRaw, ConstMeta>,
+  com.foursquare.spindle.MutableRecord<ConstT> {
+
+}
+
+public static abstract class JavaConstRaw<
+  ConstT extends com.foursquare.spindle.Record<ConstT>,
+  ConstRaw extends com.foursquare.spindle.MutableRecord<ConstT>,
+  ConstMeta extends JavaConstMeta<ConstT, ConstRaw, ConstMeta>
+> implements com.foursquare.spindle.Record<ConstT>,
+  JavaConstMutable<ConstT, ConstRaw, ConstMeta> {
+
+}
+public static abstract class JavaEnumElementMeta<
+  EnumElementT extends com.foursquare.spindle.Record<EnumElementT>,
+  EnumElementRaw extends com.foursquare.spindle.MutableRecord<EnumElementT>,
+  EnumElementMeta extends JavaEnumElementMeta<EnumElementT, EnumElementRaw, EnumElementMeta>
+> implements com.foursquare.spindle.MetaRecord<EnumElementT, EnumElementMeta> {
+
+}
+
+public static interface JavaEnumElement<
+  EnumElementT extends com.foursquare.spindle.Record<EnumElementT>,
+  EnumElementRaw extends com.foursquare.spindle.MutableRecord<EnumElementT>,
+  EnumElementMeta extends JavaEnumElementMeta<EnumElementT, EnumElementRaw, EnumElementMeta>
+> extends com.foursquare.spindle.Record<EnumElementT> {
+
+}
+
+public static interface JavaEnumElementMutable<
+  EnumElementT extends com.foursquare.spindle.Record<EnumElementT>,
+  EnumElementRaw extends com.foursquare.spindle.MutableRecord<EnumElementT>,
+  EnumElementMeta extends JavaEnumElementMeta<EnumElementT, EnumElementRaw, EnumElementMeta>
+> extends JavaEnumElement<EnumElementT, EnumElementRaw, EnumElementMeta>,
+  com.foursquare.spindle.MutableRecord<EnumElementT> {
+
+}
+
+public static abstract class JavaEnumElementRaw<
+  EnumElementT extends com.foursquare.spindle.Record<EnumElementT>,
+  EnumElementRaw extends com.foursquare.spindle.MutableRecord<EnumElementT>,
+  EnumElementMeta extends JavaEnumElementMeta<EnumElementT, EnumElementRaw, EnumElementMeta>
+> implements com.foursquare.spindle.Record<EnumElementT>,
+  JavaEnumElementMutable<EnumElementT, EnumElementRaw, EnumElementMeta> {
+
+}
+public static abstract class JavaEnumMeta<
+  EnumT extends com.foursquare.spindle.Record<EnumT>,
+  EnumRaw extends com.foursquare.spindle.MutableRecord<EnumT>,
+  EnumMeta extends JavaEnumMeta<EnumT, EnumRaw, EnumMeta>
+> implements com.foursquare.spindle.MetaRecord<EnumT, EnumMeta> {
+
+}
+
+public static interface JavaEnum<
+  EnumT extends com.foursquare.spindle.Record<EnumT>,
+  EnumRaw extends com.foursquare.spindle.MutableRecord<EnumT>,
+  EnumMeta extends JavaEnumMeta<EnumT, EnumRaw, EnumMeta>
+> extends com.foursquare.spindle.Record<EnumT> {
+
+}
+
+public static interface JavaEnumMutable<
+  EnumT extends com.foursquare.spindle.Record<EnumT>,
+  EnumRaw extends com.foursquare.spindle.MutableRecord<EnumT>,
+  EnumMeta extends JavaEnumMeta<EnumT, EnumRaw, EnumMeta>
+> extends JavaEnum<EnumT, EnumRaw, EnumMeta>,
+  com.foursquare.spindle.MutableRecord<EnumT> {
+
+}
+
+public static abstract class JavaEnumRaw<
+  EnumT extends com.foursquare.spindle.Record<EnumT>,
+  EnumRaw extends com.foursquare.spindle.MutableRecord<EnumT>,
+  EnumMeta extends JavaEnumMeta<EnumT, EnumRaw, EnumMeta>
+> implements com.foursquare.spindle.Record<EnumT>,
+  JavaEnumMutable<EnumT, EnumRaw, EnumMeta> {
+
+}
+public static abstract class JavaFieldMeta<
+  FieldT extends com.foursquare.spindle.Record<FieldT>,
+  FieldRaw extends com.foursquare.spindle.MutableRecord<FieldT>,
+  FieldMeta extends JavaFieldMeta<FieldT, FieldRaw, FieldMeta>
+> implements com.foursquare.spindle.MetaRecord<FieldT, FieldMeta> {
+
+}
+
+public static interface JavaField<
+  FieldT extends com.foursquare.spindle.Record<FieldT>,
+  FieldRaw extends com.foursquare.spindle.MutableRecord<FieldT>,
+  FieldMeta extends JavaFieldMeta<FieldT, FieldRaw, FieldMeta>
+> extends com.foursquare.spindle.Record<FieldT> {
+
+}
+
+public static interface JavaFieldMutable<
+  FieldT extends com.foursquare.spindle.Record<FieldT>,
+  FieldRaw extends com.foursquare.spindle.MutableRecord<FieldT>,
+  FieldMeta extends JavaFieldMeta<FieldT, FieldRaw, FieldMeta>
+> extends JavaField<FieldT, FieldRaw, FieldMeta>,
+  com.foursquare.spindle.MutableRecord<FieldT> {
+
+}
+
+public static abstract class JavaFieldRaw<
+  FieldT extends com.foursquare.spindle.Record<FieldT>,
+  FieldRaw extends com.foursquare.spindle.MutableRecord<FieldT>,
+  FieldMeta extends JavaFieldMeta<FieldT, FieldRaw, FieldMeta>
+> implements com.foursquare.spindle.Record<FieldT>,
+  JavaFieldMutable<FieldT, FieldRaw, FieldMeta> {
+
+}
+public static abstract class JavaStructMeta<
+  StructT extends com.foursquare.spindle.Record<StructT>,
+  StructRaw extends com.foursquare.spindle.MutableRecord<StructT>,
+  StructMeta extends JavaStructMeta<StructT, StructRaw, StructMeta>
+> implements com.foursquare.spindle.MetaRecord<StructT, StructMeta> {
+
+}
+
+public static interface JavaStruct<
+  StructT extends com.foursquare.spindle.Record<StructT>,
+  StructRaw extends com.foursquare.spindle.MutableRecord<StructT>,
+  StructMeta extends JavaStructMeta<StructT, StructRaw, StructMeta>
+> extends com.foursquare.spindle.Record<StructT> {
+
+}
+
+public static interface JavaStructMutable<
+  StructT extends com.foursquare.spindle.Record<StructT>,
+  StructRaw extends com.foursquare.spindle.MutableRecord<StructT>,
+  StructMeta extends JavaStructMeta<StructT, StructRaw, StructMeta>
+> extends JavaStruct<StructT, StructRaw, StructMeta>,
+  com.foursquare.spindle.MutableRecord<StructT> {
+
+}
+
+public static abstract class JavaStructRaw<
+  StructT extends com.foursquare.spindle.Record<StructT>,
+  StructRaw extends com.foursquare.spindle.MutableRecord<StructT>,
+  StructMeta extends JavaStructMeta<StructT, StructRaw, StructMeta>
+> implements com.foursquare.spindle.Record<StructT>,
+  JavaStructMutable<StructT, StructRaw, StructMeta> {
+
+}
+public static abstract class JavaUnionMeta<
+  UnionT extends com.foursquare.spindle.Record<UnionT>,
+  UnionRaw extends com.foursquare.spindle.MutableRecord<UnionT>,
+  UnionMeta extends JavaUnionMeta<UnionT, UnionRaw, UnionMeta>
+> implements com.foursquare.spindle.MetaRecord<UnionT, UnionMeta> {
+
+}
+
+public static interface JavaUnion<
+  UnionT extends com.foursquare.spindle.Record<UnionT>,
+  UnionRaw extends com.foursquare.spindle.MutableRecord<UnionT>,
+  UnionMeta extends JavaUnionMeta<UnionT, UnionRaw, UnionMeta>
+> extends com.foursquare.spindle.Record<UnionT> {
+
+}
+
+public static interface JavaUnionMutable<
+  UnionT extends com.foursquare.spindle.Record<UnionT>,
+  UnionRaw extends com.foursquare.spindle.MutableRecord<UnionT>,
+  UnionMeta extends JavaUnionMeta<UnionT, UnionRaw, UnionMeta>
+> extends JavaUnion<UnionT, UnionRaw, UnionMeta>,
+  com.foursquare.spindle.MutableRecord<UnionT> {
+
+}
+
+public static abstract class JavaUnionRaw<
+  UnionT extends com.foursquare.spindle.Record<UnionT>,
+  UnionRaw extends com.foursquare.spindle.MutableRecord<UnionT>,
+  UnionMeta extends JavaUnionMeta<UnionT, UnionRaw, UnionMeta>
+> implements com.foursquare.spindle.Record<UnionT>,
+  JavaUnionMutable<UnionT, UnionRaw, UnionMeta> {
+
+}
+public static abstract class JavaExceptionMeta<
+  ExceptionT extends com.foursquare.spindle.Record<ExceptionT>,
+  ExceptionRaw extends com.foursquare.spindle.MutableRecord<ExceptionT>,
+  ExceptionMeta extends JavaExceptionMeta<ExceptionT, ExceptionRaw, ExceptionMeta>
+> implements com.foursquare.spindle.MetaRecord<ExceptionT, ExceptionMeta> {
+
+}
+
+public static interface JavaException<
+  ExceptionT extends com.foursquare.spindle.Record<ExceptionT>,
+  ExceptionRaw extends com.foursquare.spindle.MutableRecord<ExceptionT>,
+  ExceptionMeta extends JavaExceptionMeta<ExceptionT, ExceptionRaw, ExceptionMeta>
+> extends com.foursquare.spindle.Record<ExceptionT> {
+
+}
+
+public static interface JavaExceptionMutable<
+  ExceptionT extends com.foursquare.spindle.Record<ExceptionT>,
+  ExceptionRaw extends com.foursquare.spindle.MutableRecord<ExceptionT>,
+  ExceptionMeta extends JavaExceptionMeta<ExceptionT, ExceptionRaw, ExceptionMeta>
+> extends JavaException<ExceptionT, ExceptionRaw, ExceptionMeta>,
+  com.foursquare.spindle.MutableRecord<ExceptionT> {
+
+}
+
+public static abstract class JavaExceptionRaw<
+  ExceptionT extends com.foursquare.spindle.Record<ExceptionT>,
+  ExceptionRaw extends com.foursquare.spindle.MutableRecord<ExceptionT>,
+  ExceptionMeta extends JavaExceptionMeta<ExceptionT, ExceptionRaw, ExceptionMeta>
+> implements com.foursquare.spindle.Record<ExceptionT>,
+  JavaExceptionMutable<ExceptionT, ExceptionRaw, ExceptionMeta> {
+
+}
+public static abstract class JavaFunctionMeta<
+  FunctionT extends com.foursquare.spindle.Record<FunctionT>,
+  FunctionRaw extends com.foursquare.spindle.MutableRecord<FunctionT>,
+  FunctionMeta extends JavaFunctionMeta<FunctionT, FunctionRaw, FunctionMeta>
+> implements com.foursquare.spindle.MetaRecord<FunctionT, FunctionMeta> {
+
+}
+
+public static interface JavaFunction<
+  FunctionT extends com.foursquare.spindle.Record<FunctionT>,
+  FunctionRaw extends com.foursquare.spindle.MutableRecord<FunctionT>,
+  FunctionMeta extends JavaFunctionMeta<FunctionT, FunctionRaw, FunctionMeta>
+> extends com.foursquare.spindle.Record<FunctionT> {
+
+}
+
+public static interface JavaFunctionMutable<
+  FunctionT extends com.foursquare.spindle.Record<FunctionT>,
+  FunctionRaw extends com.foursquare.spindle.MutableRecord<FunctionT>,
+  FunctionMeta extends JavaFunctionMeta<FunctionT, FunctionRaw, FunctionMeta>
+> extends JavaFunction<FunctionT, FunctionRaw, FunctionMeta>,
+  com.foursquare.spindle.MutableRecord<FunctionT> {
+
+}
+
+public static abstract class JavaFunctionRaw<
+  FunctionT extends com.foursquare.spindle.Record<FunctionT>,
+  FunctionRaw extends com.foursquare.spindle.MutableRecord<FunctionT>,
+  FunctionMeta extends JavaFunctionMeta<FunctionT, FunctionRaw, FunctionMeta>
+> implements com.foursquare.spindle.Record<FunctionT>,
+  JavaFunctionMutable<FunctionT, FunctionRaw, FunctionMeta> {
+
+}
+public static abstract class JavaServiceMeta<
+  ServiceT extends com.foursquare.spindle.Record<ServiceT>,
+  ServiceRaw extends com.foursquare.spindle.MutableRecord<ServiceT>,
+  ServiceMeta extends JavaServiceMeta<ServiceT, ServiceRaw, ServiceMeta>
+> implements com.foursquare.spindle.MetaRecord<ServiceT, ServiceMeta> {
+
+}
+
+public static interface JavaService<
+  ServiceT extends com.foursquare.spindle.Record<ServiceT>,
+  ServiceRaw extends com.foursquare.spindle.MutableRecord<ServiceT>,
+  ServiceMeta extends JavaServiceMeta<ServiceT, ServiceRaw, ServiceMeta>
+> extends com.foursquare.spindle.Record<ServiceT> {
+
+}
+
+public static interface JavaServiceMutable<
+  ServiceT extends com.foursquare.spindle.Record<ServiceT>,
+  ServiceRaw extends com.foursquare.spindle.MutableRecord<ServiceT>,
+  ServiceMeta extends JavaServiceMeta<ServiceT, ServiceRaw, ServiceMeta>
+> extends JavaService<ServiceT, ServiceRaw, ServiceMeta>,
+  com.foursquare.spindle.MutableRecord<ServiceT> {
+
+}
+
+public static abstract class JavaServiceRaw<
+  ServiceT extends com.foursquare.spindle.Record<ServiceT>,
+  ServiceRaw extends com.foursquare.spindle.MutableRecord<ServiceT>,
+  ServiceMeta extends JavaServiceMeta<ServiceT, ServiceRaw, ServiceMeta>
+> implements com.foursquare.spindle.Record<ServiceT>,
+  JavaServiceMutable<ServiceT, ServiceRaw, ServiceMeta> {
+
+}
+public static abstract class JavaProgramMeta<
+  ProgramT extends com.foursquare.spindle.Record<ProgramT>,
+  ProgramRaw extends com.foursquare.spindle.MutableRecord<ProgramT>,
+  ProgramMeta extends JavaProgramMeta<ProgramT, ProgramRaw, ProgramMeta>
+> implements com.foursquare.spindle.MetaRecord<ProgramT, ProgramMeta> {
+
+}
+
+public static interface JavaProgram<
+  ProgramT extends com.foursquare.spindle.Record<ProgramT>,
+  ProgramRaw extends com.foursquare.spindle.MutableRecord<ProgramT>,
+  ProgramMeta extends JavaProgramMeta<ProgramT, ProgramRaw, ProgramMeta>
+> extends com.foursquare.spindle.Record<ProgramT> {
+
+}
+
+public static interface JavaProgramMutable<
+  ProgramT extends com.foursquare.spindle.Record<ProgramT>,
+  ProgramRaw extends com.foursquare.spindle.MutableRecord<ProgramT>,
+  ProgramMeta extends JavaProgramMeta<ProgramT, ProgramRaw, ProgramMeta>
+> extends JavaProgram<ProgramT, ProgramRaw, ProgramMeta>,
+  com.foursquare.spindle.MutableRecord<ProgramT> {
+
+}
+
+public static abstract class JavaProgramRaw<
+  ProgramT extends com.foursquare.spindle.Record<ProgramT>,
+  ProgramRaw extends com.foursquare.spindle.MutableRecord<ProgramT>,
+  ProgramMeta extends JavaProgramMeta<ProgramT, ProgramRaw, ProgramMeta>
+> implements com.foursquare.spindle.Record<ProgramT>,
+  JavaProgramMutable<ProgramT, ProgramRaw, ProgramMeta> {
+
+}
+
+
+public static abstract class JavaSimpleContainerTypeMeta<
+  SimpleContainerTypeT extends com.foursquare.spindle.Record<SimpleContainerTypeT>,
+  SimpleContainerTypeRaw extends com.foursquare.spindle.MutableRecord<SimpleContainerTypeT>,
+  SimpleContainerTypeMeta extends JavaSimpleContainerTypeMeta<SimpleContainerTypeT, SimpleContainerTypeRaw, SimpleContainerTypeMeta>
+> implements com.foursquare.spindle.MetaRecord<SimpleContainerTypeT, SimpleContainerTypeMeta> {
+
+}
+
+public static interface JavaSimpleContainerType<
+  SimpleContainerTypeT extends com.foursquare.spindle.Record<SimpleContainerTypeT>,
+  SimpleContainerTypeRaw extends com.foursquare.spindle.MutableRecord<SimpleContainerTypeT>,
+  SimpleContainerTypeMeta extends JavaSimpleContainerTypeMeta<SimpleContainerTypeT, SimpleContainerTypeRaw, SimpleContainerTypeMeta>
+> extends com.foursquare.spindle.Record<SimpleContainerTypeT> {
+
+}
+
+public static interface JavaSimpleContainerTypeMutable<
+  SimpleContainerTypeT extends com.foursquare.spindle.Record<SimpleContainerTypeT>,
+  SimpleContainerTypeRaw extends com.foursquare.spindle.MutableRecord<SimpleContainerTypeT>,
+  SimpleContainerTypeMeta extends JavaSimpleContainerTypeMeta<SimpleContainerTypeT, SimpleContainerTypeRaw, SimpleContainerTypeMeta>
+> extends JavaSimpleContainerType<SimpleContainerTypeT, SimpleContainerTypeRaw, SimpleContainerTypeMeta>,
+  com.foursquare.spindle.MutableRecord<SimpleContainerTypeT> {
+
+}
+
+public static abstract class JavaSimpleContainerTypeRaw<
+  SimpleContainerTypeT extends com.foursquare.spindle.Record<SimpleContainerTypeT>,
+  SimpleContainerTypeRaw extends com.foursquare.spindle.MutableRecord<SimpleContainerTypeT>,
+  SimpleContainerTypeMeta extends JavaSimpleContainerTypeMeta<SimpleContainerTypeT, SimpleContainerTypeRaw, SimpleContainerTypeMeta>
+> implements com.foursquare.spindle.Record<SimpleContainerTypeT>,
+  JavaSimpleContainerTypeMutable<SimpleContainerTypeT, SimpleContainerTypeRaw, SimpleContainerTypeMeta> {
+
+}
+
+public static abstract class JavaSimpleTypeMeta<
+  SimpleTypeT extends com.foursquare.spindle.Record<SimpleTypeT>,
+  SimpleTypeRaw extends com.foursquare.spindle.MutableRecord<SimpleTypeT>,
+  SimpleTypeMeta extends JavaSimpleTypeMeta<SimpleTypeT, SimpleTypeRaw, SimpleTypeMeta>
+> implements com.foursquare.spindle.MetaRecord<SimpleTypeT, SimpleTypeMeta> {
+
+}
+
+public static interface JavaSimpleType<
+  SimpleTypeT extends com.foursquare.spindle.Record<SimpleTypeT>,
+  SimpleTypeRaw extends com.foursquare.spindle.MutableRecord<SimpleTypeT>,
+  SimpleTypeMeta extends JavaSimpleTypeMeta<SimpleTypeT, SimpleTypeRaw, SimpleTypeMeta>
+> extends com.foursquare.spindle.Record<SimpleTypeT> {
+
+}
+
+public static interface JavaSimpleTypeMutable<
+  SimpleTypeT extends com.foursquare.spindle.Record<SimpleTypeT>,
+  SimpleTypeRaw extends com.foursquare.spindle.MutableRecord<SimpleTypeT>,
+  SimpleTypeMeta extends JavaSimpleTypeMeta<SimpleTypeT, SimpleTypeRaw, SimpleTypeMeta>
+> extends JavaSimpleType<SimpleTypeT, SimpleTypeRaw, SimpleTypeMeta>,
+  com.foursquare.spindle.MutableRecord<SimpleTypeT> {
+
+}
+
+public static abstract class JavaSimpleTypeRaw<
+  SimpleTypeT extends com.foursquare.spindle.Record<SimpleTypeT>,
+  SimpleTypeRaw extends com.foursquare.spindle.MutableRecord<SimpleTypeT>,
+  SimpleTypeMeta extends JavaSimpleTypeMeta<SimpleTypeT, SimpleTypeRaw, SimpleTypeMeta>
+> implements com.foursquare.spindle.Record<SimpleTypeT>,
+  JavaSimpleTypeMutable<SimpleTypeT, SimpleTypeRaw, SimpleTypeMeta> {
+
+}
 
 
 }

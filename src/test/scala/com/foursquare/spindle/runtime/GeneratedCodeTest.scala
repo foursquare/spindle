@@ -4,7 +4,7 @@ package com.foursquare.spindle.test
 
 import com.foursquare.common.thrift.bson.TBSONProtocol
 import com.foursquare.common.thrift.json.TReadableJSONProtocol
-import com.foursquare.thriftexample.{Content, TvListingEntry}
+import com.foursquare.thriftexample.{Content, MutableTvListingEntry, TvListingEntry}
 import com.foursquare.thriftexample.av.Movie
 import com.foursquare.thriftexample.av.MovieTypedefs.MovieId
 import com.foursquare.thriftexample.people.{ContactInfo, Gender, Person, PhoneNumber, PhoneType}
@@ -77,7 +77,7 @@ class GeneratedCodeTest {
     movie
   }
 
-  private def makeTvListingEntry(): TvListingEntry.Mutable = {
+  private def makeTvListingEntry(): MutableTvListingEntry = {
     (TvListingEntry
       .newBuilder
       .startTime("2012-01-18 20:00:00")
