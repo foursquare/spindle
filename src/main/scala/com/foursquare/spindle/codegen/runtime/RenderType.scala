@@ -9,7 +9,11 @@ class NotImplementedException(s: String) extends Exception(s)
 trait RenderType {
   def text: String
   def javaText: String = text
+  def javaContainerText: String = javaText
+  def javaTypeParameters: Seq[RenderType] = Nil
+  def javaUnderlying: String = javaText
   def boxedText: String
+  def javaBoxedText: String = boxedText
   def defaultText: String
   def javaDefaultText: String = defaultText
   def compareTemplate: String
@@ -51,6 +55,8 @@ case class PrimitiveRenderType(
     case _ => throw new IllegalArgumentException("Unrecognized protocol suffix for ttype " + ttype)
   }
 
+  override def javaContainerText: String = "scala.%s".format(text)
+  override def javaUnderlying: String = javaBoxedText
   override def compareTemplate = "compare/primitive.ssp"
   override def fieldDefTemplate: String = "field/def_primitive.ssp"
   override def fieldImplTemplate: String = "field/impl_primitive.ssp"
@@ -116,6 +122,10 @@ case class EnumRenderType(override val text: String) extends RefRenderType {
 }
 
 case class StructRenderType(override val text: String) extends RefRenderType {
+  override def javaText: String = text.replace(".", "_")
+  override def javaContainerText: String = javaText
+  override def javaTypeParameters: Seq[RenderType] = Vector(this)
+  override def javaUnderlying: String = "com.foursquare.spindle.Record<?>"
   override def fieldWriteTemplate: String = "write/struct.ssp"
   override def fieldReadTemplate: String = "read/struct.ssp"
   override def ttype: TType = TType.STRUCT
@@ -124,6 +134,7 @@ case class StructRenderType(override val text: String) extends RefRenderType {
 
 case class ThriftJsonRenderType(ref: RenderType) extends RefRenderType with EnhancedRenderType {
   override def text: String = "net.liftweb.json.JObject"
+  override def javaText: String = "net.liftweb.json.JsonAST.JObject"
   override def fieldWriteTemplate: String = "write/json.ssp"
   override def fieldReadTemplate: String = "read/json.ssp"
   override def compareTemplate = "compare/json.ssp"
@@ -143,7 +154,9 @@ trait ContainerRenderType extends RefRenderType {
 
 abstract class Container1RenderType(override val container: String, val elem: RenderType) extends ContainerRenderType {
   override def text: String = "%s[%s]".format(container, elem.text)
-  override def javaText: String = "%s<%s>".format(container, elem.javaText)
+  override def javaText: String = "%s<%s>".format(container, elem.javaContainerText)
+  override def javaTypeParameters: Seq[RenderType] = elem.javaTypeParameters
+  override def javaUnderlying: String = "%s<%s>".format(container, elem.javaUnderlying)
 }
 
 // TODO(jorge): Make this immutable.Seq
@@ -179,7 +192,9 @@ case class SetRenderType(e1: RenderType) extends Container1RenderType("scala.col
 
 abstract class Container2RenderType(override val container: String, val elem1: RenderType, val elem2: RenderType) extends ContainerRenderType {
   override def text: String = "%s[%s, %s]".format(container, elem1.text, elem2.text)
-  override def javaText: String = "%s<%s, %s>".format(container, elem1.javaText, elem2.javaText)
+  override def javaText: String = "%s<%s, %s>".format(container, elem1.javaContainerText, elem2.javaContainerText)
+  override def javaTypeParameters: Seq[RenderType] = elem1.javaTypeParameters ++ elem2.javaTypeParameters
+  override def javaUnderlying: String = "%s<%s, %s>".format(container, elem1.javaUnderlying, elem2.javaUnderlying)
 }
 
 case class MapRenderType(e1: RenderType, e2: RenderType) extends Container2RenderType("scala.collection.immutable.Map", e1, e2) {
@@ -211,6 +226,10 @@ case class MapRenderType(e1: RenderType, e2: RenderType) extends Container2Rende
 }
 
 case class TypedefRenderType(override val text: String, ref: RenderType) extends RenderType {
+  override def javaText: String = ref.javaText
+  override def javaContainerText: String = ref.javaContainerText
+  override def javaTypeParameters: Seq[RenderType] = ref.javaTypeParameters
+  override def javaUnderlying: String = ref.javaUnderlying
   override def boxedText: String = ref.boxedText
   override def defaultText: String = ref.defaultText
   override def fieldDefTemplate: String = ref.fieldDefTemplate
@@ -234,6 +253,11 @@ case class TypedefRenderType(override val text: String, ref: RenderType) extends
 }
 
 case class NewtypeRenderType(override val text: String, ref: RenderType) extends RenderType {
+  override def javaText: String = text.replace(".", "_")
+  override def javaBoxedText: String = javaText
+  override def javaContainerText: String = javaText
+  override def javaTypeParameters: Seq[RenderType] = Vector(this)
+  override def javaUnderlying: String = ref.javaUnderlying
   override def boxedText: String = text
   override def defaultText: String = text + "(" + ref.defaultText + ")"
   override def fieldDefTemplate: String = ref.fieldDefTemplate
@@ -336,11 +360,14 @@ case class BitfieldStructRenderType(
 ) extends RenderType {
   override def boxedText: String = ref.boxedText
   override def text: String = ref.text
+  override def javaText: String = ref.javaText
+  override def javaContainerText: String = ref.javaContainerText
+  override def javaTypeParameters: Seq[RenderType] = ref.javaTypeParameters
   override def defaultText: String = ref.defaultText
   override def compareTemplate: String = "compare/primitive.ssp"
   override def fieldDefTemplate: String = "field/def_bitfield.ssp"
   override def fieldImplTemplate: String = "field/impl_bitfield.ssp"
-  override def fieldProxyTemplate: String = "field/proxy_primitive.ssp"
+  override def fieldProxyTemplate: String = "field/proxy_bitfield.ssp"
   override def fieldMutableTemplate: String = "field/mutable.ssp"
   override def fieldMutableProxyTemplate: String = "field/mutableproxy.ssp"
   override def fieldWriteTemplate: String = "write/bitfield.ssp"
