@@ -71,7 +71,7 @@ object Default {
   )
 
   val scala: Seq[Setting[_]] = Default.all ++ Seq(
-    Keys.scalaVersion := "2.9.1",
+    Keys.scalaVersion := "2.9.2",
     Keys.crossScalaVersions := Seq("2.9.1", "2.9.2", "2.10.3"),
     Keys.scalacOptions <++= (Keys.scalaVersion).map(v => {
       val opts =
