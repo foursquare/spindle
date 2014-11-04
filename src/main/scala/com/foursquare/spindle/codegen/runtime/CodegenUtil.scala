@@ -10,6 +10,14 @@ object CodegenUtil {
     "protected", "return", "sealed", "super", "this", "throw", "trait", "try", "true", "type", "val", "var", "while",
     "with", "yield")
 
+  // Java reserved words from http://docs.oracle.com/javase/tutorial/java/nutsandbolts/_keywords.html
+  val JavaReservedWords = Set(
+    "abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default",
+    "do", "double", "else", "enum", "extends", "final", "finally", "float", "for", "goto", "if", "implements",
+    "import", "instanceof", "int", "interface", "long", "native", "new", "package", "private", "protected", "public",
+    "return", "short", "static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient",
+    "try", "void", "volatile", "while")
+
   val RecordReservedWords = Set(
     // from Record.scala
     "meta",
@@ -27,7 +35,7 @@ object CodegenUtil {
     // from Object.java
     "toString", "equals", "hashCode")
 
-  val ReservedWords = ScalaReservedWords ++ RecordReservedWords
+  val ReservedWords = ScalaReservedWords ++ JavaReservedWords ++ RecordReservedWords
 
   def escapeScalaFieldName(name: String): String = {
     if (ReservedWords.contains(name)) "__" + name else name

@@ -5,7 +5,9 @@
 %>
 <%@ val cls: StructLike %>
 trait Mutable${cls.name} extends ${cls.name}
-  with Java${cls.name}Mutable[${cls.name}, Raw${cls.name}, ${cls.name}Meta] {
+    with Java${cls.name}Mutable[#if (cls.typeParameterFields.nonEmpty)${cls.typeParameterFields.map(_.text).distinct.mkString(", ")},#end<%----%>
+      ${cls.name}, Raw${cls.name}, ${cls.name}Meta
+    ] {
 #for (field <- cls.fields)
 <% render(field.renderType.fieldMutableTemplate, Map("field" -> field)) %>
 #end

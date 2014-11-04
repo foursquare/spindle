@@ -272,20 +272,15 @@ class IncludeCompanionProvider extends com.foursquare.spindle.CompanionProvider[
 }
 
 
-
 trait Include
 
-    extends JavaInclude[Include, RawInclude, IncludeMeta]
+    extends JavaInclude[
+      Include, RawInclude, IncludeMeta
+    ]
     with org.apache.thrift.TBase[Include, Include._Fields] {
 
   override def meta: IncludeMeta
 
-
-  def path: String
-  def pathOption: Option[String]
-  def pathOrNull: String
-  def pathOrThrow: String
-  def pathIsSet: Boolean
   override def compare(that: Include): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -346,7 +341,9 @@ trait Include
 }
 
 trait MutableInclude extends Include
-  with JavaIncludeMutable[Include, RawInclude, IncludeMeta] {
+    with JavaIncludeMutable[
+      Include, RawInclude, IncludeMeta
+    ] {
   def path_=(x: String): Unit
   def pathUnset(): Unit
 
@@ -362,8 +359,10 @@ trait MutableInclude extends Include
 
 
 
-
-final class RawInclude extends JavaIncludeRaw[Include, RawInclude, IncludeMeta] with MutableInclude {
+final class RawInclude extends JavaIncludeRaw[
+      Include, RawInclude, IncludeMeta
+    ]
+    with MutableInclude {
   override def meta: IncludeMeta = Include
 
   // Field #1 - path
@@ -685,26 +684,15 @@ class NamespaceCompanionProvider extends com.foursquare.spindle.CompanionProvide
 }
 
 
-
 trait Namespace
 
-    extends JavaNamespace[Namespace, RawNamespace, NamespaceMeta]
+    extends JavaNamespace[
+      Namespace, RawNamespace, NamespaceMeta
+    ]
     with org.apache.thrift.TBase[Namespace, Namespace._Fields] {
 
   override def meta: NamespaceMeta
 
-
-  def language: String
-  def languageOption: Option[String]
-  def languageOrNull: String
-  def languageOrThrow: String
-  def languageIsSet: Boolean
-
-  def name: String
-  def nameOption: Option[String]
-  def nameOrNull: String
-  def nameOrThrow: String
-  def nameIsSet: Boolean
   override def compare(that: Namespace): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -776,7 +764,9 @@ trait Namespace
 }
 
 trait MutableNamespace extends Namespace
-  with JavaNamespaceMutable[Namespace, RawNamespace, NamespaceMeta] {
+    with JavaNamespaceMutable[
+      Namespace, RawNamespace, NamespaceMeta
+    ] {
   def language_=(x: String): Unit
   def languageUnset(): Unit
   def name_=(x: String): Unit
@@ -795,8 +785,10 @@ trait MutableNamespace extends Namespace
 
 
 
-
-final class RawNamespace extends JavaNamespaceRaw[Namespace, RawNamespace, NamespaceMeta] with MutableNamespace {
+final class RawNamespace extends JavaNamespaceRaw[
+      Namespace, RawNamespace, NamespaceMeta
+    ]
+    with MutableNamespace {
   override def meta: NamespaceMeta = Namespace
 
   // Field #1 - language
@@ -1153,26 +1145,15 @@ class AnnotationCompanionProvider extends com.foursquare.spindle.CompanionProvid
 }
 
 
-
 trait Annotation
 
-    extends JavaAnnotation[Annotation, RawAnnotation, AnnotationMeta]
+    extends JavaAnnotation[
+      Annotation, RawAnnotation, AnnotationMeta
+    ]
     with org.apache.thrift.TBase[Annotation, Annotation._Fields] {
 
   override def meta: AnnotationMeta
 
-
-  def key: String
-  def keyOption: Option[String]
-  def keyOrNull: String
-  def keyOrThrow: String
-  def keyIsSet: Boolean
-
-  def value: String
-  def valueOption: Option[String]
-  def valueOrNull: String
-  def valueOrThrow: String
-  def valueIsSet: Boolean
   override def compare(that: Annotation): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -1244,7 +1225,9 @@ trait Annotation
 }
 
 trait MutableAnnotation extends Annotation
-  with JavaAnnotationMutable[Annotation, RawAnnotation, AnnotationMeta] {
+    with JavaAnnotationMutable[
+      Annotation, RawAnnotation, AnnotationMeta
+    ] {
   def key_=(x: String): Unit
   def keyUnset(): Unit
   def value_=(x: String): Unit
@@ -1263,8 +1246,10 @@ trait MutableAnnotation extends Annotation
 
 
 
-
-final class RawAnnotation extends JavaAnnotationRaw[Annotation, RawAnnotation, AnnotationMeta] with MutableAnnotation {
+final class RawAnnotation extends JavaAnnotationRaw[
+      Annotation, RawAnnotation, AnnotationMeta
+    ]
+    with MutableAnnotation {
   override def meta: AnnotationMeta = Annotation
 
   // Field #1 - key
@@ -1628,26 +1613,15 @@ class BaseTypeCompanionProvider extends com.foursquare.spindle.CompanionProvider
 }
 
 
-
 trait BaseType
 
-    extends JavaBaseType[BaseType, RawBaseType, BaseTypeMeta]
+    extends JavaBaseType[com.twitter.thrift.descriptors.Annotation,
+      BaseType, RawBaseType, BaseTypeMeta
+    ]
     with org.apache.thrift.TBase[BaseType, BaseType._Fields] {
 
   override def meta: BaseTypeMeta
 
-
-  def simpleBaseType: com.twitter.thrift.descriptors.SimpleBaseType
-  def simpleBaseTypeOption: Option[com.twitter.thrift.descriptors.SimpleBaseType]
-  def simpleBaseTypeOrNull: com.twitter.thrift.descriptors.SimpleBaseType
-  def simpleBaseTypeOrThrow: com.twitter.thrift.descriptors.SimpleBaseType
-  def simpleBaseTypeIsSet: Boolean
-  def __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
-  def annotationsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsIsSet: Boolean
   override def compare(that: BaseType): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -1719,7 +1693,9 @@ trait BaseType
 }
 
 trait MutableBaseType extends BaseType
-  with JavaBaseTypeMutable[BaseType, RawBaseType, BaseTypeMeta] {
+    with JavaBaseTypeMutable[com.twitter.thrift.descriptors.Annotation,
+      BaseType, RawBaseType, BaseTypeMeta
+    ] {
   def simpleBaseType_=(x: com.twitter.thrift.descriptors.SimpleBaseType): Unit
   def simpleBaseTypeUnset(): Unit
   def __annotations_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Unit
@@ -1738,8 +1714,10 @@ trait MutableBaseType extends BaseType
 
 
 
-
-final class RawBaseType extends JavaBaseTypeRaw[BaseType, RawBaseType, BaseTypeMeta] with MutableBaseType {
+final class RawBaseType extends JavaBaseTypeRaw[com.twitter.thrift.descriptors.Annotation,
+      BaseType, RawBaseType, BaseTypeMeta
+    ]
+    with MutableBaseType {
   override def meta: BaseTypeMeta = BaseType
 
   // Field #1 - simpleBaseType
@@ -1852,7 +1830,7 @@ final class RawBaseType extends JavaBaseTypeRaw[BaseType, RawBaseType, BaseTypeM
       this.__annotations_=(that.annotationsOrDefault)
 
     } else if (that.annotationsIsSet && this.annotationsIsSet) {
-      this.__annotations ++= that.__annotations
+      this.__annotations_=(this.__annotations ++ that.__annotations)
     }
   }
 
@@ -2083,20 +2061,15 @@ class ListTypeCompanionProvider extends com.foursquare.spindle.CompanionProvider
 }
 
 
-
 trait ListType
 
-    extends JavaListType[ListType, RawListType, ListTypeMeta]
+    extends JavaListType[
+      ListType, RawListType, ListTypeMeta
+    ]
     with org.apache.thrift.TBase[ListType, ListType._Fields] {
 
   override def meta: ListTypeMeta
 
-
-  def elementTypeId: String
-  def elementTypeIdOption: Option[String]
-  def elementTypeIdOrNull: String
-  def elementTypeIdOrThrow: String
-  def elementTypeIdIsSet: Boolean
   override def compare(that: ListType): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -2157,7 +2130,9 @@ trait ListType
 }
 
 trait MutableListType extends ListType
-  with JavaListTypeMutable[ListType, RawListType, ListTypeMeta] {
+    with JavaListTypeMutable[
+      ListType, RawListType, ListTypeMeta
+    ] {
   def elementTypeId_=(x: String): Unit
   def elementTypeIdUnset(): Unit
 
@@ -2173,8 +2148,10 @@ trait MutableListType extends ListType
 
 
 
-
-final class RawListType extends JavaListTypeRaw[ListType, RawListType, ListTypeMeta] with MutableListType {
+final class RawListType extends JavaListTypeRaw[
+      ListType, RawListType, ListTypeMeta
+    ]
+    with MutableListType {
   override def meta: ListTypeMeta = ListType
 
   // Field #1 - elementTypeId
@@ -2460,20 +2437,15 @@ class SetTypeCompanionProvider extends com.foursquare.spindle.CompanionProvider[
 }
 
 
-
 trait SetType
 
-    extends JavaSetType[SetType, RawSetType, SetTypeMeta]
+    extends JavaSetType[
+      SetType, RawSetType, SetTypeMeta
+    ]
     with org.apache.thrift.TBase[SetType, SetType._Fields] {
 
   override def meta: SetTypeMeta
 
-
-  def elementTypeId: String
-  def elementTypeIdOption: Option[String]
-  def elementTypeIdOrNull: String
-  def elementTypeIdOrThrow: String
-  def elementTypeIdIsSet: Boolean
   override def compare(that: SetType): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -2534,7 +2506,9 @@ trait SetType
 }
 
 trait MutableSetType extends SetType
-  with JavaSetTypeMutable[SetType, RawSetType, SetTypeMeta] {
+    with JavaSetTypeMutable[
+      SetType, RawSetType, SetTypeMeta
+    ] {
   def elementTypeId_=(x: String): Unit
   def elementTypeIdUnset(): Unit
 
@@ -2550,8 +2524,10 @@ trait MutableSetType extends SetType
 
 
 
-
-final class RawSetType extends JavaSetTypeRaw[SetType, RawSetType, SetTypeMeta] with MutableSetType {
+final class RawSetType extends JavaSetTypeRaw[
+      SetType, RawSetType, SetTypeMeta
+    ]
+    with MutableSetType {
   override def meta: SetTypeMeta = SetType
 
   // Field #1 - elementTypeId
@@ -2873,26 +2849,15 @@ class MapTypeCompanionProvider extends com.foursquare.spindle.CompanionProvider[
 }
 
 
-
 trait MapType
 
-    extends JavaMapType[MapType, RawMapType, MapTypeMeta]
+    extends JavaMapType[
+      MapType, RawMapType, MapTypeMeta
+    ]
     with org.apache.thrift.TBase[MapType, MapType._Fields] {
 
   override def meta: MapTypeMeta
 
-
-  def keyTypeId: String
-  def keyTypeIdOption: Option[String]
-  def keyTypeIdOrNull: String
-  def keyTypeIdOrThrow: String
-  def keyTypeIdIsSet: Boolean
-
-  def valueTypeId: String
-  def valueTypeIdOption: Option[String]
-  def valueTypeIdOrNull: String
-  def valueTypeIdOrThrow: String
-  def valueTypeIdIsSet: Boolean
   override def compare(that: MapType): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -2964,7 +2929,9 @@ trait MapType
 }
 
 trait MutableMapType extends MapType
-  with JavaMapTypeMutable[MapType, RawMapType, MapTypeMeta] {
+    with JavaMapTypeMutable[
+      MapType, RawMapType, MapTypeMeta
+    ] {
   def keyTypeId_=(x: String): Unit
   def keyTypeIdUnset(): Unit
   def valueTypeId_=(x: String): Unit
@@ -2983,8 +2950,10 @@ trait MutableMapType extends MapType
 
 
 
-
-final class RawMapType extends JavaMapTypeRaw[MapType, RawMapType, MapTypeMeta] with MutableMapType {
+final class RawMapType extends JavaMapTypeRaw[
+      MapType, RawMapType, MapTypeMeta
+    ]
+    with MutableMapType {
   override def meta: MapTypeMeta = MapType
 
   // Field #1 - keyTypeId
@@ -3348,26 +3317,15 @@ class ContainerTypeCompanionProvider extends com.foursquare.spindle.CompanionPro
 }
 
 
-
 trait ContainerType
 
-    extends JavaContainerType[ContainerType, RawContainerType, ContainerTypeMeta]
+    extends JavaContainerType[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.SimpleContainerType,
+      ContainerType, RawContainerType, ContainerTypeMeta
+    ]
     with org.apache.thrift.TBase[ContainerType, ContainerType._Fields] {
 
   override def meta: ContainerTypeMeta
 
-
-  def simpleContainerType: com.twitter.thrift.descriptors.SimpleContainerType
-  def simpleContainerTypeOption: Option[com.twitter.thrift.descriptors.SimpleContainerType]
-  def simpleContainerTypeOrNull: com.twitter.thrift.descriptors.SimpleContainerType
-  def simpleContainerTypeOrThrow: com.twitter.thrift.descriptors.SimpleContainerType
-  def simpleContainerTypeIsSet: Boolean
-  def __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
-  def annotationsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsIsSet: Boolean
   override def compare(that: ContainerType): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -3439,7 +3397,9 @@ trait ContainerType
 }
 
 trait MutableContainerType extends ContainerType
-  with JavaContainerTypeMutable[ContainerType, RawContainerType, ContainerTypeMeta] {
+    with JavaContainerTypeMutable[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.SimpleContainerType,
+      ContainerType, RawContainerType, ContainerTypeMeta
+    ] {
   def simpleContainerType_=(x: com.twitter.thrift.descriptors.SimpleContainerType): Unit
   def simpleContainerTypeUnset(): Unit
   def __annotations_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]): Unit
@@ -3458,8 +3418,10 @@ trait MutableContainerType extends ContainerType
 
 
 
-
-final class RawContainerType extends JavaContainerTypeRaw[ContainerType, RawContainerType, ContainerTypeMeta] with MutableContainerType {
+final class RawContainerType extends JavaContainerTypeRaw[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.SimpleContainerType,
+      ContainerType, RawContainerType, ContainerTypeMeta
+    ]
+    with MutableContainerType {
   override def meta: ContainerTypeMeta = ContainerType
 
   // Field #1 - simpleContainerType
@@ -3576,7 +3538,7 @@ final class RawContainerType extends JavaContainerTypeRaw[ContainerType, RawCont
       this.__annotations_=(that.annotationsOrDefault)
 
     } else if (that.annotationsIsSet && this.annotationsIsSet) {
-      this.__annotations ++= that.__annotations
+      this.__annotations_=(this.__annotations ++ that.__annotations)
     }
   }
 
@@ -3807,20 +3769,15 @@ class TyperefCompanionProvider extends com.foursquare.spindle.CompanionProvider[
 }
 
 
-
 trait Typeref
 
-    extends JavaTyperef[Typeref, RawTyperef, TyperefMeta]
+    extends JavaTyperef[
+      Typeref, RawTyperef, TyperefMeta
+    ]
     with org.apache.thrift.TBase[Typeref, Typeref._Fields] {
 
   override def meta: TyperefMeta
 
-
-  def typeAlias: String
-  def typeAliasOption: Option[String]
-  def typeAliasOrNull: String
-  def typeAliasOrThrow: String
-  def typeAliasIsSet: Boolean
   override def compare(that: Typeref): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -3881,7 +3838,9 @@ trait Typeref
 }
 
 trait MutableTyperef extends Typeref
-  with JavaTyperefMutable[Typeref, RawTyperef, TyperefMeta] {
+    with JavaTyperefMutable[
+      Typeref, RawTyperef, TyperefMeta
+    ] {
   def typeAlias_=(x: String): Unit
   def typeAliasUnset(): Unit
 
@@ -3897,8 +3856,10 @@ trait MutableTyperef extends Typeref
 
 
 
-
-final class RawTyperef extends JavaTyperefRaw[Typeref, RawTyperef, TyperefMeta] with MutableTyperef {
+final class RawTyperef extends JavaTyperefRaw[
+      Typeref, RawTyperef, TyperefMeta
+    ]
+    with MutableTyperef {
   override def meta: TyperefMeta = Typeref
 
   // Field #1 - typeAlias
@@ -4220,26 +4181,15 @@ class TypeCompanionProvider extends com.foursquare.spindle.CompanionProvider[Typ
 }
 
 
-
 trait Type
 
-    extends JavaType[Type, RawType, TypeMeta]
+    extends JavaType[com.twitter.thrift.descriptors.SimpleType,
+      Type, RawType, TypeMeta
+    ]
     with org.apache.thrift.TBase[Type, Type._Fields] {
 
   override def meta: TypeMeta
 
-
-  def id: String
-  def idOption: Option[String]
-  def idOrNull: String
-  def idOrThrow: String
-  def idIsSet: Boolean
-
-  def simpleType: com.twitter.thrift.descriptors.SimpleType
-  def simpleTypeOption: Option[com.twitter.thrift.descriptors.SimpleType]
-  def simpleTypeOrNull: com.twitter.thrift.descriptors.SimpleType
-  def simpleTypeOrThrow: com.twitter.thrift.descriptors.SimpleType
-  def simpleTypeIsSet: Boolean
   override def compare(that: Type): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -4311,7 +4261,9 @@ trait Type
 }
 
 trait MutableType extends Type
-  with JavaTypeMutable[Type, RawType, TypeMeta] {
+    with JavaTypeMutable[com.twitter.thrift.descriptors.SimpleType,
+      Type, RawType, TypeMeta
+    ] {
   def id_=(x: String): Unit
   def idUnset(): Unit
   def simpleType_=(x: com.twitter.thrift.descriptors.SimpleType): Unit
@@ -4330,8 +4282,10 @@ trait MutableType extends Type
 
 
 
-
-final class RawType extends JavaTypeRaw[Type, RawType, TypeMeta] with MutableType {
+final class RawType extends JavaTypeRaw[com.twitter.thrift.descriptors.SimpleType,
+      Type, RawType, TypeMeta
+    ]
+    with MutableType {
   override def meta: TypeMeta = Type
 
   // Field #1 - id
@@ -4737,32 +4691,15 @@ class TypedefCompanionProvider extends com.foursquare.spindle.CompanionProvider[
 }
 
 
-
 trait Typedef
 
-    extends JavaTypedef[Typedef, RawTypedef, TypedefMeta]
+    extends JavaTypedef[com.twitter.thrift.descriptors.Annotation,
+      Typedef, RawTypedef, TypedefMeta
+    ]
     with org.apache.thrift.TBase[Typedef, Typedef._Fields] {
 
   override def meta: TypedefMeta
 
-
-  def typeId: String
-  def typeIdOption: Option[String]
-  def typeIdOrNull: String
-  def typeIdOrThrow: String
-  def typeIdIsSet: Boolean
-
-  def typeAlias: String
-  def typeAliasOption: Option[String]
-  def typeAliasOrNull: String
-  def typeAliasOrThrow: String
-  def typeAliasIsSet: Boolean
-  def __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
-  def annotationsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsIsSet: Boolean
   override def compare(that: Typedef): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -4845,7 +4782,9 @@ trait Typedef
 }
 
 trait MutableTypedef extends Typedef
-  with JavaTypedefMutable[Typedef, RawTypedef, TypedefMeta] {
+    with JavaTypedefMutable[com.twitter.thrift.descriptors.Annotation,
+      Typedef, RawTypedef, TypedefMeta
+    ] {
   def typeId_=(x: String): Unit
   def typeIdUnset(): Unit
   def typeAlias_=(x: String): Unit
@@ -4950,8 +4889,10 @@ trait MutableTypedefProxy extends MutableTypedef with TypedefProxy {
 
 
 
-
-final class RawTypedef extends JavaTypedefRaw[Typedef, RawTypedef, TypedefMeta] with MutableTypedef {
+final class RawTypedef extends JavaTypedefRaw[com.twitter.thrift.descriptors.Annotation,
+      Typedef, RawTypedef, TypedefMeta
+    ]
+    with MutableTypedef {
   override def meta: TypedefMeta = Typedef
 
   // Field #1 - typeId
@@ -5089,7 +5030,7 @@ final class RawTypedef extends JavaTypedefRaw[Typedef, RawTypedef, TypedefMeta] 
       this.__annotations_=(that.annotationsOrDefault)
 
     } else if (that.annotationsIsSet && this.annotationsIsSet) {
-      this.__annotations ++= that.__annotations
+      this.__annotations_=(this.__annotations ++ that.__annotations)
     }
   }
 
@@ -5366,26 +5307,15 @@ class TypeRegistryCompanionProvider extends com.foursquare.spindle.CompanionProv
 }
 
 
-
 trait TypeRegistry
 
-    extends JavaTypeRegistry[TypeRegistry, RawTypeRegistry, TypeRegistryMeta]
+    extends JavaTypeRegistry[com.twitter.thrift.descriptors.Type,
+      TypeRegistry, RawTypeRegistry, TypeRegistryMeta
+    ]
     with org.apache.thrift.TBase[TypeRegistry, TypeRegistry._Fields] {
 
   override def meta: TypeRegistryMeta
 
-  def idToType: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]
-  def idToTypeOption: Option[scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]]
-  def idToTypeOrDefault: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]
-  def idToTypeOrNull: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]
-  def idToTypeOrThrow: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]
-  def idToTypeIsSet: Boolean
-  def aliasToTypeId: scala.collection.immutable.Map[String, String]
-  def aliasToTypeIdOption: Option[scala.collection.immutable.Map[String, String]]
-  def aliasToTypeIdOrDefault: scala.collection.immutable.Map[String, String]
-  def aliasToTypeIdOrNull: scala.collection.immutable.Map[String, String]
-  def aliasToTypeIdOrThrow: scala.collection.immutable.Map[String, String]
-  def aliasToTypeIdIsSet: Boolean
   override def compare(that: TypeRegistry): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -5457,7 +5387,9 @@ trait TypeRegistry
 }
 
 trait MutableTypeRegistry extends TypeRegistry
-  with JavaTypeRegistryMutable[TypeRegistry, RawTypeRegistry, TypeRegistryMeta] {
+    with JavaTypeRegistryMutable[com.twitter.thrift.descriptors.Type,
+      TypeRegistry, RawTypeRegistry, TypeRegistryMeta
+    ] {
   def idToType_=(x: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]): Unit
   def idToTypeUnset(): Unit
   def aliasToTypeId_=(x: scala.collection.immutable.Map[String, String]): Unit
@@ -5476,8 +5408,10 @@ trait MutableTypeRegistry extends TypeRegistry
 
 
 
-
-final class RawTypeRegistry extends JavaTypeRegistryRaw[TypeRegistry, RawTypeRegistry, TypeRegistryMeta] with MutableTypeRegistry {
+final class RawTypeRegistry extends JavaTypeRegistryRaw[com.twitter.thrift.descriptors.Type,
+      TypeRegistry, RawTypeRegistry, TypeRegistryMeta
+    ]
+    with MutableTypeRegistry {
   override def meta: TypeRegistryMeta = TypeRegistry
 
   // Field #1 - idToType
@@ -5609,13 +5543,13 @@ final class RawTypeRegistry extends JavaTypeRegistryRaw[TypeRegistry, RawTypeReg
       this.idToType_=(that.idToTypeOrNull)
 
     } else if (that.idToTypeIsSet && this.idToTypeIsSet) {
-      this.idToType ++= that.idToType
+      this.idToType_=(this.idToType ++ that.idToType)
     }
     if (that.aliasToTypeIdIsSet && !this.aliasToTypeIdIsSet) {
       this.aliasToTypeId_=(that.aliasToTypeIdOrNull)
 
     } else if (that.aliasToTypeIdIsSet && this.aliasToTypeIdIsSet) {
-      this.aliasToTypeId ++= that.aliasToTypeId
+      this.aliasToTypeId_=(this.aliasToTypeId ++ that.aliasToTypeId)
     }
   }
 
@@ -5920,32 +5854,15 @@ class ConstCompanionProvider extends com.foursquare.spindle.CompanionProvider[Co
 }
 
 
-
 trait Const
 
-    extends JavaConst[Const, RawConst, ConstMeta]
+    extends JavaConst[
+      Const, RawConst, ConstMeta
+    ]
     with org.apache.thrift.TBase[Const, Const._Fields] {
 
   override def meta: ConstMeta
 
-
-  def typeId: String
-  def typeIdOption: Option[String]
-  def typeIdOrNull: String
-  def typeIdOrThrow: String
-  def typeIdIsSet: Boolean
-
-  def name: String
-  def nameOption: Option[String]
-  def nameOrNull: String
-  def nameOrThrow: String
-  def nameIsSet: Boolean
-
-  def value: String
-  def valueOption: Option[String]
-  def valueOrNull: String
-  def valueOrThrow: String
-  def valueIsSet: Boolean
   override def compare(that: Const): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -6028,7 +5945,9 @@ trait Const
 }
 
 trait MutableConst extends Const
-  with JavaConstMutable[Const, RawConst, ConstMeta] {
+    with JavaConstMutable[
+      Const, RawConst, ConstMeta
+    ] {
   def typeId_=(x: String): Unit
   def typeIdUnset(): Unit
   def name_=(x: String): Unit
@@ -6133,8 +6052,10 @@ trait MutableConstProxy extends MutableConst with ConstProxy {
 
 
 
-
-final class RawConst extends JavaConstRaw[Const, RawConst, ConstMeta] with MutableConst {
+final class RawConst extends JavaConstRaw[
+      Const, RawConst, ConstMeta
+    ]
+    with MutableConst {
   override def meta: ConstMeta = Const
 
   // Field #1 - typeId
@@ -6571,32 +6492,15 @@ class EnumElementCompanionProvider extends com.foursquare.spindle.CompanionProvi
 }
 
 
-
 trait EnumElement
 
-    extends JavaEnumElement[EnumElement, RawEnumElement, EnumElementMeta]
+    extends JavaEnumElement[com.twitter.thrift.descriptors.Annotation,
+      EnumElement, RawEnumElement, EnumElementMeta
+    ]
     with org.apache.thrift.TBase[EnumElement, EnumElement._Fields] {
 
   override def meta: EnumElementMeta
 
-
-  def name: String
-  def nameOption: Option[String]
-  def nameOrNull: String
-  def nameOrThrow: String
-  def nameIsSet: Boolean
-  def value: Int
-  def valueOption: Option[Int]
-  def valueOrDefault: Int
-  def valueOrNull: java.lang.Integer
-  def valueOrThrow: Int
-  def valueIsSet: Boolean
-  def __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
-  def annotationsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsIsSet: Boolean
   override def compare(that: EnumElement): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -6680,7 +6584,9 @@ trait EnumElement
 }
 
 trait MutableEnumElement extends EnumElement
-  with JavaEnumElementMutable[EnumElement, RawEnumElement, EnumElementMeta] {
+    with JavaEnumElementMutable[com.twitter.thrift.descriptors.Annotation,
+      EnumElement, RawEnumElement, EnumElementMeta
+    ] {
   def name_=(x: String): Unit
   def nameUnset(): Unit
   def value_=(x: Int): Unit
@@ -6785,8 +6691,10 @@ trait MutableEnumElementProxy extends MutableEnumElement with EnumElementProxy {
 
 
 
-
-final class RawEnumElement extends JavaEnumElementRaw[EnumElement, RawEnumElement, EnumElementMeta] with MutableEnumElement {
+final class RawEnumElement extends JavaEnumElementRaw[com.twitter.thrift.descriptors.Annotation,
+      EnumElement, RawEnumElement, EnumElementMeta
+    ]
+    with MutableEnumElement {
   override def meta: EnumElementMeta = EnumElement
 
   // Field #1 - name
@@ -6928,7 +6836,7 @@ final class RawEnumElement extends JavaEnumElementRaw[EnumElement, RawEnumElemen
       this.__annotations_=(that.annotationsOrDefault)
 
     } else if (that.annotationsIsSet && this.annotationsIsSet) {
-      this.__annotations ++= that.__annotations
+      this.__annotations_=(this.__annotations ++ that.__annotations)
     }
   }
 
@@ -7250,32 +7158,15 @@ class EnumCompanionProvider extends com.foursquare.spindle.CompanionProvider[Enu
 }
 
 
-
 trait Enum
 
-    extends JavaEnum[Enum, RawEnum, EnumMeta]
+    extends JavaEnum[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.EnumElement,
+      Enum, RawEnum, EnumMeta
+    ]
     with org.apache.thrift.TBase[Enum, Enum._Fields] {
 
   override def meta: EnumMeta
 
-
-  def name: String
-  def nameOption: Option[String]
-  def nameOrNull: String
-  def nameOrThrow: String
-  def nameIsSet: Boolean
-  def elements: scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement]
-  def elementsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement]]
-  def elementsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement]
-  def elementsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement]
-  def elementsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement]
-  def elementsIsSet: Boolean
-  def __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
-  def annotationsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsIsSet: Boolean
   override def compare(that: Enum): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -7358,7 +7249,9 @@ trait Enum
 }
 
 trait MutableEnum extends Enum
-  with JavaEnumMutable[Enum, RawEnum, EnumMeta] {
+    with JavaEnumMutable[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.EnumElement,
+      Enum, RawEnum, EnumMeta
+    ] {
   def name_=(x: String): Unit
   def nameUnset(): Unit
   def elements_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.EnumElement]): Unit
@@ -7463,8 +7356,10 @@ trait MutableEnumProxy extends MutableEnum with EnumProxy {
 
 
 
-
-final class RawEnum extends JavaEnumRaw[Enum, RawEnum, EnumMeta] with MutableEnum {
+final class RawEnum extends JavaEnumRaw[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.EnumElement,
+      Enum, RawEnum, EnumMeta
+    ]
+    with MutableEnum {
   override def meta: EnumMeta = Enum
 
   // Field #1 - name
@@ -7619,13 +7514,13 @@ final class RawEnum extends JavaEnumRaw[Enum, RawEnum, EnumMeta] with MutableEnu
       this.elements_=(that.elementsOrNull)
 
     } else if (that.elementsIsSet && this.elementsIsSet) {
-      this.elements ++= that.elements
+      this.elements_=(this.elements ++ that.elements)
     }
     if (that.annotationsIsSet && !this.annotationsIsSet) {
       this.__annotations_=(that.annotationsOrDefault)
 
     } else if (that.annotationsIsSet && this.annotationsIsSet) {
-      this.__annotations ++= that.__annotations
+      this.__annotations_=(this.__annotations ++ that.__annotations)
     }
   }
 
@@ -8069,46 +7964,15 @@ class FieldCompanionProvider extends com.foursquare.spindle.CompanionProvider[Fi
 }
 
 
-
 trait Field
 
-    extends JavaField[Field, RawField, FieldMeta]
+    extends JavaField[com.twitter.thrift.descriptors.Annotation,
+      Field, RawField, FieldMeta
+    ]
     with org.apache.thrift.TBase[Field, Field._Fields] {
 
   override def meta: FieldMeta
 
-  def identifier: Short
-  def identifierOption: Option[Short]
-  def identifierOrDefault: Short
-  def identifierOrNull: java.lang.Short
-  def identifierOrThrow: Short
-  def identifierIsSet: Boolean
-
-  def name: String
-  def nameOption: Option[String]
-  def nameOrNull: String
-  def nameOrThrow: String
-  def nameIsSet: Boolean
-
-  def typeId: String
-  def typeIdOption: Option[String]
-  def typeIdOrNull: String
-  def typeIdOrThrow: String
-  def typeIdIsSet: Boolean
-  def requirednessOption: Option[com.twitter.thrift.descriptors.Requiredness]
-  def requirednessOrNull: com.twitter.thrift.descriptors.Requiredness
-  def requirednessOrThrow: com.twitter.thrift.descriptors.Requiredness
-  def requirednessIsSet: Boolean
-  def defaultValueOption: Option[String]
-  def defaultValueOrNull: String
-  def defaultValueOrThrow: String
-  def defaultValueIsSet: Boolean
-  def __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
-  def annotationsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsIsSet: Boolean
   override def compare(that: Field): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -8225,7 +8089,9 @@ trait Field
 }
 
 trait MutableField extends Field
-  with JavaFieldMutable[Field, RawField, FieldMeta] {
+    with JavaFieldMutable[com.twitter.thrift.descriptors.Annotation,
+      Field, RawField, FieldMeta
+    ] {
   def identifier_=(x: Short): Unit
   def identifierUnset(): Unit
   def name_=(x: String): Unit
@@ -8374,8 +8240,10 @@ trait MutableFieldProxy extends MutableField with FieldProxy {
 
 
 
-
-final class RawField extends JavaFieldRaw[Field, RawField, FieldMeta] with MutableField {
+final class RawField extends JavaFieldRaw[com.twitter.thrift.descriptors.Annotation,
+      Field, RawField, FieldMeta
+    ]
+    with MutableField {
   override def meta: FieldMeta = Field
 
   // Field #1 - identifier
@@ -8590,7 +8458,7 @@ final class RawField extends JavaFieldRaw[Field, RawField, FieldMeta] with Mutab
       this.__annotations_=(that.annotationsOrDefault)
 
     } else if (that.annotationsIsSet && this.annotationsIsSet) {
-      this.__annotations ++= that.__annotations
+      this.__annotations_=(this.__annotations ++ that.__annotations)
     }
   }
 
@@ -8942,32 +8810,15 @@ class StructCompanionProvider extends com.foursquare.spindle.CompanionProvider[S
 }
 
 
-
 trait Struct
 
-    extends JavaStruct[Struct, RawStruct, StructMeta]
+    extends JavaStruct[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Field,
+      Struct, RawStruct, StructMeta
+    ]
     with org.apache.thrift.TBase[Struct, Struct._Fields] {
 
   override def meta: StructMeta
 
-
-  def name: String
-  def nameOption: Option[String]
-  def nameOrNull: String
-  def nameOrThrow: String
-  def nameIsSet: Boolean
-  def __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def fieldsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Field]]
-  def fieldsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def fieldsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def fieldsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def fieldsIsSet: Boolean
-  def __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
-  def annotationsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsIsSet: Boolean
   override def compare(that: Struct): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -9050,7 +8901,9 @@ trait Struct
 }
 
 trait MutableStruct extends Struct
-  with JavaStructMutable[Struct, RawStruct, StructMeta] {
+    with JavaStructMutable[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Field,
+      Struct, RawStruct, StructMeta
+    ] {
   def name_=(x: String): Unit
   def nameUnset(): Unit
   def __fields_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Unit
@@ -9155,8 +9008,10 @@ trait MutableStructProxy extends MutableStruct with StructProxy {
 
 
 
-
-final class RawStruct extends JavaStructRaw[Struct, RawStruct, StructMeta] with MutableStruct {
+final class RawStruct extends JavaStructRaw[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Field,
+      Struct, RawStruct, StructMeta
+    ]
+    with MutableStruct {
   override def meta: StructMeta = Struct
 
   // Field #1 - name
@@ -9311,13 +9166,13 @@ final class RawStruct extends JavaStructRaw[Struct, RawStruct, StructMeta] with 
       this.__fields_=(that.fieldsOrNull)
 
     } else if (that.fieldsIsSet && this.fieldsIsSet) {
-      this.__fields ++= that.__fields
+      this.__fields_=(this.__fields ++ that.__fields)
     }
     if (that.annotationsIsSet && !this.annotationsIsSet) {
       this.__annotations_=(that.annotationsOrDefault)
 
     } else if (that.annotationsIsSet && this.annotationsIsSet) {
-      this.__annotations ++= that.__annotations
+      this.__annotations_=(this.__annotations ++ that.__annotations)
     }
   }
 
@@ -9639,32 +9494,15 @@ class UnionCompanionProvider extends com.foursquare.spindle.CompanionProvider[Un
 }
 
 
-
 trait Union
 
-    extends JavaUnion[Union, RawUnion, UnionMeta]
+    extends JavaUnion[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Field,
+      Union, RawUnion, UnionMeta
+    ]
     with org.apache.thrift.TBase[Union, Union._Fields] {
 
   override def meta: UnionMeta
 
-
-  def name: String
-  def nameOption: Option[String]
-  def nameOrNull: String
-  def nameOrThrow: String
-  def nameIsSet: Boolean
-  def __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def fieldsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Field]]
-  def fieldsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def fieldsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def fieldsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def fieldsIsSet: Boolean
-  def __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
-  def annotationsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsIsSet: Boolean
   override def compare(that: Union): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -9747,7 +9585,9 @@ trait Union
 }
 
 trait MutableUnion extends Union
-  with JavaUnionMutable[Union, RawUnion, UnionMeta] {
+    with JavaUnionMutable[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Field,
+      Union, RawUnion, UnionMeta
+    ] {
   def name_=(x: String): Unit
   def nameUnset(): Unit
   def __fields_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Unit
@@ -9852,8 +9692,10 @@ trait MutableUnionProxy extends MutableUnion with UnionProxy {
 
 
 
-
-final class RawUnion extends JavaUnionRaw[Union, RawUnion, UnionMeta] with MutableUnion {
+final class RawUnion extends JavaUnionRaw[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Field,
+      Union, RawUnion, UnionMeta
+    ]
+    with MutableUnion {
   override def meta: UnionMeta = Union
 
   // Field #1 - name
@@ -10008,13 +9850,13 @@ final class RawUnion extends JavaUnionRaw[Union, RawUnion, UnionMeta] with Mutab
       this.__fields_=(that.fieldsOrNull)
 
     } else if (that.fieldsIsSet && this.fieldsIsSet) {
-      this.__fields ++= that.__fields
+      this.__fields_=(this.__fields ++ that.__fields)
     }
     if (that.annotationsIsSet && !this.annotationsIsSet) {
       this.__annotations_=(that.annotationsOrDefault)
 
     } else if (that.annotationsIsSet && this.annotationsIsSet) {
-      this.__annotations ++= that.__annotations
+      this.__annotations_=(this.__annotations ++ that.__annotations)
     }
   }
 
@@ -10336,32 +10178,15 @@ class ExceptionCompanionProvider extends com.foursquare.spindle.CompanionProvide
 }
 
 
-
 trait Exception
 
-    extends JavaException[Exception, RawException, ExceptionMeta]
+    extends JavaException[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Field,
+      Exception, RawException, ExceptionMeta
+    ]
     with org.apache.thrift.TBase[Exception, Exception._Fields] {
 
   override def meta: ExceptionMeta
 
-
-  def name: String
-  def nameOption: Option[String]
-  def nameOrNull: String
-  def nameOrThrow: String
-  def nameIsSet: Boolean
-  def __fields: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def fieldsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Field]]
-  def fieldsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def fieldsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def fieldsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def fieldsIsSet: Boolean
-  def __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
-  def annotationsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsIsSet: Boolean
   override def compare(that: Exception): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -10444,7 +10269,9 @@ trait Exception
 }
 
 trait MutableException extends Exception
-  with JavaExceptionMutable[Exception, RawException, ExceptionMeta] {
+    with JavaExceptionMutable[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Field,
+      Exception, RawException, ExceptionMeta
+    ] {
   def name_=(x: String): Unit
   def nameUnset(): Unit
   def __fields_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.Field]): Unit
@@ -10549,8 +10376,10 @@ trait MutableExceptionProxy extends MutableException with ExceptionProxy {
 
 
 
-
-final class RawException extends JavaExceptionRaw[Exception, RawException, ExceptionMeta] with MutableException {
+final class RawException extends JavaExceptionRaw[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Field,
+      Exception, RawException, ExceptionMeta
+    ]
+    with MutableException {
   override def meta: ExceptionMeta = Exception
 
   // Field #1 - name
@@ -10705,13 +10534,13 @@ final class RawException extends JavaExceptionRaw[Exception, RawException, Excep
       this.__fields_=(that.fieldsOrNull)
 
     } else if (that.fieldsIsSet && this.fieldsIsSet) {
-      this.__fields ++= that.__fields
+      this.__fields_=(this.__fields ++ that.__fields)
     }
     if (that.annotationsIsSet && !this.annotationsIsSet) {
       this.__annotations_=(that.annotationsOrDefault)
 
     } else if (that.annotationsIsSet && this.annotationsIsSet) {
-      this.__annotations ++= that.__annotations
+      this.__annotations_=(this.__annotations ++ that.__annotations)
     }
   }
 
@@ -11155,48 +10984,15 @@ class FunctionCompanionProvider extends com.foursquare.spindle.CompanionProvider
 }
 
 
-
 trait Function
 
-    extends JavaFunction[Function, RawFunction, FunctionMeta]
+    extends JavaFunction[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Field,
+      Function, RawFunction, FunctionMeta
+    ]
     with org.apache.thrift.TBase[Function, Function._Fields] {
 
   override def meta: FunctionMeta
 
-
-  def name: String
-  def nameOption: Option[String]
-  def nameOrNull: String
-  def nameOrThrow: String
-  def nameIsSet: Boolean
-  def returnTypeIdOption: Option[String]
-  def returnTypeIdOrNull: String
-  def returnTypeIdOrThrow: String
-  def returnTypeIdIsSet: Boolean
-  def oneWay: Boolean
-  def oneWayOption: Option[Boolean]
-  def oneWayOrDefault: Boolean
-  def oneWayOrNull: java.lang.Boolean
-  def oneWayOrThrow: Boolean
-  def oneWayIsSet: Boolean
-  def argz: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def argzOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Field]]
-  def argzOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def argzOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def argzOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def argzIsSet: Boolean
-  def throwz: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def throwzOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Field]]
-  def throwzOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def throwzOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def throwzOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Field]
-  def throwzIsSet: Boolean
-  def __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
-  def annotationsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsIsSet: Boolean
   override def compare(that: Function): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -11313,7 +11109,9 @@ trait Function
 }
 
 trait MutableFunction extends Function
-  with JavaFunctionMutable[Function, RawFunction, FunctionMeta] {
+    with JavaFunctionMutable[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Field,
+      Function, RawFunction, FunctionMeta
+    ] {
   def name_=(x: String): Unit
   def nameUnset(): Unit
   def returnTypeId_=(x: String): Unit
@@ -11464,8 +11262,10 @@ trait MutableFunctionProxy extends MutableFunction with FunctionProxy {
 
 
 
-
-final class RawFunction extends JavaFunctionRaw[Function, RawFunction, FunctionMeta] with MutableFunction {
+final class RawFunction extends JavaFunctionRaw[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Field,
+      Function, RawFunction, FunctionMeta
+    ]
+    with MutableFunction {
   override def meta: FunctionMeta = Function
 
   // Field #1 - name
@@ -11715,19 +11515,19 @@ final class RawFunction extends JavaFunctionRaw[Function, RawFunction, FunctionM
       this.argz_=(that.argzOrNull)
 
     } else if (that.argzIsSet && this.argzIsSet) {
-      this.argz ++= that.argz
+      this.argz_=(this.argz ++ that.argz)
     }
     if (that.throwzIsSet && !this.throwzIsSet) {
       this.throwz_=(that.throwzOrNull)
 
     } else if (that.throwzIsSet && this.throwzIsSet) {
-      this.throwz ++= that.throwz
+      this.throwz_=(this.throwz ++ that.throwz)
     }
     if (that.annotationsIsSet && !this.annotationsIsSet) {
       this.__annotations_=(that.annotationsOrDefault)
 
     } else if (that.annotationsIsSet && this.annotationsIsSet) {
-      this.__annotations ++= that.__annotations
+      this.__annotations_=(this.__annotations ++ that.__annotations)
     }
   }
 
@@ -12122,36 +11922,15 @@ class ServiceCompanionProvider extends com.foursquare.spindle.CompanionProvider[
 }
 
 
-
 trait Service
 
-    extends JavaService[Service, RawService, ServiceMeta]
+    extends JavaService[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Function,
+      Service, RawService, ServiceMeta
+    ]
     with org.apache.thrift.TBase[Service, Service._Fields] {
 
   override def meta: ServiceMeta
 
-
-  def name: String
-  def nameOption: Option[String]
-  def nameOrNull: String
-  def nameOrThrow: String
-  def nameIsSet: Boolean
-  def extendzOption: Option[String]
-  def extendzOrNull: String
-  def extendzOrThrow: String
-  def extendzIsSet: Boolean
-  def functions: scala.collection.Seq[com.twitter.thrift.descriptors.Function]
-  def functionsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Function]]
-  def functionsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Function]
-  def functionsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Function]
-  def functionsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Function]
-  def functionsIsSet: Boolean
-  def __annotations: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]]
-  def annotationsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation]
-  def annotationsIsSet: Boolean
   override def compare(that: Service): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -12245,7 +12024,9 @@ trait Service
 }
 
 trait MutableService extends Service
-  with JavaServiceMutable[Service, RawService, ServiceMeta] {
+    with JavaServiceMutable[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Function,
+      Service, RawService, ServiceMeta
+    ] {
   def name_=(x: String): Unit
   def nameUnset(): Unit
   def extendz_=(x: String): Unit
@@ -12364,8 +12145,10 @@ trait MutableServiceProxy extends MutableService with ServiceProxy {
 
 
 
-
-final class RawService extends JavaServiceRaw[Service, RawService, ServiceMeta] with MutableService {
+final class RawService extends JavaServiceRaw[com.twitter.thrift.descriptors.Annotation, com.twitter.thrift.descriptors.Function,
+      Service, RawService, ServiceMeta
+    ]
+    with MutableService {
   override def meta: ServiceMeta = Service
 
   // Field #1 - name
@@ -12544,13 +12327,13 @@ final class RawService extends JavaServiceRaw[Service, RawService, ServiceMeta] 
       this.functions_=(that.functionsOrNull)
 
     } else if (that.functionsIsSet && this.functionsIsSet) {
-      this.functions ++= that.functions
+      this.functions_=(this.functions ++ that.functions)
     }
     if (that.annotationsIsSet && !this.annotationsIsSet) {
       this.__annotations_=(that.annotationsOrDefault)
 
     } else if (that.annotationsIsSet && this.annotationsIsSet) {
-      this.__annotations ++= that.__annotations
+      this.__annotations_=(this.__annotations ++ that.__annotations)
     }
   }
 
@@ -13190,74 +12973,15 @@ class ProgramCompanionProvider extends com.foursquare.spindle.CompanionProvider[
 }
 
 
-
 trait Program
 
-    extends JavaProgram[Program, RawProgram, ProgramMeta]
+    extends JavaProgram[com.twitter.thrift.descriptors.Const, com.twitter.thrift.descriptors.Enum, com.twitter.thrift.descriptors.Exception, com.twitter.thrift.descriptors.Include, com.twitter.thrift.descriptors.Namespace, com.twitter.thrift.descriptors.Service, com.twitter.thrift.descriptors.Struct, com.twitter.thrift.descriptors.TypeRegistry, com.twitter.thrift.descriptors.Typedef, com.twitter.thrift.descriptors.Union,
+      Program, RawProgram, ProgramMeta
+    ]
     with org.apache.thrift.TBase[Program, Program._Fields] {
 
   override def meta: ProgramMeta
 
-  def namespaces: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]
-  def namespacesOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]]
-  def namespacesOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]
-  def namespacesOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]
-  def namespacesOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]
-  def namespacesIsSet: Boolean
-  def includes: scala.collection.Seq[com.twitter.thrift.descriptors.Include]
-  def includesOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Include]]
-  def includesOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Include]
-  def includesOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Include]
-  def includesOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Include]
-  def includesIsSet: Boolean
-  def constants: scala.collection.Seq[com.twitter.thrift.descriptors.Const]
-  def constantsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Const]]
-  def constantsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Const]
-  def constantsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Const]
-  def constantsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Const]
-  def constantsIsSet: Boolean
-  def enums: scala.collection.Seq[com.twitter.thrift.descriptors.Enum]
-  def enumsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Enum]]
-  def enumsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Enum]
-  def enumsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Enum]
-  def enumsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Enum]
-  def enumsIsSet: Boolean
-  def typedefs: scala.collection.Seq[com.twitter.thrift.descriptors.Typedef]
-  def typedefsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Typedef]]
-  def typedefsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Typedef]
-  def typedefsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Typedef]
-  def typedefsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Typedef]
-  def typedefsIsSet: Boolean
-  def structs: scala.collection.Seq[com.twitter.thrift.descriptors.Struct]
-  def structsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Struct]]
-  def structsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Struct]
-  def structsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Struct]
-  def structsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Struct]
-  def structsIsSet: Boolean
-  def unions: scala.collection.Seq[com.twitter.thrift.descriptors.Union]
-  def unionsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Union]]
-  def unionsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Union]
-  def unionsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Union]
-  def unionsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Union]
-  def unionsIsSet: Boolean
-  def exceptions: scala.collection.Seq[com.twitter.thrift.descriptors.Exception]
-  def exceptionsOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Exception]]
-  def exceptionsOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Exception]
-  def exceptionsOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Exception]
-  def exceptionsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Exception]
-  def exceptionsIsSet: Boolean
-  def services: scala.collection.Seq[com.twitter.thrift.descriptors.Service]
-  def servicesOption: Option[scala.collection.Seq[com.twitter.thrift.descriptors.Service]]
-  def servicesOrDefault: scala.collection.Seq[com.twitter.thrift.descriptors.Service]
-  def servicesOrNull: scala.collection.Seq[com.twitter.thrift.descriptors.Service]
-  def servicesOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Service]
-  def servicesIsSet: Boolean
-
-  def typeRegistry: com.twitter.thrift.descriptors.TypeRegistry
-  def typeRegistryOption: Option[com.twitter.thrift.descriptors.TypeRegistry]
-  def typeRegistryOrNull: com.twitter.thrift.descriptors.TypeRegistry
-  def typeRegistryOrThrow: com.twitter.thrift.descriptors.TypeRegistry
-  def typeRegistryIsSet: Boolean
   override def compare(that: Program): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -13417,7 +13141,9 @@ trait Program
 }
 
 trait MutableProgram extends Program
-  with JavaProgramMutable[Program, RawProgram, ProgramMeta] {
+    with JavaProgramMutable[com.twitter.thrift.descriptors.Const, com.twitter.thrift.descriptors.Enum, com.twitter.thrift.descriptors.Exception, com.twitter.thrift.descriptors.Include, com.twitter.thrift.descriptors.Namespace, com.twitter.thrift.descriptors.Service, com.twitter.thrift.descriptors.Struct, com.twitter.thrift.descriptors.TypeRegistry, com.twitter.thrift.descriptors.Typedef, com.twitter.thrift.descriptors.Union,
+      Program, RawProgram, ProgramMeta
+    ] {
   def namespaces_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]): Unit
   def namespacesUnset(): Unit
   def includes_=(x: scala.collection.Seq[com.twitter.thrift.descriptors.Include]): Unit
@@ -13634,8 +13360,10 @@ trait MutableProgramProxy extends MutableProgram with ProgramProxy {
 
 
 
-
-final class RawProgram extends JavaProgramRaw[Program, RawProgram, ProgramMeta] with MutableProgram {
+final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Const, com.twitter.thrift.descriptors.Enum, com.twitter.thrift.descriptors.Exception, com.twitter.thrift.descriptors.Include, com.twitter.thrift.descriptors.Namespace, com.twitter.thrift.descriptors.Service, com.twitter.thrift.descriptors.Struct, com.twitter.thrift.descriptors.TypeRegistry, com.twitter.thrift.descriptors.Typedef, com.twitter.thrift.descriptors.Union,
+      Program, RawProgram, ProgramMeta
+    ]
+    with MutableProgram {
   override def meta: ProgramMeta = Program
 
   // Field #1 - namespaces
@@ -14085,55 +13813,55 @@ final class RawProgram extends JavaProgramRaw[Program, RawProgram, ProgramMeta] 
       this.namespaces_=(that.namespacesOrDefault)
 
     } else if (that.namespacesIsSet && this.namespacesIsSet) {
-      this.namespaces ++= that.namespaces
+      this.namespaces_=(this.namespaces ++ that.namespaces)
     }
     if (that.includesIsSet && !this.includesIsSet) {
       this.includes_=(that.includesOrDefault)
 
     } else if (that.includesIsSet && this.includesIsSet) {
-      this.includes ++= that.includes
+      this.includes_=(this.includes ++ that.includes)
     }
     if (that.constantsIsSet && !this.constantsIsSet) {
       this.constants_=(that.constantsOrDefault)
 
     } else if (that.constantsIsSet && this.constantsIsSet) {
-      this.constants ++= that.constants
+      this.constants_=(this.constants ++ that.constants)
     }
     if (that.enumsIsSet && !this.enumsIsSet) {
       this.enums_=(that.enumsOrDefault)
 
     } else if (that.enumsIsSet && this.enumsIsSet) {
-      this.enums ++= that.enums
+      this.enums_=(this.enums ++ that.enums)
     }
     if (that.typedefsIsSet && !this.typedefsIsSet) {
       this.typedefs_=(that.typedefsOrDefault)
 
     } else if (that.typedefsIsSet && this.typedefsIsSet) {
-      this.typedefs ++= that.typedefs
+      this.typedefs_=(this.typedefs ++ that.typedefs)
     }
     if (that.structsIsSet && !this.structsIsSet) {
       this.structs_=(that.structsOrDefault)
 
     } else if (that.structsIsSet && this.structsIsSet) {
-      this.structs ++= that.structs
+      this.structs_=(this.structs ++ that.structs)
     }
     if (that.unionsIsSet && !this.unionsIsSet) {
       this.unions_=(that.unionsOrDefault)
 
     } else if (that.unionsIsSet && this.unionsIsSet) {
-      this.unions ++= that.unions
+      this.unions_=(this.unions ++ that.unions)
     }
     if (that.exceptionsIsSet && !this.exceptionsIsSet) {
       this.exceptions_=(that.exceptionsOrDefault)
 
     } else if (that.exceptionsIsSet && this.exceptionsIsSet) {
-      this.exceptions ++= that.exceptions
+      this.exceptions_=(this.exceptions ++ that.exceptions)
     }
     if (that.servicesIsSet && !this.servicesIsSet) {
       this.services_=(that.servicesOrDefault)
 
     } else if (that.servicesIsSet && this.servicesIsSet) {
-      this.services ++= that.services
+      this.services_=(this.services ++ that.services)
     }
     if (that.typeRegistryIsSet && !this.typeRegistryIsSet) {
       this.typeRegistry_=(that.typeRegistryOrNull)
@@ -14538,26 +14266,15 @@ class SimpleContainerTypeCompanionProvider extends com.foursquare.spindle.Compan
 }
 
 
-
 trait SimpleContainerType
 
-    extends JavaSimpleContainerType[SimpleContainerType, RawSimpleContainerType, SimpleContainerTypeMeta]
+    extends JavaSimpleContainerType[com.twitter.thrift.descriptors.ListType, com.twitter.thrift.descriptors.MapType, com.twitter.thrift.descriptors.SetType,
+      SimpleContainerType, RawSimpleContainerType, SimpleContainerTypeMeta
+    ]
     with org.apache.thrift.TBase[SimpleContainerType, SimpleContainerType._Fields] {
 
   override def meta: SimpleContainerTypeMeta
 
-  def listTypeOption: Option[com.twitter.thrift.descriptors.ListType]
-  def listTypeOrNull: com.twitter.thrift.descriptors.ListType
-  def listTypeOrThrow: com.twitter.thrift.descriptors.ListType
-  def listTypeIsSet: Boolean
-  def setTypeOption: Option[com.twitter.thrift.descriptors.SetType]
-  def setTypeOrNull: com.twitter.thrift.descriptors.SetType
-  def setTypeOrThrow: com.twitter.thrift.descriptors.SetType
-  def setTypeIsSet: Boolean
-  def mapTypeOption: Option[com.twitter.thrift.descriptors.MapType]
-  def mapTypeOrNull: com.twitter.thrift.descriptors.MapType
-  def mapTypeOrThrow: com.twitter.thrift.descriptors.MapType
-  def mapTypeIsSet: Boolean
   override def compare(that: SimpleContainerType): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -14640,7 +14357,9 @@ trait SimpleContainerType
 }
 
 trait MutableSimpleContainerType extends SimpleContainerType
-  with JavaSimpleContainerTypeMutable[SimpleContainerType, RawSimpleContainerType, SimpleContainerTypeMeta] {
+    with JavaSimpleContainerTypeMutable[com.twitter.thrift.descriptors.ListType, com.twitter.thrift.descriptors.MapType, com.twitter.thrift.descriptors.SetType,
+      SimpleContainerType, RawSimpleContainerType, SimpleContainerTypeMeta
+    ] {
   def listType_=(x: com.twitter.thrift.descriptors.ListType): Unit
   def listTypeUnset(): Unit
   def setType_=(x: com.twitter.thrift.descriptors.SetType): Unit
@@ -14662,8 +14381,10 @@ trait MutableSimpleContainerType extends SimpleContainerType
 
 
 
-
-final class RawSimpleContainerType extends JavaSimpleContainerTypeRaw[SimpleContainerType, RawSimpleContainerType, SimpleContainerTypeMeta] with MutableSimpleContainerType {
+final class RawSimpleContainerType extends JavaSimpleContainerTypeRaw[com.twitter.thrift.descriptors.ListType, com.twitter.thrift.descriptors.MapType, com.twitter.thrift.descriptors.SetType,
+      SimpleContainerType, RawSimpleContainerType, SimpleContainerTypeMeta
+    ]
+    with MutableSimpleContainerType {
   override def meta: SimpleContainerTypeMeta = SimpleContainerType
 
   // Field #1 - listType
@@ -15118,26 +14839,15 @@ class SimpleTypeCompanionProvider extends com.foursquare.spindle.CompanionProvid
 }
 
 
-
 trait SimpleType
 
-    extends JavaSimpleType[SimpleType, RawSimpleType, SimpleTypeMeta]
+    extends JavaSimpleType[com.twitter.thrift.descriptors.BaseType, com.twitter.thrift.descriptors.ContainerType, com.twitter.thrift.descriptors.Typeref,
+      SimpleType, RawSimpleType, SimpleTypeMeta
+    ]
     with org.apache.thrift.TBase[SimpleType, SimpleType._Fields] {
 
   override def meta: SimpleTypeMeta
 
-  def baseTypeOption: Option[com.twitter.thrift.descriptors.BaseType]
-  def baseTypeOrNull: com.twitter.thrift.descriptors.BaseType
-  def baseTypeOrThrow: com.twitter.thrift.descriptors.BaseType
-  def baseTypeIsSet: Boolean
-  def containerTypeOption: Option[com.twitter.thrift.descriptors.ContainerType]
-  def containerTypeOrNull: com.twitter.thrift.descriptors.ContainerType
-  def containerTypeOrThrow: com.twitter.thrift.descriptors.ContainerType
-  def containerTypeIsSet: Boolean
-  def typerefOption: Option[com.twitter.thrift.descriptors.Typeref]
-  def typerefOrNull: com.twitter.thrift.descriptors.Typeref
-  def typerefOrThrow: com.twitter.thrift.descriptors.Typeref
-  def typerefIsSet: Boolean
   override def compare(that: SimpleType): Int = {
     var cmp: Int = 0
     if (that == null) {
@@ -15220,7 +14930,9 @@ trait SimpleType
 }
 
 trait MutableSimpleType extends SimpleType
-  with JavaSimpleTypeMutable[SimpleType, RawSimpleType, SimpleTypeMeta] {
+    with JavaSimpleTypeMutable[com.twitter.thrift.descriptors.BaseType, com.twitter.thrift.descriptors.ContainerType, com.twitter.thrift.descriptors.Typeref,
+      SimpleType, RawSimpleType, SimpleTypeMeta
+    ] {
   def baseType_=(x: com.twitter.thrift.descriptors.BaseType): Unit
   def baseTypeUnset(): Unit
   def containerType_=(x: com.twitter.thrift.descriptors.ContainerType): Unit
@@ -15242,8 +14954,10 @@ trait MutableSimpleType extends SimpleType
 
 
 
-
-final class RawSimpleType extends JavaSimpleTypeRaw[SimpleType, RawSimpleType, SimpleTypeMeta] with MutableSimpleType {
+final class RawSimpleType extends JavaSimpleTypeRaw[com.twitter.thrift.descriptors.BaseType, com.twitter.thrift.descriptors.ContainerType, com.twitter.thrift.descriptors.Typeref,
+      SimpleType, RawSimpleType, SimpleTypeMeta
+    ]
+    with MutableSimpleType {
   override def meta: SimpleTypeMeta = SimpleType
 
   // Field #1 - baseType

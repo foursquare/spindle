@@ -190,7 +190,7 @@ class TypeDeclarationResolver(enhancedTypes: EnhancedTypes) {
 
   def debugScopedTypedef(unresolvedTypedef: ScopedTypedef): String = {
     val id = unresolvedTypedef.typedef.typeId
-    val tpe = unresolvedTypedef.program.tree.typeRegistry.idToType(id)
+    val tpe = unresolvedTypedef.program.tree.typeRegistry.idToType()(id)
     val alias = tpe.simpleType.typerefOrThrow.typeAlias
     "Unresolvable typedef refers to non-existent type " + alias + " in " + unresolvedTypedef.program.file.toString
   }

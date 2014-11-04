@@ -45,20 +45,20 @@ class ThriftParserTest {
     assertTrue(program.constants.slice(0, 4).forall(const => {
       idToSimpleBaseType(const.typeId, program) == SimpleBaseType.I32
     }))
-    assertEquals(idToSimpleBaseType(program.constants(4).typeId, program), SimpleBaseType.STRING)
-    assertEquals(idToSimpleBaseType(program.constants(5).typeId, program), SimpleBaseType.BINARY)
-    assertEquals(idToSimpleBaseType(program.constants(6).typeId, program), SimpleBaseType.BOOL)
-    assertEquals(idToSimpleBaseType(program.constants(7).typeId, program), SimpleBaseType.BYTE)
-    assertEquals(idToSimpleBaseType(program.constants(8).typeId, program), SimpleBaseType.I16)
-    assertEquals(idToSimpleBaseType(program.constants(9).typeId, program), SimpleBaseType.I32)
-    assertEquals(idToSimpleBaseType(program.constants(10).typeId, program), SimpleBaseType.I64)
-    assertEquals(idToSimpleBaseType(program.constants(11).typeId, program), SimpleBaseType.DOUBLE)
+    assertEquals(idToSimpleBaseType(program.constants()(4).typeId, program), SimpleBaseType.STRING)
+    assertEquals(idToSimpleBaseType(program.constants()(5).typeId, program), SimpleBaseType.BINARY)
+    assertEquals(idToSimpleBaseType(program.constants()(6).typeId, program), SimpleBaseType.BOOL)
+    assertEquals(idToSimpleBaseType(program.constants()(7).typeId, program), SimpleBaseType.BYTE)
+    assertEquals(idToSimpleBaseType(program.constants()(8).typeId, program), SimpleBaseType.I16)
+    assertEquals(idToSimpleBaseType(program.constants()(9).typeId, program), SimpleBaseType.I32)
+    assertEquals(idToSimpleBaseType(program.constants()(10).typeId, program), SimpleBaseType.I64)
+    assertEquals(idToSimpleBaseType(program.constants()(11).typeId, program), SimpleBaseType.DOUBLE)
     assertTrue(program.constants.slice(12, 15).forall(const => {
       idToSimpleBaseType(const.typeId, program) == SimpleBaseType.STRING
     }))
-    assertEquals(idToBaseTypeAnnotations(program.constants(12).typeId, program).size, 0)
-    assertEquals(idToBaseTypeAnnotations(program.constants(13).typeId, program).size, 1)
-    assertEquals(idToBaseTypeAnnotations(program.constants(14).typeId, program).size, 2)
+    assertEquals(idToBaseTypeAnnotations(program.constants()(12).typeId, program).size, 0)
+    assertEquals(idToBaseTypeAnnotations(program.constants()(13).typeId, program).size, 1)
+    assertEquals(idToBaseTypeAnnotations(program.constants()(14).typeId, program).size, 2)
     assertTrue(program.constants.slice(15, 21).forall(const => {
       idToSimpleContainerType(const.typeId, program).listTypeIsSet
     }))
@@ -69,7 +69,7 @@ class ThriftParserTest {
       idToSimpleContainerType(const.typeId, program).mapTypeIsSet
     }))
     assertEquals(
-      program.typeRegistry.idToType(program.constants(30).typeId).simpleType.typerefOrThrow.typeAlias, "myint")
+      program.typeRegistry.idToType()(program.constants()(30).typeId).simpleType.typerefOrThrow.typeAlias, "myint")
   }
 
   @Test
@@ -78,9 +78,9 @@ class ThriftParserTest {
 
     assertEquals(program.structs.size, 24)
     assertTrue(program.structs.slice(0, 7).forall(struct => struct.__fields.size == 0))
-    assertEquals(program.structs(3).__annotations.size, 0)
-    assertEquals(program.structs(4).__annotations.size, 1)
-    assertEquals(program.structs(5).__annotations.size, 2)
+    assertEquals(program.structs()(3).__annotations.size, 0)
+    assertEquals(program.structs()(4).__annotations.size, 1)
+    assertEquals(program.structs()(5).__annotations.size, 2)
     assertTrue(program.structs.slice(7, 19).forall(struct => struct.__fields.size == 1))
     assertTrue(program.structs.slice(19, 24).forall(struct => struct.__fields.size == 2))
   }
@@ -103,14 +103,14 @@ class ThriftParserTest {
   }
 
   def idToSimpleBaseType(id: String, program: Program): SimpleBaseType = {
-    program.typeRegistry.idToType(id).simpleType.baseTypeOrThrow.simpleBaseType
+    program.typeRegistry.idToType()(id).simpleType.baseTypeOrThrow.simpleBaseType
   }
 
   def idToSimpleContainerType(id: String, program: Program): SimpleContainerType = {
-    program.typeRegistry.idToType(id).simpleType.containerTypeOrThrow.simpleContainerType
+    program.typeRegistry.idToType()(id).simpleType.containerTypeOrThrow.simpleContainerType
   }
 
   def idToBaseTypeAnnotations(id: String, program: Program): Seq[Annotation] = {
-    program.typeRegistry.idToType(id).simpleType.baseTypeOrThrow.__annotations
+    program.typeRegistry.idToType()(id).simpleType.baseTypeOrThrow.__annotations
   }
 }

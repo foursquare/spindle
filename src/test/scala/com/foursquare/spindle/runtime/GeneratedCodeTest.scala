@@ -6,7 +6,7 @@ import com.foursquare.common.thrift.bson.TBSONProtocol
 import com.foursquare.common.thrift.json.TReadableJSONProtocol
 import com.foursquare.thriftexample.{Content, MutableTvListingEntry, TvListingEntry}
 import com.foursquare.thriftexample.av.Movie
-import com.foursquare.thriftexample.av.MovieTypedefs.MovieId
+import com.foursquare.thriftexample.av.MovieTypedefs.{MinutesId, MovieId}
 import com.foursquare.thriftexample.people.{ContactInfo, Gender, Person, PhoneNumber, PhoneType}
 import com.foursquare.thriftexample.talent.{Actor, CrewMember}
 import com.foursquare.thriftexample.TvlistingTypedefs.{MyLong, MyObjectId, MyString}
@@ -69,7 +69,7 @@ class GeneratedCodeTest {
         .newBuilder
         .id(MovieId(new ObjectId("522e3e9f4b90871874292b48")))
         .name("Dodgeball: A True Underdog Story")
-        .lengthMinutes(92)
+        .lengthMinutes(MinutesId(92L))
         .cast(Map("Peter La Fleur" -> vinceVaughn, "Kate Veatch" -> christineTaylor))
         .crew(List(rawsonThurber))
         .result())
@@ -124,9 +124,9 @@ class GeneratedCodeTest {
     assertTrue(tvListingEntry1.hashCode == tvListingEntry2.hashCode)
     assertTrue(tvListingEntry1.## == tvListingEntry2.##)
 
-    tvListingEntry1.startTime = "2012-01-18 20:00:01"
+    tvListingEntry1.startTime_=("2012-01-18 20:00:01")
     assertFalse(tvListingEntry1.equals(tvListingEntry2))
-    tvListingEntry2.startTime = "2012-01-18 20:00:01"
+    tvListingEntry2.startTime_=("2012-01-18 20:00:01")
     assertTrue(tvListingEntry1.equals(tvListingEntry2))
     assertTrue(tvListingEntry1.hashCode == tvListingEntry2.hashCode)
     assertTrue(tvListingEntry1.## == tvListingEntry2.##)
@@ -138,9 +138,9 @@ class GeneratedCodeTest {
     assertTrue(tvListingEntry1.hashCode == tvListingEntry2.hashCode)
     assertTrue(tvListingEntry1.## == tvListingEntry2.##)
 
-    tvListingEntry2.content = null
+    tvListingEntry2.content_=(null)
     assertFalse(tvListingEntry1.equals(tvListingEntry2))
-    tvListingEntry1.content = null
+    tvListingEntry1.content_=(null)
     assertTrue(tvListingEntry1.equals(tvListingEntry2))
     assertTrue(tvListingEntry1.hashCode == tvListingEntry2.hashCode)
     assertTrue(tvListingEntry1.## == tvListingEntry2.##)
