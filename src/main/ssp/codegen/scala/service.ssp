@@ -178,8 +178,16 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
 <%-- ServiceToClient adapter --%>\
   class ServiceToClient(
       service: com.twitter.finagle.Service[com.twitter.finagle.thrift.ThriftClientRequest, Array[Byte]],
-      protocolFactory: org.apache.thrift.protocol.TProtocolFactory
+      protocolFactory: org.apache.thrift.protocol.TProtocolFactory,
+      deserializationPoolOpt: Option[com.twitter.util.FuturePool]
   ) extends #if (parentServiceName != "")${parentServiceName}.ServiceToClient(service, protocolFactory) with ServiceIface #(else)ServiceIface#(end) {
+    <%-- Note: Can't use default param because Twitter's
+    finagle Thrift Iface constructor finder expects 2 args  --%>
+    def this(
+      service: com.twitter.finagle.Service[com.twitter.finagle.thrift.ThriftClientRequest, Array[Byte]],
+      protocolFactory: org.apache.thrift.protocol.TProtocolFactory
+    ) = this(service, protocolFactory, None)
+
 #for (function <- service.functions)
 
     override <% render("service_funcsig.ssp", Map("function" -> function, "resolver" -> resolver,
@@ -210,7 +218,12 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
 #(end)
             com.twitter.util.Future.value(null) <%-- Thrift compiler uses null. --%>
 #else
-            com.twitter.util.Future.value((new Client(__prot__)).recv_${function.name}())
+            val __client__ = (new Client(__prot__))
+            deserializationPoolOpt.map(__deserializationPool__ =>
+              __deserializationPool__.apply(__client__.recv_${function.name}())
+            ).getOrElse(
+              com.twitter.util.Future.value(__client__.recv_${function.name}())
+            )
 #end
           } catch {
             case e: Exception => com.twitter.util.Future.exception(e)
