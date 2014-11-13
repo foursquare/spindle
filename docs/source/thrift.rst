@@ -24,7 +24,7 @@ Thrift's data model includes an ``enum`` type (equivalent to Java's ``enum``). O
 32-bit integers.
 
 
-Thrift's data model also has the following parametrized container types. The parameters ``<a>`` and ``<b>`` can be primitives, ``enum``s, or ``struct``s.
+Thrift's data model also has the following parametrized container types. The parameters ``<a>`` and ``<b>`` can be primitives, ``enum``\s, or ``struct``\s.
 
 * ``list<a>`` - ordered list of elements (Java's ``List<A>``)
 * ``set<a>`` - unordered list of unique elements (Java's ``Set<A>``)
@@ -34,7 +34,7 @@ Thrift includes three "class" types:
 
 * ``struct`` - numbered fields, with a type and an optional default value
 * ``union`` - tagged union types
-* ``exception`` - like ``struct``s, but can be used in the "throws" clause of a service
+* ``exception`` - like ``struct``\s, but can be used in the "throws" clause of a service
 
 Finally, Thrift allows you to define constants and typedefs. A constant is a value of any Thrift type. A typedef is an alias of any Thrift type.
 
@@ -45,7 +45,7 @@ Thrift data structures are described in ``.thrift`` files which conform to the T
 Tutorial`_ for an example, or reference the `formal grammar`_.
 
 .. _Thrift Tutorial: http://wiki.apache.org/thrift/Tutorial
-.. _formal grammar: http://thrift.apache.org/docs/idl/
+.. _formal grammar: http://thrift.apache.org/docs/idl
 
 
 .. _serialization-formats:
@@ -53,11 +53,11 @@ Tutorial`_ for an example, or reference the `formal grammar`_.
 Serialization formats
 ---------------------
 
-There are four serialization formats we use. 
+There are four serialization formats we use:
 
 * ``TBinaryProtocol`` - The original binary encoding included with Thrift. It is not well-documented, but is fairly simple. Field names are ommitted (only integer field identifiers are used), types are encoded as byte identifiers, sizes are prepended as integers.
-* ``TCompactProtocol`` - A more compact binary encoding. Also not well-documented, but somewhat described `here`_ 
+* ``TCompactProtocol`` - A more compact binary encoding. Also not well-documented, but somewhat described `here`_
 * ``TReadableJSONProtocol`` - Reads and writes human-readable JSON. Unlike ``TJSONProtocol``, ituses actual field names for keys, rather than field identifiers. If the field has a ``wire_name`` annotation, will use that instead of the name. Includes special handling for ``ObjectId``.
-* ``TBSONObjectProtocol`` - Reads and writes BSON ``DBObject``s. It uses field names for keys. If the field has a ``wire_name`` annotation, will use that instead of the name. Includes special handling for ``ObjectId`` and ``DateTime``.
+* ``TBSONObjectProtocol`` - Reads and writes BSON ``DBObject``\s. It uses field names for keys. If the field has a ``wire_name`` annotation, will use that instead of the name. Includes special handling for ``ObjectId`` and ``DateTime``.
 
 .. _here: http://wiki.apache.org/thrift/New_compact_binary_protocol
