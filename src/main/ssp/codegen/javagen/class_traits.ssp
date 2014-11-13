@@ -4,12 +4,14 @@
   import com.foursquare.spindle.codegen.runtime.StructLike
 %>
 <%@ val cls: StructLike %>
-public static interface Java${cls.name}<
+public static interface Java${cls.name}<#if (cls.typeParameterFields.nonEmpty)${cls.typeParameterFields.map(f => "%s extends %s".format(f.javaText, f.javaUnderlying)).distinct.mkString(", ")},#end<%----%>
   ${cls.name}T extends com.foursquare.spindle.Record<${cls.name}T>,
   ${cls.name}Raw extends com.foursquare.spindle.MutableRecord<${cls.name}T>,
   ${cls.name}Meta extends Java${cls.name}Meta<${cls.name}T, ${cls.name}Raw, ${cls.name}Meta>
 > extends com.foursquare.spindle.Record<${cls.name}T> {
-
+#for (field <- cls.fields)
+<% render(field.renderType.fieldDefTemplate, Map("field" -> field)) %>
+#end
 }
 
 <% render("class_traits_mutablet.ssp", Map("cls" -> cls)) %>

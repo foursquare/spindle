@@ -5,7 +5,7 @@
       this.${field.escapedName}_=(that.${field.defaultName})
 #if (field.renderType.isContainer)
     } else if (that.${field.isSetName} && this.${field.isSetName}) {
-      this.${field.escapedName} ++= that.${field.escapedName}
+      this.${field.escapedName}_=(this.${field.escapedName} ++ that.${field.escapedName})
 #end
     }
 #end

@@ -5,4 +5,3 @@
 %>
 <%@ val field: ScalaField %>
 <% render("def_ref.ssp", Map("field" -> field)) %>
-  def ${field.name}ByteArray: Array[Byte]

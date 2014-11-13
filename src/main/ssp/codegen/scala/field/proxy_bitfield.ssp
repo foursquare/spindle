@@ -6,5 +6,6 @@
 <%@ val field: ScalaField %>
 <%
   val renderType = field.renderType.asInstanceOf[BitfieldStructRenderType]
-  render("../" + renderType.ref.fieldDefTemplate, Map("field" -> field))
+  render("../" + renderType.ref.fieldProxyTemplate, Map("field" -> field))
 %>
+  override def ${field.name}Struct: ${renderType.className} = underlying.${field.name}Struct

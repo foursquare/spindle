@@ -28,7 +28,7 @@ object ThriftCodegenPlugin extends Plugin {
     thriftCodegenTemplate := "scala/record.ssp",
     thriftCodegenJavaTemplate := "javagen/record.ssp",
     thriftCodegenAllowReload := false,
-    thriftCodegenVersion := "3.0.0-M2.1",
+    thriftCodegenVersion := "3.0.0-M3",
     thriftCodegenBinaryLibs <<= (thriftCodegenVersion, Keys.scalaBinaryVersion in thrift)((cv, bv) =>
         Seq("com.foursquare" % ("spindle-codegen-binary_" + bv) % cv)
     ),
@@ -61,7 +61,7 @@ object ThriftCodegenPlugin extends Plugin {
     )
 
   private def thriftSettings0 = Seq[Project.Setting[_]](
-    thriftCodegenWorkingDir <<= (Keys.crossTarget, Keys.configuration) { (outDir, conf) => 
+    thriftCodegenWorkingDir <<= (Keys.crossTarget, Keys.configuration) { (outDir, conf) =>
       outDir / (Defaults.prefix(conf.name) + "scalate.d")
     },
     Keys.sourceManaged in thrift ~= (_ / "thrift"), // e.g. /target/scala-2.8.1.final/src_managed/main/thrift

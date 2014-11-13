@@ -6,13 +6,16 @@
 <%@ val cls: StructLike %>
 
 <% val brace = if (!cls.primaryKeyField.isDefined) "{" else "" %>
-
 trait ${cls.name}
 #if (cls.isException)
     extends RuntimeException
-    with Java${cls.name}[${cls.name}, Raw${cls.name}, ${cls.name}Meta]
+    with Java${cls.name}[#if (cls.typeParameterFields.nonEmpty)${cls.typeParameterFields.map(_.text).distinct.mkString(", ")},#end<%----%>
+      ${cls.name}, Raw${cls.name}, ${cls.name}Meta
+    ]
 #else
-    extends Java${cls.name}[${cls.name}, Raw${cls.name}, ${cls.name}Meta]
+    extends Java${cls.name}[#if (cls.typeParameterFields.nonEmpty)${cls.typeParameterFields.map(_.text).distinct.mkString(", ")},#end<%----%>
+      ${cls.name}, Raw${cls.name}, ${cls.name}Meta
+    ]
 #end
 #for (pkField <- cls.primaryKeyField)
     with com.foursquare.spindle.HasPrimaryKey[${pkField.renderType.text}, ${cls.name}]
