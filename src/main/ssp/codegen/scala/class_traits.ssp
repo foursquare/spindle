@@ -10,9 +10,11 @@
 trait ${cls.name}
 #if (cls.isException)
     extends RuntimeException
+    with Java${cls.name}
     with com.foursquare.spindle.Record[${cls.name}]
 #else
-    extends com.foursquare.spindle.Record[${cls.name}]
+    extends Java${cls.name}
+    with com.foursquare.spindle.Record[${cls.name}]
 #end
 #for (pkField <- cls.primaryKeyField)
     with com.foursquare.spindle.HasPrimaryKey[${pkField.renderType.text}, ${cls.name}]

@@ -20,7 +20,7 @@ final class Raw${cls.name}(msg: String) extends RuntimeException(msg) with Mutab
   }
 
 #else
-final class Raw${cls.name} extends Mutable${cls.name} {
+final class Raw${cls.name} extends Java${cls.name}Raw with Mutable${cls.name} {
 #end
   override def meta = ${cls.name}
 

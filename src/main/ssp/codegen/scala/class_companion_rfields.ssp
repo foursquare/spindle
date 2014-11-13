@@ -42,6 +42,7 @@
     )
 #end
 
+  override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
   override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, ${cls.name}, ${cls.name}.type]] =
     Vector[com.foursquare.spindle.FieldDescriptor[_, ${cls.name}, ${cls.name}.type]](
       ${cls.fields.map(_.escapedName).mkString(",\n      ")}

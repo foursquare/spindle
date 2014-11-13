@@ -5,16 +5,15 @@ package com.foursquare.spindle
 trait UntypedMetaRecord {
   def recordName: String
   def annotations: Annotations
-  def createRawRecord: UntypedRecord
-  def fields: Seq[UntypedFieldDescriptor]
-  def ifInstanceFrom(x: AnyRef): Option[UntypedRecord]
+  def createUntypedRawRecord: UntypedRecord
+  def untypedFields: Seq[UntypedFieldDescriptor]
+  def untypedIfInstanceFrom(x: AnyRef): Option[UntypedRecord]
 }
 
 trait MetaRecord[R <: Record[R]] extends UntypedMetaRecord {
   type Mutable <: R
   type Raw <: R
 
-  def recordName: String
   def createRawRecord: Raw with MutableRecord[R]
   def fields: Seq[FieldDescriptor[_, R, this.type]]
   def ifInstanceFrom(x: AnyRef): Option[R]

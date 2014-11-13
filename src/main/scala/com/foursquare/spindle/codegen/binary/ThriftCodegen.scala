@@ -102,7 +102,7 @@ object ThriftCodegen {
             val prefix = program.pkg.map(_.split('.').mkString(File.separator, File.separator, "")).getOrElse("")
             val outputDir = nsOut.getAbsoluteFile.toString + prefix
             new File(outputDir).mkdirs()
-            val outputFile = new File(outputDir + File.separator + source.baseName + ".java")
+            val outputFile = new File(outputDir + File.separator + "java_" + source.baseName + ".java")
             new PrintWriter(outputFile, "UTF-8")
           }
           case (a, b) => {

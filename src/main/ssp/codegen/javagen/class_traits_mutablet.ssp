@@ -1,0 +1,7 @@
+<%
+  // Copyright 2014 Foursquare Labs Inc. All Rights Reserved.
+
+  import com.foursquare.spindle.codegen.runtime.StructLike
+%>
+<%@ val cls: StructLike %>
+public static interface Java${cls.name}Mutable extends Java${cls.name} { }

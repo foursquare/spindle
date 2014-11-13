@@ -8,8 +8,10 @@ class NotImplementedException(s: String) extends Exception(s)
 
 trait RenderType {
   def text: String
+  def javaText: String = text
   def boxedText: String
   def defaultText: String
+  def javaDefaultText: String = defaultText
   def compareTemplate: String
   def fieldDefTemplate: String
   def fieldImplTemplate: String
@@ -32,8 +34,10 @@ trait RenderType {
 
 case class PrimitiveRenderType(
     override val text: String,
+    override val javaText: String,
     override val boxedText: String,
     override val defaultText: String,
+    override val javaDefaultText: String,
     override val ttype: TType
 ) extends RenderType {
   val tprotocolSuffix = ttype match {
@@ -139,6 +143,7 @@ trait ContainerRenderType extends RefRenderType {
 
 abstract class Container1RenderType(override val container: String, val elem: RenderType) extends ContainerRenderType {
   override def text: String = "%s[%s]".format(container, elem.text)
+  override def javaText: String = "%s<%s>".format(container, elem.javaText)
 }
 
 // TODO(jorge): Make this immutable.Seq
@@ -174,6 +179,7 @@ case class SetRenderType(e1: RenderType) extends Container1RenderType("scala.col
 
 abstract class Container2RenderType(override val container: String, val elem1: RenderType, val elem2: RenderType) extends ContainerRenderType {
   override def text: String = "%s[%s, %s]".format(container, elem1.text, elem2.text)
+  override def javaText: String = "%s<%s, %s>".format(container, elem1.javaText, elem2.javaText)
 }
 
 case class MapRenderType(e1: RenderType, e2: RenderType) extends Container2RenderType("scala.collection.immutable.Map", e1, e2) {
@@ -369,12 +375,12 @@ object RenderType {
 
   def apply(tpe: TypeReference): RenderType = {
     tpe match {
-      case BoolRef => PrimitiveRenderType("Boolean", "java.lang.Boolean", "false", TType.BOOL)
-      case ByteRef => PrimitiveRenderType("Byte", "java.lang.Byte", "0", TType.BYTE)
-      case I16Ref => PrimitiveRenderType("Short", "java.lang.Short", "0", TType.I16)
-      case I32Ref => PrimitiveRenderType("Int", "java.lang.Integer", "0", TType.I32)
-      case I64Ref => PrimitiveRenderType("Long", "java.lang.Long", "0L", TType.I64)
-      case DoubleRef => PrimitiveRenderType("Double", "java.lang.Double", "0.0", TType.DOUBLE)
+      case BoolRef => PrimitiveRenderType("Boolean", "boolean", "java.lang.Boolean", "false", "false", TType.BOOL)
+      case ByteRef => PrimitiveRenderType("Byte", "byte", "java.lang.Byte", "0", "0", TType.BYTE)
+      case I16Ref => PrimitiveRenderType("Short", "short", "java.lang.Short", "0", "0", TType.I16)
+      case I32Ref => PrimitiveRenderType("Int", "int", "java.lang.Integer", "0", "0", TType.I32)
+      case I64Ref => PrimitiveRenderType("Long", "long", "java.lang.Long", "0L", "0", TType.I64)
+      case DoubleRef => PrimitiveRenderType("Double", "double", "java.lang.Double", "0.0", "0.0", TType.DOUBLE)
       case StringRef => StringRenderType
       case BinaryRef => BinaryRenderType
       case ListRef(elem) => SeqRenderType(RenderType(elem))
