@@ -12,7 +12,7 @@ trait UntypedRecord {
 }
 
 trait Record[R <: Record[R]] extends UntypedRecord with scala.Ordered[R] { self: R =>
-  def meta: MetaRecord[R]
+  def meta: MetaRecord[R, _]
 
   def mergeCopy(that: R): R
 }

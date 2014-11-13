@@ -4,7 +4,7 @@
   import com.foursquare.spindle.codegen.runtime.StructLike
 %>
 <%@ val cls: StructLike %>
-  override def deepCopy(): ${cls.name}.Raw = {
+  override def deepCopy(): Raw${cls.name} = {
     // May not be the most efficient way to create a deep copy, but we don't expect to use this intensively.
     val trans = new org.apache.thrift.transport.TMemoryBuffer(1024)
     val prot = new org.apache.thrift.protocol.TBinaryProtocol.Factory().getProtocol(trans)

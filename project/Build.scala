@@ -9,7 +9,7 @@ object SpindleBuild extends Build {
       settings = Defaults.defaultSettings ++ Default.scala
     ).aggregate(
       thriftBase, thriftBson, thriftJson, runtime, thriftDescriptors, parser, codegenRuntime, codegenTemplates,
-      codegenBinary, codegenSbtPlugin, testCodegen, testThriftExample, testParser, testRuntime
+      codegenBinary, codegenSbtPlugin, testCodegen, testThriftExample, testParser, testCodegenBinary, testRuntime
     )
 
   lazy val publishable =

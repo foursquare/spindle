@@ -11,12 +11,12 @@ trait FunctionDescriptor[RequestType <: Record[RequestType], ResponseType <: Rec
   /**
    * Return the [[com.foursquare.spindle.MetaRecord]] for this method's arguments.
    */
-  def requestMetaRecord: MetaRecord[RequestType]
+  def requestMetaRecord: MetaRecord[RequestType, _]
 
   /**
    * Return the [[com.foursquare.spindle.MetaRecord]] for this method's response.
    */
-  def responseMetaRecord: MetaRecord[ResponseType]
+  def responseMetaRecord: MetaRecord[ResponseType, _]
 }
 
 trait ServiceDescriptor {

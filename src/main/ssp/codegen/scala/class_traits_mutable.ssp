@@ -1,7 +1,7 @@
 <%
   // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-  import com.foursquare.spindle.codegen.runtime.StructLike 
+  import com.foursquare.spindle.codegen.runtime.StructLike
 %>
 <%@ val cls: StructLike %>
   /** Returns a pointer to a Mutable version of this record.
@@ -16,4 +16,4 @@
     * This is included as an optimization for when we want access to a Mutable record
     * but don't want to pay the cost of copying every time.
     */
-  def mutable: ${cls.name}.Mutable
+  def mutable: Mutable${cls.name}

@@ -28,7 +28,7 @@ val requiredTraits = requiredFields.map(field => "Has" + field.name.capitalize)
     type AllUnspecified = Builder[Any]
   }
 
-  class Builder[+State] private[${cls.name}] (private var obj: ${cls.name}.Raw) {
+  class Builder[+State] private[${cls.name}] (private var obj: Raw${cls.name}) {
 #for ((field, trayt) <- requiredFields zip requiredTraits)
     def ${field.escapedName}(v: ${field.renderType.text}): ${cls.name}.Builder[State with Builder.${trayt}] = {
       obj.${field.escapedName}_=(v)
@@ -84,7 +84,7 @@ val requiredTraits = requiredFields.map(field => "Has" + field.name.capitalize)
   val resultImplicitParams = if (hasRequiredFields) "(implicit %s)".format(paramDecls.mkString(", ")) else ""
   val resultParams = if (hasRequiredFields) "(%s)".format(paramNames.mkString(", ")) else ""
 %>
-    def resultMutable()${resultImplicitParams}: ${cls.name}.Mutable = {
+    def resultMutable()${resultImplicitParams}: Mutable${cls.name} = {
       if (obj != null) {
         val ret = obj
         obj = null

@@ -13,21 +13,21 @@
 
   val ${field.escapedName} =
 #if (field.isForeignKey)
-    new com.foursquare.spindle.ForeignKeyFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type](
+    new com.foursquare.spindle.ForeignKeyFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}Meta](
 #elseif (field.renderType.isInstanceOf[com.foursquare.spindle.codegen.runtime.BitfieldStructRenderType])
 <% val structName = field.renderType.asInstanceOf[com.foursquare.spindle.codegen.runtime.BitfieldStructRenderType].className %>
-    new com.foursquare.spindle.BitfieldFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type, ${structName}, ${structName}.type](
+    new com.foursquare.spindle.BitfieldFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}Meta, ${structName}, ${structName}Meta](
 #else
-    new com.foursquare.spindle.OptionalFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}.type](
+    new com.foursquare.spindle.OptionalFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}Meta](
 #end
       name = "${field.wireName}",
       longName = "${field.name}",
       id = ${field.identifier},
       annotations = Map(${field.annotations.toSeq.map(at => "\"%s\" -> \"%s\"".format(at._1, at._2)).mkString(", ")}),
-      owner = ${cls.name},
+      owner = this,
       getter = _.${field.name}Option,
-      setterRaw = (r: ${cls.name}.Raw, v: ${field.renderType.text}) => { r.${field.escapedName}_=(v) },
-      unsetterRaw = (r: ${cls.name}.Raw) => { r.${field.name}Unset() },
+      setterRaw = (r: com.foursquare.spindle.MutableRecord[${cls.name}], v: ${field.renderType.text}) => { r.asInstanceOf[Raw${cls.name}].${field.escapedName}_=(v) },
+      unsetterRaw = (r: com.foursquare.spindle.MutableRecord[${cls.name}]) => { r.asInstanceOf[Raw${cls.name}].${field.name}Unset() },
 #if (field.isForeignKey)
       objSetter = (r: ${cls.name}, obj: com.foursquare.spindle.SemitypedHasPrimaryKey[${field.renderType.text}]) => { r.${field.name}SetObj(obj) },
       objGetter = (r: ${cls.name}, m: com.foursquare.spindle.UntypedMetaRecord) => { r.${field.name}UntypedFk(m) },
@@ -43,7 +43,7 @@
 #end
 
   override def untypedFields: Seq[com.foursquare.spindle.UntypedFieldDescriptor] = fields
-  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, ${cls.name}, ${cls.name}.type]] =
-    Vector[com.foursquare.spindle.FieldDescriptor[_, ${cls.name}, ${cls.name}.type]](
+  override val fields: Seq[com.foursquare.spindle.FieldDescriptor[_, ${cls.name}, ${cls.name}Meta]] =
+    Vector[com.foursquare.spindle.FieldDescriptor[_, ${cls.name}, ${cls.name}Meta]](
       ${cls.fields.map(_.escapedName).mkString(",\n      ")}
     )

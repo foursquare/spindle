@@ -8,9 +8,14 @@
 def escapeQuotes(str: String): String = str.replace("\"", "\\\"")
 %>\
 
-object ${cls.name}
-    extends Java${cls.name}Meta
-    with com.foursquare.spindle.MetaRecord[${cls.name}]
+object ${cls.name} extends ${cls.name}Meta {
+<% render("class_companion_builder.ssp", Map("cls" -> cls)) %>
+
+  implicit val companionProvider: ${cls.name}CompanionProvider = new ${cls.name}CompanionProvider
+}
+
+class ${cls.name}Meta
+    extends Java${cls.name}Meta[${cls.name}, Raw${cls.name}, ${cls.name}Meta]
 #for (pkField <- cls.primaryKeyField)
     with com.foursquare.spindle.HasMetaPrimaryKey[${pkField.renderType.text}, ${cls.name}]
 #end
@@ -20,12 +25,9 @@ object ${cls.name}
 
 <% render("class_companion_tfields.ssp", Map("cls" -> cls)) %>
 
-  override type Mutable = Mutable${cls.name}
-  override type Raw = Raw${cls.name}
-
   override def createUntypedRawRecord: com.foursquare.spindle.UntypedRecord = createRawRecord
   override def createRecord: ${cls.name} = createRawRecord
-  override def createRawRecord: ${cls.name}.Raw = new ${cls.name}.Raw
+  override def createRawRecord: Raw${cls.name} = new Raw${cls.name}
 
   override def untypedIfInstanceFrom(x: AnyRef): Option[com.foursquare.spindle.UntypedRecord] = ifInstanceFrom(x)
   override def ifInstanceFrom(x: AnyRef): Option[${cls.name}] = {
@@ -44,26 +46,22 @@ object ${cls.name}
 <% render("class_companion_rfields.ssp", Map("cls" -> cls)) %>
 
 #for (pkField <- cls.primaryKeyField)
-  override def primaryKey: com.foursquare.spindle.FieldDescriptor[${pkField.renderType.text}, ${cls.name}, ${cls.name}.type] = this.${pkField.name}
+  override def primaryKey: com.foursquare.spindle.FieldDescriptor[${pkField.renderType.text}, ${cls.name}, ${cls.name}Meta] = this.${pkField.name}
 #end
 \
 
   def apply(
       ${cls.fields.map(field => "%s: %s".format(field.escapedName, field.renderType.text)).mkString(",\n      ")}
   ): ${cls.name} = {
-    val ret = ${cls.name}.createRawRecord
+    val ret = this.createRawRecord
 #for (field <- cls.fields)
     ret.${field.escapedName}_=(${field.escapedName})
 #end
     ret
   }
-
-<% render("class_companion_builder.ssp", Map("cls" -> cls)) %>
-
-  implicit val companionProvider: ${cls.name}CompanionProvider = new ${cls.name}CompanionProvider
 }
 
 class ${cls.name}CompanionProvider extends com.foursquare.spindle.CompanionProvider[${cls.name}] {
-  type CompanionT = ${cls.name}.type
-  override def provide: ${cls.name}.type = ${cls.name}
+  type CompanionT = ${cls.name}Meta
+  override def provide: ${cls.name}Meta = ${cls.name}
 }

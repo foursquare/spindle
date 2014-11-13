@@ -7,30 +7,30 @@ object RuntimeHelpers {
     def missingKey[
         F,
         R <: Record[R],
-        M <: MetaRecord[R],
+        M <: MetaRecord[R, M],
         FR <: Record[FR] with HasPrimaryKey[F, FR]
     ](
         record: R,
         field: ForeignKeyFieldDescriptor[F, R, M],
-        foreignMeta: MetaRecord[FR]
+        foreignMeta: MetaRecord[FR, _]
     ): Option[FR]
 
     def missingObj[
         F,
         R <: Record[R],
-        M <: MetaRecord[R],
+        M <: MetaRecord[R, M],
         FR <: Record[FR] with HasPrimaryKey[F, FR]
     ](
         record: R,
         field: ForeignKeyFieldDescriptor[F, R, M],
-        foreignMeta: MetaRecord[FR],
+        foreignMeta: MetaRecord[FR, _],
         fieldValue: F
     ): Option[FR]
 
     def missingAlternateObj[
         F,
         R <: Record[R],
-        M <: MetaRecord[R]
+        M <: MetaRecord[R, M]
     ](
         record: R,
         field: ForeignKeyFieldDescriptor[F, R, M],
@@ -40,12 +40,12 @@ object RuntimeHelpers {
     def mismatchedInstanceType[
         F,
         R <: Record[R],
-        M <: MetaRecord[R],
+        M <: MetaRecord[R, M],
         FR <: Record[FR] with HasPrimaryKey[F, FR]
     ](
         record: R,
         field: ForeignKeyFieldDescriptor[F, R, M],
-        foreignMeta: MetaRecord[FR],
+        foreignMeta: MetaRecord[FR, _],
         fieldValue: F,
         obj: AnyRef
     ): Option[FR]
@@ -53,12 +53,12 @@ object RuntimeHelpers {
     def mismatchedPrimaryKey[
         F,
         R <: Record[R],
-        M <: MetaRecord[R],
+        M <: MetaRecord[R, M],
         FR <: Record[FR] with HasPrimaryKey[F, FR]
     ](
         record: R,
         field: ForeignKeyFieldDescriptor[F, R, M],
-        foreignMeta: MetaRecord[FR],
+        foreignMeta: MetaRecord[FR, _],
         fieldValue: F,
         foreignRecord: FR
     ): Option[FR]
@@ -68,30 +68,30 @@ object RuntimeHelpers {
     override def missingKey[
         F,
         R <: Record[R],
-        M <: MetaRecord[R],
+        M <: MetaRecord[R, M],
         FR <: Record[FR] with HasPrimaryKey[F, FR]
     ](
         record: R,
         field: ForeignKeyFieldDescriptor[F, R, M],
-        foreignMeta: MetaRecord[FR]
+        foreignMeta: MetaRecord[FR, _]
     ): Option[FR] = None
 
     override def missingObj[
         F,
         R <: Record[R],
-        M <: MetaRecord[R],
+        M <: MetaRecord[R, M],
         FR <: Record[FR] with HasPrimaryKey[F, FR]
     ](
         record: R,
         field: ForeignKeyFieldDescriptor[F, R, M],
-        foreignMeta: MetaRecord[FR],
+        foreignMeta: MetaRecord[FR, _],
         fieldValue: F
     ): Option[FR] = None
 
     override def missingAlternateObj[
         F,
         R <: Record[R],
-        M <: MetaRecord[R]
+        M <: MetaRecord[R, M]
     ](
         record: R,
         field: ForeignKeyFieldDescriptor[F, R, M],
@@ -101,12 +101,12 @@ object RuntimeHelpers {
     override def mismatchedInstanceType[
         F,
         R <: Record[R],
-        M <: MetaRecord[R],
+        M <: MetaRecord[R, M],
         FR <: Record[FR] with HasPrimaryKey[F, FR]
     ](
         record: R,
         field: ForeignKeyFieldDescriptor[F, R, M],
-        foreignMeta: MetaRecord[FR],
+        foreignMeta: MetaRecord[FR, _],
         fieldValue: F,
         obj: AnyRef
     ): Option[FR] = None
@@ -114,12 +114,12 @@ object RuntimeHelpers {
     override def mismatchedPrimaryKey[
         F,
         R <: Record[R],
-        M <: MetaRecord[R],
+        M <: MetaRecord[R, M],
         FR <: Record[FR] with HasPrimaryKey[F, FR]
     ](
         record: R,
         field: ForeignKeyFieldDescriptor[F, R, M],
-        foreignMeta: MetaRecord[FR],
+        foreignMeta: MetaRecord[FR, _],
         fieldValue: F,
         foreignRecord: FR
     ): Option[FR] = None
