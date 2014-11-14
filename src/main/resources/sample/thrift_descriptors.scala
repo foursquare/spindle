@@ -3265,8 +3265,7 @@ class ContainerTypeMeta
 
 
   val simpleContainerType =
-
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SimpleContainerType, ContainerType, ContainerTypeMeta](
+    new com.foursquare.spindle.StructFieldDescriptor[ContainerType, ContainerTypeMeta, com.twitter.thrift.descriptors.SimpleContainerType, com.twitter.thrift.descriptors.SimpleContainerTypeMeta](
       name = "simpleContainerType",
       longName = "simpleContainerType",
       id = 1,
@@ -3275,6 +3274,7 @@ class ContainerTypeMeta
       getter = _.simpleContainerTypeOption,
       setterRaw = (r: com.foursquare.spindle.MutableRecord[ContainerType], v: com.twitter.thrift.descriptors.SimpleContainerType) => { r.asInstanceOf[RawContainerType].simpleContainerType_=(v) },
       unsetterRaw = (r: com.foursquare.spindle.MutableRecord[ContainerType]) => { r.asInstanceOf[RawContainerType].simpleContainerTypeUnset() },
+      structMeta = com.twitter.thrift.descriptors.SimpleContainerType,
       manifest = manifest[com.twitter.thrift.descriptors.SimpleContainerType]
     )
 
@@ -4143,8 +4143,7 @@ class TypeMeta
     )
 
   val simpleType =
-
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SimpleType, Type, TypeMeta](
+    new com.foursquare.spindle.StructFieldDescriptor[Type, TypeMeta, com.twitter.thrift.descriptors.SimpleType, com.twitter.thrift.descriptors.SimpleTypeMeta](
       name = "simpleType",
       longName = "simpleType",
       id = 2,
@@ -4153,6 +4152,7 @@ class TypeMeta
       getter = _.simpleTypeOption,
       setterRaw = (r: com.foursquare.spindle.MutableRecord[Type], v: com.twitter.thrift.descriptors.SimpleType) => { r.asInstanceOf[RawType].simpleType_=(v) },
       unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Type]) => { r.asInstanceOf[RawType].simpleTypeUnset() },
+      structMeta = com.twitter.thrift.descriptors.SimpleType,
       manifest = manifest[com.twitter.thrift.descriptors.SimpleType]
     )
 
@@ -12911,8 +12911,7 @@ class ProgramMeta
     )
 
   val typeRegistry =
-
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.TypeRegistry, Program, ProgramMeta](
+    new com.foursquare.spindle.StructFieldDescriptor[Program, ProgramMeta, com.twitter.thrift.descriptors.TypeRegistry, com.twitter.thrift.descriptors.TypeRegistryMeta](
       name = "typeRegistry",
       longName = "typeRegistry",
       id = 98,
@@ -12921,6 +12920,7 @@ class ProgramMeta
       getter = _.typeRegistryOption,
       setterRaw = (r: com.foursquare.spindle.MutableRecord[Program], v: com.twitter.thrift.descriptors.TypeRegistry) => { r.asInstanceOf[RawProgram].typeRegistry_=(v) },
       unsetterRaw = (r: com.foursquare.spindle.MutableRecord[Program]) => { r.asInstanceOf[RawProgram].typeRegistryUnset() },
+      structMeta = com.twitter.thrift.descriptors.TypeRegistry,
       manifest = manifest[com.twitter.thrift.descriptors.TypeRegistry]
     )
 
@@ -14197,8 +14197,7 @@ class SimpleContainerTypeMeta
 
 
   val listType =
-
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.ListType, SimpleContainerType, SimpleContainerTypeMeta](
+    new com.foursquare.spindle.StructFieldDescriptor[SimpleContainerType, SimpleContainerTypeMeta, com.twitter.thrift.descriptors.ListType, com.twitter.thrift.descriptors.ListTypeMeta](
       name = "listType",
       longName = "listType",
       id = 1,
@@ -14207,12 +14206,12 @@ class SimpleContainerTypeMeta
       getter = _.listTypeOption,
       setterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleContainerType], v: com.twitter.thrift.descriptors.ListType) => { r.asInstanceOf[RawSimpleContainerType].listType_=(v) },
       unsetterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleContainerType]) => { r.asInstanceOf[RawSimpleContainerType].listTypeUnset() },
+      structMeta = com.twitter.thrift.descriptors.ListType,
       manifest = manifest[com.twitter.thrift.descriptors.ListType]
     )
 
   val setType =
-
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.SetType, SimpleContainerType, SimpleContainerTypeMeta](
+    new com.foursquare.spindle.StructFieldDescriptor[SimpleContainerType, SimpleContainerTypeMeta, com.twitter.thrift.descriptors.SetType, com.twitter.thrift.descriptors.SetTypeMeta](
       name = "setType",
       longName = "setType",
       id = 2,
@@ -14221,12 +14220,12 @@ class SimpleContainerTypeMeta
       getter = _.setTypeOption,
       setterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleContainerType], v: com.twitter.thrift.descriptors.SetType) => { r.asInstanceOf[RawSimpleContainerType].setType_=(v) },
       unsetterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleContainerType]) => { r.asInstanceOf[RawSimpleContainerType].setTypeUnset() },
+      structMeta = com.twitter.thrift.descriptors.SetType,
       manifest = manifest[com.twitter.thrift.descriptors.SetType]
     )
 
   val mapType =
-
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.MapType, SimpleContainerType, SimpleContainerTypeMeta](
+    new com.foursquare.spindle.StructFieldDescriptor[SimpleContainerType, SimpleContainerTypeMeta, com.twitter.thrift.descriptors.MapType, com.twitter.thrift.descriptors.MapTypeMeta](
       name = "mapType",
       longName = "mapType",
       id = 3,
@@ -14235,6 +14234,7 @@ class SimpleContainerTypeMeta
       getter = _.mapTypeOption,
       setterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleContainerType], v: com.twitter.thrift.descriptors.MapType) => { r.asInstanceOf[RawSimpleContainerType].mapType_=(v) },
       unsetterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleContainerType]) => { r.asInstanceOf[RawSimpleContainerType].mapTypeUnset() },
+      structMeta = com.twitter.thrift.descriptors.MapType,
       manifest = manifest[com.twitter.thrift.descriptors.MapType]
     )
 
@@ -14770,8 +14770,7 @@ class SimpleTypeMeta
 
 
   val baseType =
-
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.BaseType, SimpleType, SimpleTypeMeta](
+    new com.foursquare.spindle.StructFieldDescriptor[SimpleType, SimpleTypeMeta, com.twitter.thrift.descriptors.BaseType, com.twitter.thrift.descriptors.BaseTypeMeta](
       name = "baseType",
       longName = "baseType",
       id = 1,
@@ -14780,12 +14779,12 @@ class SimpleTypeMeta
       getter = _.baseTypeOption,
       setterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleType], v: com.twitter.thrift.descriptors.BaseType) => { r.asInstanceOf[RawSimpleType].baseType_=(v) },
       unsetterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleType]) => { r.asInstanceOf[RawSimpleType].baseTypeUnset() },
+      structMeta = com.twitter.thrift.descriptors.BaseType,
       manifest = manifest[com.twitter.thrift.descriptors.BaseType]
     )
 
   val containerType =
-
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.ContainerType, SimpleType, SimpleTypeMeta](
+    new com.foursquare.spindle.StructFieldDescriptor[SimpleType, SimpleTypeMeta, com.twitter.thrift.descriptors.ContainerType, com.twitter.thrift.descriptors.ContainerTypeMeta](
       name = "containerType",
       longName = "containerType",
       id = 2,
@@ -14794,12 +14793,12 @@ class SimpleTypeMeta
       getter = _.containerTypeOption,
       setterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleType], v: com.twitter.thrift.descriptors.ContainerType) => { r.asInstanceOf[RawSimpleType].containerType_=(v) },
       unsetterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleType]) => { r.asInstanceOf[RawSimpleType].containerTypeUnset() },
+      structMeta = com.twitter.thrift.descriptors.ContainerType,
       manifest = manifest[com.twitter.thrift.descriptors.ContainerType]
     )
 
   val typeref =
-
-    new com.foursquare.spindle.OptionalFieldDescriptor[com.twitter.thrift.descriptors.Typeref, SimpleType, SimpleTypeMeta](
+    new com.foursquare.spindle.StructFieldDescriptor[SimpleType, SimpleTypeMeta, com.twitter.thrift.descriptors.Typeref, com.twitter.thrift.descriptors.TyperefMeta](
       name = "typeref",
       longName = "typeref",
       id = 3,
@@ -14808,6 +14807,7 @@ class SimpleTypeMeta
       getter = _.typerefOption,
       setterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleType], v: com.twitter.thrift.descriptors.Typeref) => { r.asInstanceOf[RawSimpleType].typeref_=(v) },
       unsetterRaw = (r: com.foursquare.spindle.MutableRecord[SimpleType]) => { r.asInstanceOf[RawSimpleType].typerefUnset() },
+      structMeta = com.twitter.thrift.descriptors.Typeref,
       manifest = manifest[com.twitter.thrift.descriptors.Typeref]
     )
 

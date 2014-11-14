@@ -17,6 +17,8 @@
 #elseif (field.renderType.isInstanceOf[com.foursquare.spindle.codegen.runtime.BitfieldStructRenderType])
 <% val structName = field.renderType.asInstanceOf[com.foursquare.spindle.codegen.runtime.BitfieldStructRenderType].className %>
     new com.foursquare.spindle.BitfieldFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}Meta, ${structName}, ${structName}Meta](
+#elseif (field.renderType.isInstanceOf[com.foursquare.spindle.codegen.runtime.StructRenderType])
+    new com.foursquare.spindle.StructFieldDescriptor[${cls.name}, ${cls.name}Meta, ${field.renderType.text}, ${field.renderType.text}Meta](
 #else
     new com.foursquare.spindle.OptionalFieldDescriptor[${field.renderType.text}, ${cls.name}, ${cls.name}Meta](
 #end
@@ -37,6 +39,8 @@
 #elseif (field.renderType.isInstanceOf[com.foursquare.spindle.codegen.runtime.BitfieldStructRenderType])
 <% val structName = field.renderType.asInstanceOf[com.foursquare.spindle.codegen.runtime.BitfieldStructRenderType].className %>
       structMeta = ${structName},
+#elseif (field.renderType.isInstanceOf[com.foursquare.spindle.codegen.runtime.StructRenderType])
+      structMeta = ${field.renderType.text},
 #end
       manifest = manifest[${field.renderType.text}]
     )
