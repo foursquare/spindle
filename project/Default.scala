@@ -3,6 +3,7 @@
 import com.foursquare.spindle.codegen.plugin.ThriftCodegenPlugin
 import com.mojolly.scalate.ScalatePlugin
 import com.mojolly.scalate.ScalatePlugin.{ScalateKeys, TemplateConfig}
+import sbtbuildinfo.Plugin._
 import sbt._
 
 object Default {
@@ -86,6 +87,11 @@ object Default {
         opts
       }
     })
+  ) ++ buildInfoSettings ++ Seq(
+    Keys.sourceGenerators in Compile <+= buildInfo,
+    buildInfoKeys := Seq[BuildInfoKey](Keys.version),
+    buildInfoPackage := "com.foursquare.spindle",
+    buildInfoObject := "Info"
   )
 
   val scalate: Seq[Setting[_]] = Default.scala ++ ScalatePlugin.scalateSettings ++ Seq(

@@ -2,7 +2,7 @@
 
 package com.foursquare.spindle.codegen.binary
 
-import com.foursquare.spindle.Annotations
+import com.foursquare.spindle.{Annotations, Info}
 import com.foursquare.spindle.codegen.runtime.{BitfieldRef, CodegenException, EnhancedTypeRef, EnhancedTypes,
     ProgramSource, ScalaProgram, Scope, TypeDeclaration, TypeDeclarationResolver, TypeReference}
 import com.foursquare.spindle.codegen.parser.{ParserException, ThriftParser}
@@ -113,7 +113,8 @@ object ThriftCodegen {
           Map(
             "program" -> program,
             "source" -> source,
-            "templatePath" -> templatePath)
+            "templatePath" -> templatePath,
+            "version" -> Info.version)
         try {
           engine.layout(templatePath, out, args)
         } catch {

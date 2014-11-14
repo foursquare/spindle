@@ -10,3 +10,5 @@ addSbtPlugin(
   "com.foursquare" % "spindle-codegen-plugin" % "3.0.0-M3.1",
   scalaVersion = "2.9.2",
   sbtVersion = "0.12")
+
+addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.2.5")
