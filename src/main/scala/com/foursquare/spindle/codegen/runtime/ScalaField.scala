@@ -15,7 +15,7 @@ class ScalaField(
   val wireNameOpt: Option[String] = annotations.get("wire_name")
   val wireName: String = wireNameOpt.getOrElse(name)
   val varName: String = "_" + name
-  val tfieldName: String = name.toUpperCase + "_DESC"
+  val tfieldName: String = name.toUpperCase + "_FDESC"
   val isSetName: String = name + "IsSet"
   val isSetVar: String = "_" + isSetName
   val builderRequired: Boolean = 

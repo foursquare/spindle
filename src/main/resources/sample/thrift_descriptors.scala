@@ -188,9 +188,9 @@ class IncludeMeta
 
 
   // Thrift descriptors.
-  val INCLUDE_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Include")
+  val INCLUDE_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Include")
 
-  val PATH_DESC: org.apache.thrift.protocol.TField =
+  val PATH_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "path",
       org.apache.thrift.protocol.TType.STRING,
@@ -204,7 +204,7 @@ class IncludeMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "path" -> PATH_DESC
+    "path" -> PATH_FDESC
   )
 
   object _Fields {
@@ -378,9 +378,9 @@ final class RawInclude extends JavaIncludeRaw[
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Include.INCLUDE_DESC)
+    oprot.writeStructBegin(Include.INCLUDE_SDESC)
     if (pathIsSet) {
-      oprot.writeFieldBegin(Include.PATH_DESC)
+      oprot.writeFieldBegin(Include.PATH_FDESC)
       oprot.writeString(_path)
       oprot.writeFieldEnd()
     }
@@ -570,9 +570,9 @@ class NamespaceMeta
 
 
   // Thrift descriptors.
-  val NAMESPACE_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Namespace")
+  val NAMESPACE_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Namespace")
 
-  val LANGUAGE_DESC: org.apache.thrift.protocol.TField =
+  val LANGUAGE_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "language",
       org.apache.thrift.protocol.TType.STRING,
@@ -582,7 +582,7 @@ class NamespaceMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val NAME_DESC: org.apache.thrift.protocol.TField =
+  val NAME_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "name",
       org.apache.thrift.protocol.TType.STRING,
@@ -596,8 +596,8 @@ class NamespaceMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "language" -> LANGUAGE_DESC,
-    "name" -> NAME_DESC
+    "language" -> LANGUAGE_FDESC,
+    "name" -> NAME_FDESC
   )
 
   object _Fields {
@@ -813,14 +813,14 @@ final class RawNamespace extends JavaNamespaceRaw[
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Namespace.NAMESPACE_DESC)
+    oprot.writeStructBegin(Namespace.NAMESPACE_SDESC)
     if (languageIsSet) {
-      oprot.writeFieldBegin(Namespace.LANGUAGE_DESC)
+      oprot.writeFieldBegin(Namespace.LANGUAGE_FDESC)
       oprot.writeString(_language)
       oprot.writeFieldEnd()
     }
     if (nameIsSet) {
-      oprot.writeFieldBegin(Namespace.NAME_DESC)
+      oprot.writeFieldBegin(Namespace.NAME_FDESC)
       oprot.writeString(_name)
       oprot.writeFieldEnd()
     }
@@ -1031,9 +1031,9 @@ class AnnotationMeta
 
 
   // Thrift descriptors.
-  val ANNOTATION_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Annotation")
+  val ANNOTATION_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Annotation")
 
-  val KEY_DESC: org.apache.thrift.protocol.TField =
+  val KEY_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "key",
       org.apache.thrift.protocol.TType.STRING,
@@ -1043,7 +1043,7 @@ class AnnotationMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val VALUE_DESC: org.apache.thrift.protocol.TField =
+  val VALUE_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "value",
       org.apache.thrift.protocol.TType.STRING,
@@ -1057,8 +1057,8 @@ class AnnotationMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "key" -> KEY_DESC,
-    "value" -> VALUE_DESC
+    "key" -> KEY_FDESC,
+    "value" -> VALUE_FDESC
   )
 
   object _Fields {
@@ -1274,14 +1274,14 @@ final class RawAnnotation extends JavaAnnotationRaw[
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Annotation.ANNOTATION_DESC)
+    oprot.writeStructBegin(Annotation.ANNOTATION_SDESC)
     if (keyIsSet) {
-      oprot.writeFieldBegin(Annotation.KEY_DESC)
+      oprot.writeFieldBegin(Annotation.KEY_FDESC)
       oprot.writeString(_key)
       oprot.writeFieldEnd()
     }
     if (valueIsSet) {
-      oprot.writeFieldBegin(Annotation.VALUE_DESC)
+      oprot.writeFieldBegin(Annotation.VALUE_FDESC)
       oprot.writeString(_value)
       oprot.writeFieldEnd()
     }
@@ -1499,9 +1499,9 @@ class BaseTypeMeta
 
 
   // Thrift descriptors.
-  val BASETYPE_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("BaseType")
+  val BASETYPE_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("BaseType")
 
-  val SIMPLEBASETYPE_DESC: org.apache.thrift.protocol.TField =
+  val SIMPLEBASETYPE_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "simpleBaseType",
       org.apache.thrift.protocol.TType.I32,
@@ -1511,7 +1511,7 @@ class BaseTypeMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ANNOTATIONS_DESC: org.apache.thrift.protocol.TField =
+  val ANNOTATIONS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "annotations",
       org.apache.thrift.protocol.TType.LIST,
@@ -1525,8 +1525,8 @@ class BaseTypeMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "simpleBaseType" -> SIMPLEBASETYPE_DESC,
-    "annotations" -> ANNOTATIONS_DESC
+    "simpleBaseType" -> SIMPLEBASETYPE_FDESC,
+    "annotations" -> ANNOTATIONS_FDESC
   )
 
   object _Fields {
@@ -1743,14 +1743,14 @@ final class RawBaseType extends JavaBaseTypeRaw[com.twitter.thrift.descriptors.A
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(BaseType.BASETYPE_DESC)
+    oprot.writeStructBegin(BaseType.BASETYPE_SDESC)
     if (simpleBaseTypeIsSet) {
-      oprot.writeFieldBegin(BaseType.SIMPLEBASETYPE_DESC)
+      oprot.writeFieldBegin(BaseType.SIMPLEBASETYPE_FDESC)
       oprot.writeI32(_simpleBaseType.getValue())
       oprot.writeFieldEnd()
     }
     if (annotationsIsSet) {
-      oprot.writeFieldBegin(BaseType.ANNOTATIONS_DESC)
+      oprot.writeFieldBegin(BaseType.ANNOTATIONS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _annotations.size))
       _annotations.foreach(element => {
         element.write(oprot)
@@ -1977,9 +1977,9 @@ class ListTypeMeta
 
 
   // Thrift descriptors.
-  val LISTTYPE_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("ListType")
+  val LISTTYPE_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("ListType")
 
-  val ELEMENTTYPEID_DESC: org.apache.thrift.protocol.TField =
+  val ELEMENTTYPEID_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "elementTypeId",
       org.apache.thrift.protocol.TType.STRING,
@@ -1993,7 +1993,7 @@ class ListTypeMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "elementTypeId" -> ELEMENTTYPEID_DESC
+    "elementTypeId" -> ELEMENTTYPEID_FDESC
   )
 
   object _Fields {
@@ -2167,9 +2167,9 @@ final class RawListType extends JavaListTypeRaw[
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(ListType.LISTTYPE_DESC)
+    oprot.writeStructBegin(ListType.LISTTYPE_SDESC)
     if (elementTypeIdIsSet) {
-      oprot.writeFieldBegin(ListType.ELEMENTTYPEID_DESC)
+      oprot.writeFieldBegin(ListType.ELEMENTTYPEID_FDESC)
       oprot.writeString(_elementTypeId)
       oprot.writeFieldEnd()
     }
@@ -2353,9 +2353,9 @@ class SetTypeMeta
 
 
   // Thrift descriptors.
-  val SETTYPE_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("SetType")
+  val SETTYPE_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("SetType")
 
-  val ELEMENTTYPEID_DESC: org.apache.thrift.protocol.TField =
+  val ELEMENTTYPEID_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "elementTypeId",
       org.apache.thrift.protocol.TType.STRING,
@@ -2369,7 +2369,7 @@ class SetTypeMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "elementTypeId" -> ELEMENTTYPEID_DESC
+    "elementTypeId" -> ELEMENTTYPEID_FDESC
   )
 
   object _Fields {
@@ -2543,9 +2543,9 @@ final class RawSetType extends JavaSetTypeRaw[
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(SetType.SETTYPE_DESC)
+    oprot.writeStructBegin(SetType.SETTYPE_SDESC)
     if (elementTypeIdIsSet) {
-      oprot.writeFieldBegin(SetType.ELEMENTTYPEID_DESC)
+      oprot.writeFieldBegin(SetType.ELEMENTTYPEID_FDESC)
       oprot.writeString(_elementTypeId)
       oprot.writeFieldEnd()
     }
@@ -2735,9 +2735,9 @@ class MapTypeMeta
 
 
   // Thrift descriptors.
-  val MAPTYPE_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("MapType")
+  val MAPTYPE_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("MapType")
 
-  val KEYTYPEID_DESC: org.apache.thrift.protocol.TField =
+  val KEYTYPEID_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "keyTypeId",
       org.apache.thrift.protocol.TType.STRING,
@@ -2747,7 +2747,7 @@ class MapTypeMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val VALUETYPEID_DESC: org.apache.thrift.protocol.TField =
+  val VALUETYPEID_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "valueTypeId",
       org.apache.thrift.protocol.TType.STRING,
@@ -2761,8 +2761,8 @@ class MapTypeMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "keyTypeId" -> KEYTYPEID_DESC,
-    "valueTypeId" -> VALUETYPEID_DESC
+    "keyTypeId" -> KEYTYPEID_FDESC,
+    "valueTypeId" -> VALUETYPEID_FDESC
   )
 
   object _Fields {
@@ -2978,14 +2978,14 @@ final class RawMapType extends JavaMapTypeRaw[
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(MapType.MAPTYPE_DESC)
+    oprot.writeStructBegin(MapType.MAPTYPE_SDESC)
     if (keyTypeIdIsSet) {
-      oprot.writeFieldBegin(MapType.KEYTYPEID_DESC)
+      oprot.writeFieldBegin(MapType.KEYTYPEID_FDESC)
       oprot.writeString(_keyTypeId)
       oprot.writeFieldEnd()
     }
     if (valueTypeIdIsSet) {
-      oprot.writeFieldBegin(MapType.VALUETYPEID_DESC)
+      oprot.writeFieldBegin(MapType.VALUETYPEID_FDESC)
       oprot.writeString(_valueTypeId)
       oprot.writeFieldEnd()
     }
@@ -3203,9 +3203,9 @@ class ContainerTypeMeta
 
 
   // Thrift descriptors.
-  val CONTAINERTYPE_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("ContainerType")
+  val CONTAINERTYPE_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("ContainerType")
 
-  val SIMPLECONTAINERTYPE_DESC: org.apache.thrift.protocol.TField =
+  val SIMPLECONTAINERTYPE_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "simpleContainerType",
       org.apache.thrift.protocol.TType.STRUCT,
@@ -3215,7 +3215,7 @@ class ContainerTypeMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ANNOTATIONS_DESC: org.apache.thrift.protocol.TField =
+  val ANNOTATIONS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "annotations",
       org.apache.thrift.protocol.TType.LIST,
@@ -3229,8 +3229,8 @@ class ContainerTypeMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "simpleContainerType" -> SIMPLECONTAINERTYPE_DESC,
-    "annotations" -> ANNOTATIONS_DESC
+    "simpleContainerType" -> SIMPLECONTAINERTYPE_FDESC,
+    "annotations" -> ANNOTATIONS_FDESC
   )
 
   object _Fields {
@@ -3447,14 +3447,14 @@ final class RawContainerType extends JavaContainerTypeRaw[com.twitter.thrift.des
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(ContainerType.CONTAINERTYPE_DESC)
+    oprot.writeStructBegin(ContainerType.CONTAINERTYPE_SDESC)
     if (simpleContainerTypeIsSet) {
-      oprot.writeFieldBegin(ContainerType.SIMPLECONTAINERTYPE_DESC)
+      oprot.writeFieldBegin(ContainerType.SIMPLECONTAINERTYPE_FDESC)
       _simpleContainerType.write(oprot)
       oprot.writeFieldEnd()
     }
     if (annotationsIsSet) {
-      oprot.writeFieldBegin(ContainerType.ANNOTATIONS_DESC)
+      oprot.writeFieldBegin(ContainerType.ANNOTATIONS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _annotations.size))
       _annotations.foreach(element => {
         element.write(oprot)
@@ -3685,9 +3685,9 @@ class TyperefMeta
 
 
   // Thrift descriptors.
-  val TYPEREF_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Typeref")
+  val TYPEREF_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Typeref")
 
-  val TYPEALIAS_DESC: org.apache.thrift.protocol.TField =
+  val TYPEALIAS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "typeAlias",
       org.apache.thrift.protocol.TType.STRING,
@@ -3701,7 +3701,7 @@ class TyperefMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "typeAlias" -> TYPEALIAS_DESC
+    "typeAlias" -> TYPEALIAS_FDESC
   )
 
   object _Fields {
@@ -3875,9 +3875,9 @@ final class RawTyperef extends JavaTyperefRaw[
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Typeref.TYPEREF_DESC)
+    oprot.writeStructBegin(Typeref.TYPEREF_SDESC)
     if (typeAliasIsSet) {
-      oprot.writeFieldBegin(Typeref.TYPEALIAS_DESC)
+      oprot.writeFieldBegin(Typeref.TYPEALIAS_FDESC)
       oprot.writeString(_typeAlias)
       oprot.writeFieldEnd()
     }
@@ -4067,9 +4067,9 @@ class TypeMeta
 
 
   // Thrift descriptors.
-  val TYPE_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Type")
+  val TYPE_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Type")
 
-  val ID_DESC: org.apache.thrift.protocol.TField =
+  val ID_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "id",
       org.apache.thrift.protocol.TType.STRING,
@@ -4079,7 +4079,7 @@ class TypeMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val SIMPLETYPE_DESC: org.apache.thrift.protocol.TField =
+  val SIMPLETYPE_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "simpleType",
       org.apache.thrift.protocol.TType.STRUCT,
@@ -4093,8 +4093,8 @@ class TypeMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "id" -> ID_DESC,
-    "simpleType" -> SIMPLETYPE_DESC
+    "id" -> ID_FDESC,
+    "simpleType" -> SIMPLETYPE_FDESC
   )
 
   object _Fields {
@@ -4310,14 +4310,14 @@ final class RawType extends JavaTypeRaw[com.twitter.thrift.descriptors.SimpleTyp
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Type.TYPE_DESC)
+    oprot.writeStructBegin(Type.TYPE_SDESC)
     if (idIsSet) {
-      oprot.writeFieldBegin(Type.ID_DESC)
+      oprot.writeFieldBegin(Type.ID_FDESC)
       oprot.writeString(_id)
       oprot.writeFieldEnd()
     }
     if (simpleTypeIsSet) {
-      oprot.writeFieldBegin(Type.SIMPLETYPE_DESC)
+      oprot.writeFieldBegin(Type.SIMPLETYPE_FDESC)
       _simpleType.write(oprot)
       oprot.writeFieldEnd()
     }
@@ -4545,9 +4545,9 @@ class TypedefMeta
 
 
   // Thrift descriptors.
-  val TYPEDEF_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Typedef")
+  val TYPEDEF_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Typedef")
 
-  val TYPEID_DESC: org.apache.thrift.protocol.TField =
+  val TYPEID_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "typeId",
       org.apache.thrift.protocol.TType.STRING,
@@ -4557,7 +4557,7 @@ class TypedefMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val TYPEALIAS_DESC: org.apache.thrift.protocol.TField =
+  val TYPEALIAS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "typeAlias",
       org.apache.thrift.protocol.TType.STRING,
@@ -4567,7 +4567,7 @@ class TypedefMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ANNOTATIONS_DESC: org.apache.thrift.protocol.TField =
+  val ANNOTATIONS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "annotations",
       org.apache.thrift.protocol.TType.LIST,
@@ -4581,9 +4581,9 @@ class TypedefMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "typeId" -> TYPEID_DESC,
-    "typeAlias" -> TYPEALIAS_DESC,
-    "annotations" -> ANNOTATIONS_DESC
+    "typeId" -> TYPEID_FDESC,
+    "typeAlias" -> TYPEALIAS_FDESC,
+    "annotations" -> ANNOTATIONS_FDESC
   )
 
   object _Fields {
@@ -4927,19 +4927,19 @@ final class RawTypedef extends JavaTypedefRaw[com.twitter.thrift.descriptors.Ann
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Typedef.TYPEDEF_DESC)
+    oprot.writeStructBegin(Typedef.TYPEDEF_SDESC)
     if (typeIdIsSet) {
-      oprot.writeFieldBegin(Typedef.TYPEID_DESC)
+      oprot.writeFieldBegin(Typedef.TYPEID_FDESC)
       oprot.writeString(_typeId)
       oprot.writeFieldEnd()
     }
     if (typeAliasIsSet) {
-      oprot.writeFieldBegin(Typedef.TYPEALIAS_DESC)
+      oprot.writeFieldBegin(Typedef.TYPEALIAS_FDESC)
       oprot.writeString(_typeAlias)
       oprot.writeFieldEnd()
     }
     if (annotationsIsSet) {
-      oprot.writeFieldBegin(Typedef.ANNOTATIONS_DESC)
+      oprot.writeFieldBegin(Typedef.ANNOTATIONS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _annotations.size))
       _annotations.foreach(element => {
         element.write(oprot)
@@ -5193,9 +5193,9 @@ class TypeRegistryMeta
 
 
   // Thrift descriptors.
-  val TYPEREGISTRY_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("TypeRegistry")
+  val TYPEREGISTRY_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("TypeRegistry")
 
-  val IDTOTYPE_DESC: org.apache.thrift.protocol.TField =
+  val IDTOTYPE_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "idToType",
       org.apache.thrift.protocol.TType.MAP,
@@ -5205,7 +5205,7 @@ class TypeRegistryMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ALIASTOTYPEID_DESC: org.apache.thrift.protocol.TField =
+  val ALIASTOTYPEID_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "aliasToTypeId",
       org.apache.thrift.protocol.TType.MAP,
@@ -5219,8 +5219,8 @@ class TypeRegistryMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "idToType" -> IDTOTYPE_DESC,
-    "aliasToTypeId" -> ALIASTOTYPEID_DESC
+    "idToType" -> IDTOTYPE_FDESC,
+    "aliasToTypeId" -> ALIASTOTYPEID_FDESC
   )
 
   object _Fields {
@@ -5438,9 +5438,9 @@ final class RawTypeRegistry extends JavaTypeRegistryRaw[com.twitter.thrift.descr
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(TypeRegistry.TYPEREGISTRY_DESC)
+    oprot.writeStructBegin(TypeRegistry.TYPEREGISTRY_SDESC)
     if (idToTypeIsSet) {
-      oprot.writeFieldBegin(TypeRegistry.IDTOTYPE_DESC)
+      oprot.writeFieldBegin(TypeRegistry.IDTOTYPE_FDESC)
       oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRUCT, _idToType.size))
       _idToType.foreach(item => {
         oprot.writeString(item._1)
@@ -5450,7 +5450,7 @@ final class RawTypeRegistry extends JavaTypeRegistryRaw[com.twitter.thrift.descr
       oprot.writeFieldEnd()
     }
     if (aliasToTypeIdIsSet) {
-      oprot.writeFieldBegin(TypeRegistry.ALIASTOTYPEID_DESC)
+      oprot.writeFieldBegin(TypeRegistry.ALIASTOTYPEID_FDESC)
       oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, _aliasToTypeId.size))
       _aliasToTypeId.foreach(item => {
         oprot.writeString(item._1)
@@ -5708,9 +5708,9 @@ class ConstMeta
 
 
   // Thrift descriptors.
-  val CONST_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Const")
+  val CONST_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Const")
 
-  val TYPEID_DESC: org.apache.thrift.protocol.TField =
+  val TYPEID_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "typeId",
       org.apache.thrift.protocol.TType.STRING,
@@ -5720,7 +5720,7 @@ class ConstMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val NAME_DESC: org.apache.thrift.protocol.TField =
+  val NAME_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "name",
       org.apache.thrift.protocol.TType.STRING,
@@ -5730,7 +5730,7 @@ class ConstMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val VALUE_DESC: org.apache.thrift.protocol.TField =
+  val VALUE_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "value",
       org.apache.thrift.protocol.TType.STRING,
@@ -5744,9 +5744,9 @@ class ConstMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "typeId" -> TYPEID_DESC,
-    "name" -> NAME_DESC,
-    "value" -> VALUE_DESC
+    "typeId" -> TYPEID_FDESC,
+    "name" -> NAME_FDESC,
+    "value" -> VALUE_FDESC
   )
 
   object _Fields {
@@ -6089,19 +6089,19 @@ final class RawConst extends JavaConstRaw[
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Const.CONST_DESC)
+    oprot.writeStructBegin(Const.CONST_SDESC)
     if (typeIdIsSet) {
-      oprot.writeFieldBegin(Const.TYPEID_DESC)
+      oprot.writeFieldBegin(Const.TYPEID_FDESC)
       oprot.writeString(_typeId)
       oprot.writeFieldEnd()
     }
     if (nameIsSet) {
-      oprot.writeFieldBegin(Const.NAME_DESC)
+      oprot.writeFieldBegin(Const.NAME_FDESC)
       oprot.writeString(_name)
       oprot.writeFieldEnd()
     }
     if (valueIsSet) {
-      oprot.writeFieldBegin(Const.VALUE_DESC)
+      oprot.writeFieldBegin(Const.VALUE_FDESC)
       oprot.writeString(_value)
       oprot.writeFieldEnd()
     }
@@ -6346,9 +6346,9 @@ class EnumElementMeta
 
 
   // Thrift descriptors.
-  val ENUMELEMENT_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("EnumElement")
+  val ENUMELEMENT_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("EnumElement")
 
-  val NAME_DESC: org.apache.thrift.protocol.TField =
+  val NAME_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "name",
       org.apache.thrift.protocol.TType.STRING,
@@ -6358,7 +6358,7 @@ class EnumElementMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val VALUE_DESC: org.apache.thrift.protocol.TField =
+  val VALUE_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "value",
       org.apache.thrift.protocol.TType.I32,
@@ -6368,7 +6368,7 @@ class EnumElementMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ANNOTATIONS_DESC: org.apache.thrift.protocol.TField =
+  val ANNOTATIONS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "annotations",
       org.apache.thrift.protocol.TType.LIST,
@@ -6382,9 +6382,9 @@ class EnumElementMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "name" -> NAME_DESC,
-    "value" -> VALUE_DESC,
-    "annotations" -> ANNOTATIONS_DESC
+    "name" -> NAME_FDESC,
+    "value" -> VALUE_FDESC,
+    "annotations" -> ANNOTATIONS_FDESC
   )
 
   object _Fields {
@@ -6731,19 +6731,19 @@ final class RawEnumElement extends JavaEnumElementRaw[com.twitter.thrift.descrip
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(EnumElement.ENUMELEMENT_DESC)
+    oprot.writeStructBegin(EnumElement.ENUMELEMENT_SDESC)
     if (nameIsSet) {
-      oprot.writeFieldBegin(EnumElement.NAME_DESC)
+      oprot.writeFieldBegin(EnumElement.NAME_FDESC)
       oprot.writeString(_name)
       oprot.writeFieldEnd()
     }
     if (valueIsSet) {
-      oprot.writeFieldBegin(EnumElement.VALUE_DESC)
+      oprot.writeFieldBegin(EnumElement.VALUE_FDESC)
       oprot.writeI32(_value)
       oprot.writeFieldEnd()
     }
     if (annotationsIsSet) {
-      oprot.writeFieldBegin(EnumElement.ANNOTATIONS_DESC)
+      oprot.writeFieldBegin(EnumElement.ANNOTATIONS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _annotations.size))
       _annotations.foreach(element => {
         element.write(oprot)
@@ -7012,9 +7012,9 @@ class EnumMeta
 
 
   // Thrift descriptors.
-  val ENUM_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Enum")
+  val ENUM_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Enum")
 
-  val NAME_DESC: org.apache.thrift.protocol.TField =
+  val NAME_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "name",
       org.apache.thrift.protocol.TType.STRING,
@@ -7024,7 +7024,7 @@ class EnumMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ELEMENTS_DESC: org.apache.thrift.protocol.TField =
+  val ELEMENTS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "elements",
       org.apache.thrift.protocol.TType.LIST,
@@ -7034,7 +7034,7 @@ class EnumMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ANNOTATIONS_DESC: org.apache.thrift.protocol.TField =
+  val ANNOTATIONS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "annotations",
       org.apache.thrift.protocol.TType.LIST,
@@ -7048,9 +7048,9 @@ class EnumMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "name" -> NAME_DESC,
-    "elements" -> ELEMENTS_DESC,
-    "annotations" -> ANNOTATIONS_DESC
+    "name" -> NAME_FDESC,
+    "elements" -> ELEMENTS_FDESC,
+    "annotations" -> ANNOTATIONS_FDESC
   )
 
   object _Fields {
@@ -7395,14 +7395,14 @@ final class RawEnum extends JavaEnumRaw[com.twitter.thrift.descriptors.Annotatio
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Enum.ENUM_DESC)
+    oprot.writeStructBegin(Enum.ENUM_SDESC)
     if (nameIsSet) {
-      oprot.writeFieldBegin(Enum.NAME_DESC)
+      oprot.writeFieldBegin(Enum.NAME_FDESC)
       oprot.writeString(_name)
       oprot.writeFieldEnd()
     }
     if (elementsIsSet) {
-      oprot.writeFieldBegin(Enum.ELEMENTS_DESC)
+      oprot.writeFieldBegin(Enum.ELEMENTS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _elements.size))
       _elements.foreach(element => {
         element.write(oprot)
@@ -7411,7 +7411,7 @@ final class RawEnum extends JavaEnumRaw[com.twitter.thrift.descriptors.Annotatio
       oprot.writeFieldEnd()
     }
     if (annotationsIsSet) {
-      oprot.writeFieldBegin(Enum.ANNOTATIONS_DESC)
+      oprot.writeFieldBegin(Enum.ANNOTATIONS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _annotations.size))
       _annotations.foreach(element => {
         element.write(oprot)
@@ -7728,9 +7728,9 @@ class FieldMeta
 
 
   // Thrift descriptors.
-  val FIELD_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Field")
+  val FIELD_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Field")
 
-  val IDENTIFIER_DESC: org.apache.thrift.protocol.TField =
+  val IDENTIFIER_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "identifier",
       org.apache.thrift.protocol.TType.I16,
@@ -7740,7 +7740,7 @@ class FieldMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val NAME_DESC: org.apache.thrift.protocol.TField =
+  val NAME_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "name",
       org.apache.thrift.protocol.TType.STRING,
@@ -7750,7 +7750,7 @@ class FieldMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val TYPEID_DESC: org.apache.thrift.protocol.TField =
+  val TYPEID_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "typeId",
       org.apache.thrift.protocol.TType.STRING,
@@ -7760,7 +7760,7 @@ class FieldMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val REQUIREDNESS_DESC: org.apache.thrift.protocol.TField =
+  val REQUIREDNESS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "requiredness",
       org.apache.thrift.protocol.TType.I32,
@@ -7770,7 +7770,7 @@ class FieldMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val DEFAULTVALUE_DESC: org.apache.thrift.protocol.TField =
+  val DEFAULTVALUE_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "defaultValue",
       org.apache.thrift.protocol.TType.STRING,
@@ -7780,7 +7780,7 @@ class FieldMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ANNOTATIONS_DESC: org.apache.thrift.protocol.TField =
+  val ANNOTATIONS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "annotations",
       org.apache.thrift.protocol.TType.LIST,
@@ -7794,12 +7794,12 @@ class FieldMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "identifier" -> IDENTIFIER_DESC,
-    "name" -> NAME_DESC,
-    "typeId" -> TYPEID_DESC,
-    "requiredness" -> REQUIREDNESS_DESC,
-    "defaultValue" -> DEFAULTVALUE_DESC,
-    "annotations" -> ANNOTATIONS_DESC
+    "identifier" -> IDENTIFIER_FDESC,
+    "name" -> NAME_FDESC,
+    "typeId" -> TYPEID_FDESC,
+    "requiredness" -> REQUIREDNESS_FDESC,
+    "defaultValue" -> DEFAULTVALUE_FDESC,
+    "annotations" -> ANNOTATIONS_FDESC
   )
 
   object _Fields {
@@ -8305,34 +8305,34 @@ final class RawField extends JavaFieldRaw[com.twitter.thrift.descriptors.Annotat
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Field.FIELD_DESC)
+    oprot.writeStructBegin(Field.FIELD_SDESC)
     if (identifierIsSet) {
-      oprot.writeFieldBegin(Field.IDENTIFIER_DESC)
+      oprot.writeFieldBegin(Field.IDENTIFIER_FDESC)
       oprot.writeI16(_identifier)
       oprot.writeFieldEnd()
     }
     if (nameIsSet) {
-      oprot.writeFieldBegin(Field.NAME_DESC)
+      oprot.writeFieldBegin(Field.NAME_FDESC)
       oprot.writeString(_name)
       oprot.writeFieldEnd()
     }
     if (typeIdIsSet) {
-      oprot.writeFieldBegin(Field.TYPEID_DESC)
+      oprot.writeFieldBegin(Field.TYPEID_FDESC)
       oprot.writeString(_typeId)
       oprot.writeFieldEnd()
     }
     if (requirednessIsSet) {
-      oprot.writeFieldBegin(Field.REQUIREDNESS_DESC)
+      oprot.writeFieldBegin(Field.REQUIREDNESS_FDESC)
       oprot.writeI32(_requiredness.getValue())
       oprot.writeFieldEnd()
     }
     if (defaultValueIsSet) {
-      oprot.writeFieldBegin(Field.DEFAULTVALUE_DESC)
+      oprot.writeFieldBegin(Field.DEFAULTVALUE_FDESC)
       oprot.writeString(_defaultValue)
       oprot.writeFieldEnd()
     }
     if (annotationsIsSet) {
-      oprot.writeFieldBegin(Field.ANNOTATIONS_DESC)
+      oprot.writeFieldBegin(Field.ANNOTATIONS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _annotations.size))
       _annotations.foreach(element => {
         element.write(oprot)
@@ -8664,9 +8664,9 @@ class StructMeta
 
 
   // Thrift descriptors.
-  val STRUCT_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Struct")
+  val STRUCT_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Struct")
 
-  val NAME_DESC: org.apache.thrift.protocol.TField =
+  val NAME_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "name",
       org.apache.thrift.protocol.TType.STRING,
@@ -8676,7 +8676,7 @@ class StructMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val FIELDS_DESC: org.apache.thrift.protocol.TField =
+  val FIELDS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "fields",
       org.apache.thrift.protocol.TType.LIST,
@@ -8686,7 +8686,7 @@ class StructMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ANNOTATIONS_DESC: org.apache.thrift.protocol.TField =
+  val ANNOTATIONS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "annotations",
       org.apache.thrift.protocol.TType.LIST,
@@ -8700,9 +8700,9 @@ class StructMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "name" -> NAME_DESC,
-    "fields" -> FIELDS_DESC,
-    "annotations" -> ANNOTATIONS_DESC
+    "name" -> NAME_FDESC,
+    "fields" -> FIELDS_FDESC,
+    "annotations" -> ANNOTATIONS_FDESC
   )
 
   object _Fields {
@@ -9047,14 +9047,14 @@ final class RawStruct extends JavaStructRaw[com.twitter.thrift.descriptors.Annot
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Struct.STRUCT_DESC)
+    oprot.writeStructBegin(Struct.STRUCT_SDESC)
     if (nameIsSet) {
-      oprot.writeFieldBegin(Struct.NAME_DESC)
+      oprot.writeFieldBegin(Struct.NAME_FDESC)
       oprot.writeString(_name)
       oprot.writeFieldEnd()
     }
     if (fieldsIsSet) {
-      oprot.writeFieldBegin(Struct.FIELDS_DESC)
+      oprot.writeFieldBegin(Struct.FIELDS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _fields.size))
       _fields.foreach(element => {
         element.write(oprot)
@@ -9063,7 +9063,7 @@ final class RawStruct extends JavaStructRaw[com.twitter.thrift.descriptors.Annot
       oprot.writeFieldEnd()
     }
     if (annotationsIsSet) {
-      oprot.writeFieldBegin(Struct.ANNOTATIONS_DESC)
+      oprot.writeFieldBegin(Struct.ANNOTATIONS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _annotations.size))
       _annotations.foreach(element => {
         element.write(oprot)
@@ -9348,9 +9348,9 @@ class UnionMeta
 
 
   // Thrift descriptors.
-  val UNION_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Union")
+  val UNION_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Union")
 
-  val NAME_DESC: org.apache.thrift.protocol.TField =
+  val NAME_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "name",
       org.apache.thrift.protocol.TType.STRING,
@@ -9360,7 +9360,7 @@ class UnionMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val FIELDS_DESC: org.apache.thrift.protocol.TField =
+  val FIELDS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "fields",
       org.apache.thrift.protocol.TType.LIST,
@@ -9370,7 +9370,7 @@ class UnionMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ANNOTATIONS_DESC: org.apache.thrift.protocol.TField =
+  val ANNOTATIONS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "annotations",
       org.apache.thrift.protocol.TType.LIST,
@@ -9384,9 +9384,9 @@ class UnionMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "name" -> NAME_DESC,
-    "fields" -> FIELDS_DESC,
-    "annotations" -> ANNOTATIONS_DESC
+    "name" -> NAME_FDESC,
+    "fields" -> FIELDS_FDESC,
+    "annotations" -> ANNOTATIONS_FDESC
   )
 
   object _Fields {
@@ -9731,14 +9731,14 @@ final class RawUnion extends JavaUnionRaw[com.twitter.thrift.descriptors.Annotat
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Union.UNION_DESC)
+    oprot.writeStructBegin(Union.UNION_SDESC)
     if (nameIsSet) {
-      oprot.writeFieldBegin(Union.NAME_DESC)
+      oprot.writeFieldBegin(Union.NAME_FDESC)
       oprot.writeString(_name)
       oprot.writeFieldEnd()
     }
     if (fieldsIsSet) {
-      oprot.writeFieldBegin(Union.FIELDS_DESC)
+      oprot.writeFieldBegin(Union.FIELDS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _fields.size))
       _fields.foreach(element => {
         element.write(oprot)
@@ -9747,7 +9747,7 @@ final class RawUnion extends JavaUnionRaw[com.twitter.thrift.descriptors.Annotat
       oprot.writeFieldEnd()
     }
     if (annotationsIsSet) {
-      oprot.writeFieldBegin(Union.ANNOTATIONS_DESC)
+      oprot.writeFieldBegin(Union.ANNOTATIONS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _annotations.size))
       _annotations.foreach(element => {
         element.write(oprot)
@@ -10032,9 +10032,9 @@ class ExceptionMeta
 
 
   // Thrift descriptors.
-  val EXCEPTION_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Exception")
+  val EXCEPTION_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Exception")
 
-  val NAME_DESC: org.apache.thrift.protocol.TField =
+  val NAME_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "name",
       org.apache.thrift.protocol.TType.STRING,
@@ -10044,7 +10044,7 @@ class ExceptionMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val FIELDS_DESC: org.apache.thrift.protocol.TField =
+  val FIELDS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "fields",
       org.apache.thrift.protocol.TType.LIST,
@@ -10054,7 +10054,7 @@ class ExceptionMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ANNOTATIONS_DESC: org.apache.thrift.protocol.TField =
+  val ANNOTATIONS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "annotations",
       org.apache.thrift.protocol.TType.LIST,
@@ -10068,9 +10068,9 @@ class ExceptionMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "name" -> NAME_DESC,
-    "fields" -> FIELDS_DESC,
-    "annotations" -> ANNOTATIONS_DESC
+    "name" -> NAME_FDESC,
+    "fields" -> FIELDS_FDESC,
+    "annotations" -> ANNOTATIONS_FDESC
   )
 
   object _Fields {
@@ -10415,14 +10415,14 @@ final class RawException extends JavaExceptionRaw[com.twitter.thrift.descriptors
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Exception.EXCEPTION_DESC)
+    oprot.writeStructBegin(Exception.EXCEPTION_SDESC)
     if (nameIsSet) {
-      oprot.writeFieldBegin(Exception.NAME_DESC)
+      oprot.writeFieldBegin(Exception.NAME_FDESC)
       oprot.writeString(_name)
       oprot.writeFieldEnd()
     }
     if (fieldsIsSet) {
-      oprot.writeFieldBegin(Exception.FIELDS_DESC)
+      oprot.writeFieldBegin(Exception.FIELDS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _fields.size))
       _fields.foreach(element => {
         element.write(oprot)
@@ -10431,7 +10431,7 @@ final class RawException extends JavaExceptionRaw[com.twitter.thrift.descriptors
       oprot.writeFieldEnd()
     }
     if (annotationsIsSet) {
-      oprot.writeFieldBegin(Exception.ANNOTATIONS_DESC)
+      oprot.writeFieldBegin(Exception.ANNOTATIONS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _annotations.size))
       _annotations.foreach(element => {
         element.write(oprot)
@@ -10748,9 +10748,9 @@ class FunctionMeta
 
 
   // Thrift descriptors.
-  val FUNCTION_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Function")
+  val FUNCTION_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Function")
 
-  val NAME_DESC: org.apache.thrift.protocol.TField =
+  val NAME_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "name",
       org.apache.thrift.protocol.TType.STRING,
@@ -10760,7 +10760,7 @@ class FunctionMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val RETURNTYPEID_DESC: org.apache.thrift.protocol.TField =
+  val RETURNTYPEID_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "returnTypeId",
       org.apache.thrift.protocol.TType.STRING,
@@ -10770,7 +10770,7 @@ class FunctionMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ONEWAY_DESC: org.apache.thrift.protocol.TField =
+  val ONEWAY_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "oneWay",
       org.apache.thrift.protocol.TType.BOOL,
@@ -10780,7 +10780,7 @@ class FunctionMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ARGZ_DESC: org.apache.thrift.protocol.TField =
+  val ARGZ_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "argz",
       org.apache.thrift.protocol.TType.LIST,
@@ -10790,7 +10790,7 @@ class FunctionMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val THROWZ_DESC: org.apache.thrift.protocol.TField =
+  val THROWZ_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "throwz",
       org.apache.thrift.protocol.TType.LIST,
@@ -10800,7 +10800,7 @@ class FunctionMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ANNOTATIONS_DESC: org.apache.thrift.protocol.TField =
+  val ANNOTATIONS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "annotations",
       org.apache.thrift.protocol.TType.LIST,
@@ -10814,12 +10814,12 @@ class FunctionMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "name" -> NAME_DESC,
-    "returnTypeId" -> RETURNTYPEID_DESC,
-    "oneWay" -> ONEWAY_DESC,
-    "argz" -> ARGZ_DESC,
-    "throwz" -> THROWZ_DESC,
-    "annotations" -> ANNOTATIONS_DESC
+    "name" -> NAME_FDESC,
+    "returnTypeId" -> RETURNTYPEID_FDESC,
+    "oneWay" -> ONEWAY_FDESC,
+    "argz" -> ARGZ_FDESC,
+    "throwz" -> THROWZ_FDESC,
+    "annotations" -> ANNOTATIONS_FDESC
   )
 
   object _Fields {
@@ -11330,24 +11330,24 @@ final class RawFunction extends JavaFunctionRaw[com.twitter.thrift.descriptors.A
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Function.FUNCTION_DESC)
+    oprot.writeStructBegin(Function.FUNCTION_SDESC)
     if (nameIsSet) {
-      oprot.writeFieldBegin(Function.NAME_DESC)
+      oprot.writeFieldBegin(Function.NAME_FDESC)
       oprot.writeString(_name)
       oprot.writeFieldEnd()
     }
     if (returnTypeIdIsSet) {
-      oprot.writeFieldBegin(Function.RETURNTYPEID_DESC)
+      oprot.writeFieldBegin(Function.RETURNTYPEID_FDESC)
       oprot.writeString(_returnTypeId)
       oprot.writeFieldEnd()
     }
     if (oneWayIsSet) {
-      oprot.writeFieldBegin(Function.ONEWAY_DESC)
+      oprot.writeFieldBegin(Function.ONEWAY_FDESC)
       oprot.writeBool(_oneWay)
       oprot.writeFieldEnd()
     }
     if (argzIsSet) {
-      oprot.writeFieldBegin(Function.ARGZ_DESC)
+      oprot.writeFieldBegin(Function.ARGZ_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _argz.size))
       _argz.foreach(element => {
         element.write(oprot)
@@ -11356,7 +11356,7 @@ final class RawFunction extends JavaFunctionRaw[com.twitter.thrift.descriptors.A
       oprot.writeFieldEnd()
     }
     if (throwzIsSet) {
-      oprot.writeFieldBegin(Function.THROWZ_DESC)
+      oprot.writeFieldBegin(Function.THROWZ_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _throwz.size))
       _throwz.foreach(element => {
         element.write(oprot)
@@ -11365,7 +11365,7 @@ final class RawFunction extends JavaFunctionRaw[com.twitter.thrift.descriptors.A
       oprot.writeFieldEnd()
     }
     if (annotationsIsSet) {
-      oprot.writeFieldBegin(Function.ANNOTATIONS_DESC)
+      oprot.writeFieldBegin(Function.ANNOTATIONS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _annotations.size))
       _annotations.foreach(element => {
         element.write(oprot)
@@ -11746,9 +11746,9 @@ class ServiceMeta
 
 
   // Thrift descriptors.
-  val SERVICE_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Service")
+  val SERVICE_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Service")
 
-  val NAME_DESC: org.apache.thrift.protocol.TField =
+  val NAME_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "name",
       org.apache.thrift.protocol.TType.STRING,
@@ -11758,7 +11758,7 @@ class ServiceMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val EXTENDZ_DESC: org.apache.thrift.protocol.TField =
+  val EXTENDZ_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "extendz",
       org.apache.thrift.protocol.TType.STRING,
@@ -11768,7 +11768,7 @@ class ServiceMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val FUNCTIONS_DESC: org.apache.thrift.protocol.TField =
+  val FUNCTIONS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "functions",
       org.apache.thrift.protocol.TType.LIST,
@@ -11778,7 +11778,7 @@ class ServiceMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ANNOTATIONS_DESC: org.apache.thrift.protocol.TField =
+  val ANNOTATIONS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "annotations",
       org.apache.thrift.protocol.TType.LIST,
@@ -11792,10 +11792,10 @@ class ServiceMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "name" -> NAME_DESC,
-    "extendz" -> EXTENDZ_DESC,
-    "functions" -> FUNCTIONS_DESC,
-    "annotations" -> ANNOTATIONS_DESC
+    "name" -> NAME_FDESC,
+    "extendz" -> EXTENDZ_FDESC,
+    "functions" -> FUNCTIONS_FDESC,
+    "annotations" -> ANNOTATIONS_FDESC
   )
 
   object _Fields {
@@ -12192,19 +12192,19 @@ final class RawService extends JavaServiceRaw[com.twitter.thrift.descriptors.Ann
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Service.SERVICE_DESC)
+    oprot.writeStructBegin(Service.SERVICE_SDESC)
     if (nameIsSet) {
-      oprot.writeFieldBegin(Service.NAME_DESC)
+      oprot.writeFieldBegin(Service.NAME_FDESC)
       oprot.writeString(_name)
       oprot.writeFieldEnd()
     }
     if (extendzIsSet) {
-      oprot.writeFieldBegin(Service.EXTENDZ_DESC)
+      oprot.writeFieldBegin(Service.EXTENDZ_FDESC)
       oprot.writeString(_extendz)
       oprot.writeFieldEnd()
     }
     if (functionsIsSet) {
-      oprot.writeFieldBegin(Service.FUNCTIONS_DESC)
+      oprot.writeFieldBegin(Service.FUNCTIONS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _functions.size))
       _functions.foreach(element => {
         element.write(oprot)
@@ -12213,7 +12213,7 @@ final class RawService extends JavaServiceRaw[com.twitter.thrift.descriptors.Ann
       oprot.writeFieldEnd()
     }
     if (annotationsIsSet) {
-      oprot.writeFieldBegin(Service.ANNOTATIONS_DESC)
+      oprot.writeFieldBegin(Service.ANNOTATIONS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _annotations.size))
       _annotations.foreach(element => {
         element.write(oprot)
@@ -12617,9 +12617,9 @@ class ProgramMeta
 
 
   // Thrift descriptors.
-  val PROGRAM_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Program")
+  val PROGRAM_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("Program")
 
-  val NAMESPACES_DESC: org.apache.thrift.protocol.TField =
+  val NAMESPACES_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "namespaces",
       org.apache.thrift.protocol.TType.LIST,
@@ -12629,7 +12629,7 @@ class ProgramMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val INCLUDES_DESC: org.apache.thrift.protocol.TField =
+  val INCLUDES_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "includes",
       org.apache.thrift.protocol.TType.LIST,
@@ -12639,7 +12639,7 @@ class ProgramMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val CONSTANTS_DESC: org.apache.thrift.protocol.TField =
+  val CONSTANTS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "constants",
       org.apache.thrift.protocol.TType.LIST,
@@ -12649,7 +12649,7 @@ class ProgramMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val ENUMS_DESC: org.apache.thrift.protocol.TField =
+  val ENUMS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "enums",
       org.apache.thrift.protocol.TType.LIST,
@@ -12659,7 +12659,7 @@ class ProgramMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val TYPEDEFS_DESC: org.apache.thrift.protocol.TField =
+  val TYPEDEFS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "typedefs",
       org.apache.thrift.protocol.TType.LIST,
@@ -12669,7 +12669,7 @@ class ProgramMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val STRUCTS_DESC: org.apache.thrift.protocol.TField =
+  val STRUCTS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "structs",
       org.apache.thrift.protocol.TType.LIST,
@@ -12679,7 +12679,7 @@ class ProgramMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val UNIONS_DESC: org.apache.thrift.protocol.TField =
+  val UNIONS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "unions",
       org.apache.thrift.protocol.TType.LIST,
@@ -12689,7 +12689,7 @@ class ProgramMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val EXCEPTIONS_DESC: org.apache.thrift.protocol.TField =
+  val EXCEPTIONS_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "exceptions",
       org.apache.thrift.protocol.TType.LIST,
@@ -12699,7 +12699,7 @@ class ProgramMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val SERVICES_DESC: org.apache.thrift.protocol.TField =
+  val SERVICES_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "services",
       org.apache.thrift.protocol.TType.LIST,
@@ -12709,7 +12709,7 @@ class ProgramMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val TYPEREGISTRY_DESC: org.apache.thrift.protocol.TField =
+  val TYPEREGISTRY_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "typeRegistry",
       org.apache.thrift.protocol.TType.STRUCT,
@@ -12723,16 +12723,16 @@ class ProgramMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "namespaces" -> NAMESPACES_DESC,
-    "includes" -> INCLUDES_DESC,
-    "constants" -> CONSTANTS_DESC,
-    "enums" -> ENUMS_DESC,
-    "typedefs" -> TYPEDEFS_DESC,
-    "structs" -> STRUCTS_DESC,
-    "unions" -> UNIONS_DESC,
-    "exceptions" -> EXCEPTIONS_DESC,
-    "services" -> SERVICES_DESC,
-    "typeRegistry" -> TYPEREGISTRY_DESC
+    "namespaces" -> NAMESPACES_FDESC,
+    "includes" -> INCLUDES_FDESC,
+    "constants" -> CONSTANTS_FDESC,
+    "enums" -> ENUMS_FDESC,
+    "typedefs" -> TYPEDEFS_FDESC,
+    "structs" -> STRUCTS_FDESC,
+    "unions" -> UNIONS_FDESC,
+    "exceptions" -> EXCEPTIONS_FDESC,
+    "services" -> SERVICES_FDESC,
+    "typeRegistry" -> TYPEREGISTRY_FDESC
   )
 
   object _Fields {
@@ -13469,9 +13469,9 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(Program.PROGRAM_DESC)
+    oprot.writeStructBegin(Program.PROGRAM_SDESC)
     if (namespacesIsSet) {
-      oprot.writeFieldBegin(Program.NAMESPACES_DESC)
+      oprot.writeFieldBegin(Program.NAMESPACES_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _namespaces.size))
       _namespaces.foreach(element => {
         element.write(oprot)
@@ -13480,7 +13480,7 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
       oprot.writeFieldEnd()
     }
     if (includesIsSet) {
-      oprot.writeFieldBegin(Program.INCLUDES_DESC)
+      oprot.writeFieldBegin(Program.INCLUDES_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _includes.size))
       _includes.foreach(element => {
         element.write(oprot)
@@ -13489,7 +13489,7 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
       oprot.writeFieldEnd()
     }
     if (constantsIsSet) {
-      oprot.writeFieldBegin(Program.CONSTANTS_DESC)
+      oprot.writeFieldBegin(Program.CONSTANTS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _constants.size))
       _constants.foreach(element => {
         element.write(oprot)
@@ -13498,7 +13498,7 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
       oprot.writeFieldEnd()
     }
     if (enumsIsSet) {
-      oprot.writeFieldBegin(Program.ENUMS_DESC)
+      oprot.writeFieldBegin(Program.ENUMS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _enums.size))
       _enums.foreach(element => {
         element.write(oprot)
@@ -13507,7 +13507,7 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
       oprot.writeFieldEnd()
     }
     if (typedefsIsSet) {
-      oprot.writeFieldBegin(Program.TYPEDEFS_DESC)
+      oprot.writeFieldBegin(Program.TYPEDEFS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _typedefs.size))
       _typedefs.foreach(element => {
         element.write(oprot)
@@ -13516,7 +13516,7 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
       oprot.writeFieldEnd()
     }
     if (structsIsSet) {
-      oprot.writeFieldBegin(Program.STRUCTS_DESC)
+      oprot.writeFieldBegin(Program.STRUCTS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _structs.size))
       _structs.foreach(element => {
         element.write(oprot)
@@ -13525,7 +13525,7 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
       oprot.writeFieldEnd()
     }
     if (unionsIsSet) {
-      oprot.writeFieldBegin(Program.UNIONS_DESC)
+      oprot.writeFieldBegin(Program.UNIONS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _unions.size))
       _unions.foreach(element => {
         element.write(oprot)
@@ -13534,7 +13534,7 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
       oprot.writeFieldEnd()
     }
     if (exceptionsIsSet) {
-      oprot.writeFieldBegin(Program.EXCEPTIONS_DESC)
+      oprot.writeFieldBegin(Program.EXCEPTIONS_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _exceptions.size))
       _exceptions.foreach(element => {
         element.write(oprot)
@@ -13543,7 +13543,7 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
       oprot.writeFieldEnd()
     }
     if (servicesIsSet) {
-      oprot.writeFieldBegin(Program.SERVICES_DESC)
+      oprot.writeFieldBegin(Program.SERVICES_FDESC)
       oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, _services.size))
       _services.foreach(element => {
         element.write(oprot)
@@ -13552,7 +13552,7 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
       oprot.writeFieldEnd()
     }
     if (typeRegistryIsSet) {
-      oprot.writeFieldBegin(Program.TYPEREGISTRY_DESC)
+      oprot.writeFieldBegin(Program.TYPEREGISTRY_FDESC)
       _typeRegistry.write(oprot)
       oprot.writeFieldEnd()
     }
@@ -14122,9 +14122,9 @@ class SimpleContainerTypeMeta
 
 
   // Thrift descriptors.
-  val SIMPLECONTAINERTYPE_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("SimpleContainerType")
+  val SIMPLECONTAINERTYPE_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("SimpleContainerType")
 
-  val LISTTYPE_DESC: org.apache.thrift.protocol.TField =
+  val LISTTYPE_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "listType",
       org.apache.thrift.protocol.TType.STRUCT,
@@ -14134,7 +14134,7 @@ class SimpleContainerTypeMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val SETTYPE_DESC: org.apache.thrift.protocol.TField =
+  val SETTYPE_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "setType",
       org.apache.thrift.protocol.TType.STRUCT,
@@ -14144,7 +14144,7 @@ class SimpleContainerTypeMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val MAPTYPE_DESC: org.apache.thrift.protocol.TField =
+  val MAPTYPE_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "mapType",
       org.apache.thrift.protocol.TType.STRUCT,
@@ -14158,9 +14158,9 @@ class SimpleContainerTypeMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "listType" -> LISTTYPE_DESC,
-    "setType" -> SETTYPE_DESC,
-    "mapType" -> MAPTYPE_DESC
+    "listType" -> LISTTYPE_FDESC,
+    "setType" -> SETTYPE_FDESC,
+    "mapType" -> MAPTYPE_FDESC
   )
 
   object _Fields {
@@ -14415,19 +14415,19 @@ final class RawSimpleContainerType extends JavaSimpleContainerTypeRaw[com.twitte
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(SimpleContainerType.SIMPLECONTAINERTYPE_DESC)
+    oprot.writeStructBegin(SimpleContainerType.SIMPLECONTAINERTYPE_SDESC)
     if (listTypeIsSet) {
-      oprot.writeFieldBegin(SimpleContainerType.LISTTYPE_DESC)
+      oprot.writeFieldBegin(SimpleContainerType.LISTTYPE_FDESC)
       _listType.write(oprot)
       oprot.writeFieldEnd()
     }
     if (setTypeIsSet) {
-      oprot.writeFieldBegin(SimpleContainerType.SETTYPE_DESC)
+      oprot.writeFieldBegin(SimpleContainerType.SETTYPE_FDESC)
       _setType.write(oprot)
       oprot.writeFieldEnd()
     }
     if (mapTypeIsSet) {
-      oprot.writeFieldBegin(SimpleContainerType.MAPTYPE_DESC)
+      oprot.writeFieldBegin(SimpleContainerType.MAPTYPE_FDESC)
       _mapType.write(oprot)
       oprot.writeFieldEnd()
     }
@@ -14695,9 +14695,9 @@ class SimpleTypeMeta
 
 
   // Thrift descriptors.
-  val SIMPLETYPE_DESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("SimpleType")
+  val SIMPLETYPE_SDESC: org.apache.thrift.protocol.TStruct = new org.apache.thrift.protocol.TStruct("SimpleType")
 
-  val BASETYPE_DESC: org.apache.thrift.protocol.TField =
+  val BASETYPE_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "baseType",
       org.apache.thrift.protocol.TType.STRUCT,
@@ -14707,7 +14707,7 @@ class SimpleTypeMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val CONTAINERTYPE_DESC: org.apache.thrift.protocol.TField =
+  val CONTAINERTYPE_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "containerType",
       org.apache.thrift.protocol.TType.STRUCT,
@@ -14717,7 +14717,7 @@ class SimpleTypeMeta
         java.util.Collections.emptyMap[String, String]
       }
     )
-  val TYPEREF_DESC: org.apache.thrift.protocol.TField =
+  val TYPEREF_FDESC: org.apache.thrift.protocol.TField =
     new com.foursquare.common.thrift.base.EnhancedTField(
       "typeref",
       org.apache.thrift.protocol.TType.STRUCT,
@@ -14731,9 +14731,9 @@ class SimpleTypeMeta
   val UNKNOWN_FIELD: org.apache.thrift.protocol.TField = new org.apache.thrift.protocol.TField("", org.apache.thrift.protocol.TType.VOID, -1);
 
   val wireNameToTField: Map[String, org.apache.thrift.protocol.TField] = Map(
-    "baseType" -> BASETYPE_DESC,
-    "containerType" -> CONTAINERTYPE_DESC,
-    "typeref" -> TYPEREF_DESC
+    "baseType" -> BASETYPE_FDESC,
+    "containerType" -> CONTAINERTYPE_FDESC,
+    "typeref" -> TYPEREF_FDESC
   )
 
   object _Fields {
@@ -14988,19 +14988,19 @@ final class RawSimpleType extends JavaSimpleTypeRaw[com.twitter.thrift.descripto
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
-    oprot.writeStructBegin(SimpleType.SIMPLETYPE_DESC)
+    oprot.writeStructBegin(SimpleType.SIMPLETYPE_SDESC)
     if (baseTypeIsSet) {
-      oprot.writeFieldBegin(SimpleType.BASETYPE_DESC)
+      oprot.writeFieldBegin(SimpleType.BASETYPE_FDESC)
       _baseType.write(oprot)
       oprot.writeFieldEnd()
     }
     if (containerTypeIsSet) {
-      oprot.writeFieldBegin(SimpleType.CONTAINERTYPE_DESC)
+      oprot.writeFieldBegin(SimpleType.CONTAINERTYPE_FDESC)
       _containerType.write(oprot)
       oprot.writeFieldEnd()
     }
     if (typerefIsSet) {
-      oprot.writeFieldBegin(SimpleType.TYPEREF_DESC)
+      oprot.writeFieldBegin(SimpleType.TYPEREF_FDESC)
       _typeref.write(oprot)
       oprot.writeFieldEnd()
     }
