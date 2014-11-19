@@ -9,28 +9,25 @@ sealed trait UntypedFieldDescriptor {
   def name: String
   def longName: String
   def annotations: Map[String, String]
-  def unsafeGetterOption: Function1[Any, Option[Any]]
+  def unsafeGetterOption: Any => Option[Any]
   def unsafeSetterRaw: (Any, Any) => Unit
   def unsafeManifest: Manifest[_]
 }
 
 trait FieldDescriptor[F, R <: Record[R], M <: MetaRecord[R, M]] extends Field[F, M] with UntypedFieldDescriptor {
-  def id: Int
-  def longName: String
-  def annotations: Map[String, String]
   def getter: R => Option[F]
   def getterOption: R => Option[F] = getter
   def manifest: Manifest[F]
   def setterRaw: (MutableRecord[R], F) => Unit
   def unsetterRaw: MutableRecord[R] => Unit
 
-  override def unsafeGetterOption: Function1[Any, Option[Any]] = getterOption.asInstanceOf[Function1[Any, Option[Any]]]
+  override def unsafeGetterOption: Any => Option[Any] = getterOption.asInstanceOf[Any => Option[Any]]
   override def unsafeSetterRaw: (Any, Any) => Unit = setterRaw.asInstanceOf[(Any, Any) => Unit]
   override def unsafeManifest: Manifest[_] = manifest
 }
 
 trait UntypedForeignKeyField {
-  def unsafeObjGetter: Function1[Any, Option[Any]]
+  def unsafeObjGetter: Any => Option[Any]
 }
 
 trait ForeignKeyField[F, R <: Record[R]] extends UntypedForeignKeyField {
@@ -38,6 +35,17 @@ trait ForeignKeyField[F, R <: Record[R]] extends UntypedForeignKeyField {
   def objGetter: (R, UntypedMetaRecord) => Option[UntypedRecord with SemitypedHasPrimaryKey[F]]
   def alternateObjSetter: (R, AnyRef) => Unit
   def alternateObjGetter: R => Option[AnyRef]
+}
+
+trait UntypedForeignKeySeqField {
+  def unsafeObjGetter: Any => Option[Any]
+}
+
+trait ForeignKeySeqField[F, R <: Record[R]] extends UntypedForeignKeySeqField {
+  def objSetter: (R, Seq[SemitypedHasPrimaryKey[F]]) => Unit
+  def objGetter: (R, UntypedMetaRecord) => Option[Seq[UntypedRecord with SemitypedHasPrimaryKey[F]]]
+  def alternateObjSetter: (R, Seq[AnyRef]) => Unit
+  def alternateObjGetter: R => Option[Seq[AnyRef]]
 }
 
 trait UntypedBitfieldField {
@@ -81,11 +89,28 @@ case class ForeignKeyFieldDescriptor[F, R <: Record[R], M <: MetaRecord[R, M]](
     override val unsetterRaw: MutableRecord[R] => Unit,
     override val objSetter: (R, SemitypedHasPrimaryKey[F]) => Unit,
     override val objGetter: (R, UntypedMetaRecord) => Option[UntypedRecord with SemitypedHasPrimaryKey[F]],
-    override val unsafeObjGetter: Function1[Any, Option[Any]],
+    override val unsafeObjGetter: Any => Option[Any],
     override val alternateObjSetter: (R, AnyRef) => Unit,
     override val alternateObjGetter: R => Option[AnyRef],
     override val manifest: Manifest[F]
 ) extends OptionalField[F, M] with FieldDescriptor[F, R, M] with ForeignKeyField[F, R]
+
+case class ForeignKeySeqFieldDescriptor[F, R <: Record[R], M <: MetaRecord[R, M]](
+    override val name: String,
+    override val longName: String,
+    override val id: Int,
+    override val annotations: Map[String, String],
+    override val owner: M,
+    override val getter: R => Option[Seq[F]],
+    override val setterRaw: (MutableRecord[R], Seq[F]) => Unit,
+    override val unsetterRaw: MutableRecord[R] => Unit,
+    override val objSetter: (R, Seq[SemitypedHasPrimaryKey[F]]) => Unit,
+    override val objGetter: (R, UntypedMetaRecord) => Option[Seq[UntypedRecord with SemitypedHasPrimaryKey[F]]],
+    override val unsafeObjGetter: Any => Option[Seq[Any]],
+    override val alternateObjSetter: (R, Seq[AnyRef]) => Unit,
+    override val alternateObjGetter: R => Option[Seq[AnyRef]],
+    override val manifest: Manifest[Seq[F]]
+) extends OptionalField[Seq[F], M] with FieldDescriptor[Seq[F], R, M] with ForeignKeySeqField[F, R]
 
 case class BitfieldFieldDescriptor[F, R <: Record[R], M <: MetaRecord[R, M], FR <: Record[FR], FM <: MetaRecord[FR, FM]](
     override val name: String,
