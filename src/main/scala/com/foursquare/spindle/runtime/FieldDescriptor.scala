@@ -10,6 +10,7 @@ sealed trait UntypedFieldDescriptor {
   def longName: String
   def annotations: Map[String, String]
   def unsafeGetterOption: Function1[Any, Option[Any]]
+  def unsafeSetterRaw: (Any, Any) => Unit
   def unsafeManifest: Manifest[_]
 }
 
@@ -24,6 +25,7 @@ trait FieldDescriptor[F, R <: Record[R], M <: MetaRecord[R, M]] extends Field[F,
   def unsetterRaw: MutableRecord[R] => Unit
 
   override def unsafeGetterOption: Function1[Any, Option[Any]] = getterOption.asInstanceOf[Function1[Any, Option[Any]]]
+  override def unsafeSetterRaw: (Any, Any) => Unit = setterRaw.asInstanceOf[(Any, Any) => Unit]
   override def unsafeManifest: Manifest[_] = manifest
 }
 
