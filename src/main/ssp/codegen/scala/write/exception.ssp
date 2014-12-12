@@ -1,0 +1,4 @@
+<%@ val renderType: com.foursquare.spindle.codegen.runtime.RenderType %>
+<%@ val valueExpr: String %>
+<%@ val indent: String %>
+${indent}${valueExpr}.write(oprot)
