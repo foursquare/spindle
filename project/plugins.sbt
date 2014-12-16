@@ -9,7 +9,7 @@ addSbtPlugin("com.jsuereth" % "xsbt-gpg-plugin" % "0.6")
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.2.5")
 
 addSbtPlugin(
-  "com.foursquare" % "spindle-codegen-plugin" % "3.0.0-M5.1",
+  "com.foursquare" % "spindle-codegen-plugin" % "3.0.0-M6",
   scalaVersion = "2.9.2",
   sbtVersion = "0.12")
 
