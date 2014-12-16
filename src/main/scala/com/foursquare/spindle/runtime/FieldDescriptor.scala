@@ -112,3 +112,16 @@ case class StructFieldDescriptor[R <: Record[R], M <: MetaRecord[R, M], ER <: Re
     override val structMeta: EM,
     override val manifest: Manifest[ER]
 ) extends OptionalField[ER, M] with FieldDescriptor[ER, R, M] with StructField[ER, EM]
+
+case class ExceptionFieldDescriptor[R <: Record[R], M <: MetaRecord[R, M], ER <: Record[ER], EM <: MetaRecord[ER, EM], E <: RuntimeException with ER](
+    override val name: String,
+    override val longName: String,
+    override val id: Int,
+    override val annotations: Map[String, String],
+    override val owner: M,
+    override val getter: R => Option[E],
+    override val setterRaw: (MutableRecord[R], E) => Unit,
+    override val unsetterRaw: MutableRecord[R] => Unit,
+    override val structMeta: EM,
+    override val manifest: Manifest[E]
+) extends OptionalField[E, M] with FieldDescriptor[E, R, M] with StructField[ER, EM]

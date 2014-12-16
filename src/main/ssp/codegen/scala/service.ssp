@@ -443,13 +443,13 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
   // Dynamically generate a ScalaStruct for NAME_args, then emit Scala code for it.
   val rawArgsStruct = Struct.newBuilder.name("%s_%s_args".format(service.name, function.name)).__fields(function.argz).result()
   val argsStruct = new ScalaClass(rawArgsStruct, resolver)
-  render("class.ssp", Map("cls" -> argsStruct)) // TODO(tdyas): Capture and indent properly.
+  render("class.ssp", Map("cls" -> argsStruct, "clsContainer" -> "")) // TODO(tdyas): Capture and indent properly.
 
   // Dynamically generate a ScalaStruct for NAME_result, then emit Scala code for it. For one-way functions,
   // this is purely so functionDescriptors has a class to reference.
   val rawResultStruct = Struct.newBuilder.name("%s_%s_result".format(service.name, function.name)).__fields(function.fields).result()
   val resultStruct = new ScalaClass(rawResultStruct, resolver)
-  render("class.ssp", Map("cls" -> resultStruct)) // TODO(tdyas): Capture and indent properly.
+  render("class.ssp", Map("cls" -> resultStruct, "clsContainer" -> "")) // TODO(tdyas): Capture and indent properly.
 %>
 #end
 

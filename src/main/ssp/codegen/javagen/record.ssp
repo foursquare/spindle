@@ -54,7 +54,7 @@ class java_${source.baseName} {
 #end
 
 #for (exception <- program.exceptions)
-<% render("class.ssp", Map("cls" -> exception)) %>
+<% render("exception.ssp", Map("cls" -> exception, "resolver" -> program.resolver)) %>
 #end
 
 #for (service <- program.services)
