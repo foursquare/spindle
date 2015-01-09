@@ -19,7 +19,7 @@ sealed abstract class SimpleBaseType private (
     override val name: String,
     override val stringValue: String
 ) extends com.foursquare.spindle.Enum[SimpleBaseType] with JavaSimpleBaseType with org.apache.thrift.TEnum {
-  override def toString: String = name
+  override def toString: String = stringValue
   override def getValue: Int = id
   override def meta = SimpleBaseType
 }
@@ -96,7 +96,7 @@ sealed abstract class Requiredness private (
     override val name: String,
     override val stringValue: String
 ) extends com.foursquare.spindle.Enum[Requiredness] with JavaRequiredness with org.apache.thrift.TEnum {
-  override def toString: String = name
+  override def toString: String = stringValue
   override def getValue: Int = id
   override def meta = Requiredness
 }
