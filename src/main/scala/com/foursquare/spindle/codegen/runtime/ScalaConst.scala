@@ -2,6 +2,7 @@
 
 package com.foursquare.spindle.codegen.runtime
 
+import com.foursquare.spindle.Annotations
 import com.twitter.thrift.descriptors.{Const, ConstProxy}
 
 
@@ -25,7 +26,7 @@ extends ConstProxy {
         }
       }, foundTypeReference => foundTypeReference
     )
-  val renderType = RenderType(typeReference)
+  val renderType = RenderType(typeReference, Annotations.empty)
   override def valueOption: Option[String] = renderType.renderValue(underlying.value)
   def jsValueOption: Option[String] = renderType match {
     // this is a horrible, HORRIBLE hack. We need to properly extract the js rendering

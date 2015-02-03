@@ -20,6 +20,18 @@ class EnumTest {
   }
 
   @Test
+  def testSerializeEnumAsString() {
+    val s = StructWithNewEnumField.newBuilder
+      .anEnum(NewTestEnum.Zero)
+      .anEnumList(List(NewTestEnum.One, NewTestEnum.Two))
+      .anEnumAsString(NewTestEnum.Zero)
+      .anEnumListAsString(List(NewTestEnum.One, NewTestEnum.Two))
+      .result()
+      .toString
+    assertEquals("""{ "anEnum": 0, "anEnumList": [ 1, 2 ], "anEnumAsString": "zero", "anEnumListAsString": [ "one", "two" ] }""", s)
+  }
+
+  @Test
   def testUnknownEnum() {
     // Test all 25 possible combinations of src and dst protocol.
     val protocols =
@@ -40,6 +52,8 @@ class EnumTest {
     val enumStruct = StructWithNewEnumField.newBuilder
       .anEnum(NewTestEnum.Two)
       .anEnumList(NewTestEnum.Zero :: NewTestEnum.Two :: NewTestEnum.One :: Nil)
+      .anEnumAsString(NewTestEnum.Two)
+      .anEnumListAsString(NewTestEnum.Zero :: NewTestEnum.Two :: NewTestEnum.One :: Nil)
       .result()
 
     // Write the object out.
@@ -54,8 +68,12 @@ class EnumTest {
 
     // Now read the new object into an older version of the same struct.
     val buf2 = doWrite(srcProtocol, enumStruct)
-    val oldObj = StructWithOldEnumField.createRawRecord.asInstanceOf[TBase[_, _]]
+    val oldStruct = StructWithOldEnumField.createRawRecord
+    val oldObj = oldStruct.asInstanceOf[TBase[_, _]]
     doRead(srcProtocol, buf2, oldObj)
+
+    assertEquals(OldTestEnum.UnknownWireValue(2), oldStruct.anEnumOrNull)
+    assertEquals(OldTestEnum.UnknownWireValue("two"), oldStruct.anEnumAsStringOrNull)
 
     // Write the old object back out using the other protocol.
     val oldBuf = doWrite(dstProtocol, oldObj)

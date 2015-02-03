@@ -2,6 +2,7 @@
 
 package com.foursquare.spindle.codegen.runtime
 
+import com.foursquare.spindle.Annotations
 import com.twitter.thrift.descriptors.{Annotation, Field, Function, FunctionProxy, Requiredness}
 
 class ScalaFunction(override val underlying: Function, resolver: TypeReferenceResolver) extends FunctionProxy with HasAnnotations {
@@ -10,7 +11,7 @@ class ScalaFunction(override val underlying: Function, resolver: TypeReferenceRe
     .flatMap(typeId => resolver.typeForTypeId(typeId).right.toOption)
     .map(_._1)
     .flatMap(resolver.resolveType(_).right.toOption)
-    .map(RenderType(_)))
+    .map(RenderType(_, Annotations.empty)))
 
   override val argz: Seq[ScalaField] = underlying.argz.map(new ScalaField(_, resolver))
   override val throwz: Seq[ScalaField] = underlying.throwz.map(new ScalaField(_, resolver))

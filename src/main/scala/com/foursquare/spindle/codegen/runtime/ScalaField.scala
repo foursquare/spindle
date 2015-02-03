@@ -41,7 +41,7 @@ class ScalaField(
 
   // TODO(jorge): implement. must be in terms of custom TypeReference
   val enhancedTypeAnnotations = extractEnhancedType(typeReference)
-  val renderType: RenderType = RenderType(typeReference)
+  val renderType: RenderType = RenderType(typeReference, annotations)
 
   val nullOrDefault = if (this.defaultValueIsSet || !renderType.isNullable) "OrDefault" else "OrNull"
   val defaultName = this.name + nullOrDefault

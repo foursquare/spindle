@@ -38,6 +38,7 @@ abstract class EnumMeta[T <: Enum[T]] {
 
   // Implemented by concrete subclasses to implement the conversion.
   def findByStringValueOrNull(v: String): T
+  def findByStringValueOrUnknown(v: String): T
 
   def annotations: Annotations = Annotations.empty
 }

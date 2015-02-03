@@ -3,19 +3,21 @@
 namespace java com.foursquare.spindle.test.gen
 
 enum OldTestEnum {
-  Zero = 0
-  One = 1
+  Zero = 0 (string_value="zero")
+  One = 1 (string_value="one")
 }
 
 enum NewTestEnum {
-  Zero = 0
-  One = 1
-  Two = 2
+  Zero = 0 (string_value="zero")
+  One = 1 (string_value="one")
+  Two = 2 (string_value="two")
 }
 
 struct StructWithOldEnumField {
   1: optional OldTestEnum anEnum
   2: optional list<OldTestEnum> anEnumList
+  3: optional OldTestEnum anEnumAsString (serialize_as="string")
+  4: optional list<OldTestEnum> anEnumListAsString (serialize_as="string")
 } (
   preserve_unknown_fields="1"
 )
@@ -24,6 +26,8 @@ struct StructWithOldEnumField {
 struct StructWithNewEnumField {
   1: optional NewTestEnum anEnum
   2: optional list<NewTestEnum> anEnumList
+  3: optional NewTestEnum anEnumAsString (serialize_as="string")
+  4: optional list<NewTestEnum> anEnumListAsString (serialize_as="string")
 } (
   preserve_unknown_fields="1"
 )

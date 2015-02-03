@@ -24,7 +24,7 @@ class ScalaTypedef(
       foundTypeReference => foundTypeReference
     )
 
-  val renderType = RenderType(typeReference)
+  val renderType = RenderType(typeReference, annotations)
 
   val newType = annotations.get("new_type").exists(_ == "true")
 }

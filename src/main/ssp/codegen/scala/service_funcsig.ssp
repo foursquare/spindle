@@ -1,6 +1,6 @@
 <%
 // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
-
+import com.foursquare.spindle.Annotations
 import com.foursquare.spindle.codegen.runtime.{RenderType, ScalaFunction, TypeReferenceResolver}
 %>
 <%@ val function: ScalaFunction %>
@@ -25,7 +25,7 @@ val returnRenderType: Option[RenderType] = (function
   .flatMap(resolver.typeForTypeId(_).right.toOption)
   .map(_._1)
   .flatMap(resolver.resolveType(_).right.toOption)
-  .map(RenderType(_)))
+  .map(RenderType(_, Annotations.empty)))
 
 val returnTypeText = {
  if (wrapReturnTypeInFuture) {

@@ -35,7 +35,7 @@ object SimpleBaseType extends com.foursquare.spindle.EnumMeta[SimpleBaseType] {
     object STRING extends SimpleBaseType(6, "STRING", "STRING")
     object BINARY extends SimpleBaseType(7, "BINARY", "BINARY")
 
-  final case class UnknownWireValue(override val id: Int) extends SimpleBaseType(id, "?", "?")
+  final case class UnknownWireValue(val v: Any) extends SimpleBaseType(if (v.isInstanceOf[Int]) v.asInstanceOf[Int] else -1, "?", if (v.isInstanceOf[String]) v.asInstanceOf[String] else "?")
 
   override val values: Vector[SimpleBaseType] =
     Vector(
@@ -89,6 +89,11 @@ object SimpleBaseType extends com.foursquare.spindle.EnumMeta[SimpleBaseType] {
     case "BINARY" => SimpleBaseType.BINARY
     case _ => null
   }
+
+  override def findByStringValueOrUnknown(v: String): SimpleBaseType = findByStringValueOrNull(v) match {
+    case null => new UnknownWireValue(v)
+    case x: SimpleBaseType => x
+  }
 }
 
 sealed abstract class Requiredness private (
@@ -106,7 +111,7 @@ object Requiredness extends com.foursquare.spindle.EnumMeta[Requiredness] {
     object REQUIRED extends Requiredness(0, "REQUIRED", "REQUIRED")
     object OPTIONAL extends Requiredness(1, "OPTIONAL", "OPTIONAL")
 
-  final case class UnknownWireValue(override val id: Int) extends Requiredness(id, "?", "?")
+  final case class UnknownWireValue(val v: Any) extends Requiredness(if (v.isInstanceOf[Int]) v.asInstanceOf[Int] else -1, "?", if (v.isInstanceOf[String]) v.asInstanceOf[String] else "?")
 
   override val values: Vector[Requiredness] =
     Vector(
@@ -135,6 +140,11 @@ object Requiredness extends com.foursquare.spindle.EnumMeta[Requiredness] {
     case "REQUIRED" => Requiredness.REQUIRED
     case "OPTIONAL" => Requiredness.OPTIONAL
     case _ => null
+  }
+
+  override def findByStringValueOrUnknown(v: String): Requiredness = findByStringValueOrNull(v) match {
+    case null => new UnknownWireValue(v)
+    case x: Requiredness => x
   }
 }
 

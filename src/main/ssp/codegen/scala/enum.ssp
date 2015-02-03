@@ -45,7 +45,7 @@ object ${enum.name} extends com.foursquare.spindle.EnumMeta[${enum.name}] {
 #end
 #end
 
-  final case class UnknownWireValue(override val id: Int) extends ${enum.name}(id, "?", "?")
+  final case class UnknownWireValue(val v: Any) extends ${enum.name}(if (v.isInstanceOf[Int]) v.asInstanceOf[Int] else -1, "?", if (v.isInstanceOf[String]) v.asInstanceOf[String] else "?")
 #if (enum.annotations.nonEmpty)
   override val annotations: com.foursquare.spindle.Annotations =
     new com.foursquare.spindle.Annotations(scala.collection.immutable.Vector(
@@ -82,5 +82,10 @@ object ${enum.name} extends com.foursquare.spindle.EnumMeta[${enum.name}] {
     case "${elem.alternateValue.getOrElse(elem.name)}" => ${enum.name}.${elem.name}
 #end
     case _ => null
+  }
+
+  override def findByStringValueOrUnknown(v: String): ${enum.name} = findByStringValueOrNull(v) match {
+    case null => new UnknownWireValue(v)
+    case x: ${enum.name} => x
   }
 }

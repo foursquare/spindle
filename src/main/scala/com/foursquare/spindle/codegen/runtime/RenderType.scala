@@ -2,6 +2,7 @@
 
 package com.foursquare.spindle.codegen.runtime
 
+import com.foursquare.spindle.Annotations
 import scalaj.collection.Imports._
 
 class NotImplementedException(s: String) extends Exception(s)
@@ -115,6 +116,16 @@ case class EnumRenderType(override val text: String) extends RefRenderType {
   override def ttype: TType = TType.I32
   override def fieldWriteTemplate: String = "write/enum.ssp"
   override def fieldReadTemplate: String = "read/enum.ssp"
+  override def isEnum: Boolean = true
+  override def hasOrdering: Boolean = false
+  override def renderValueSupported = true
+  override def renderValue(v: String) = Some(v)
+}
+
+case class EnumStringRenderType(override val text: String) extends RefRenderType {
+  override def ttype: TType = TType.STRING
+  override def fieldWriteTemplate: String = "write/enum_string.ssp"
+  override def fieldReadTemplate: String = "read/enum_string.ssp"
   override def isEnum: Boolean = true
   override def hasOrdering: Boolean = false
   override def renderValueSupported = true
@@ -412,7 +423,7 @@ object RenderType {
   // Allow fs:JsonX so we can add more meta-data to the type for javascript codegen.
   val JsonEnhancedType = """fs:Json(.*)""".r
 
-  def apply(tpe: TypeReference): RenderType = {
+  def apply(tpe: TypeReference, annotations: Annotations): RenderType = {
     tpe match {
       case BoolRef => PrimitiveRenderType("Boolean", "boolean", "java.lang.Boolean", "false", "false", TType.BOOL)
       case ByteRef => PrimitiveRenderType("Byte", "byte", "java.lang.Byte", "0", "0", TType.BYTE)
@@ -422,26 +433,29 @@ object RenderType {
       case DoubleRef => PrimitiveRenderType("Double", "double", "java.lang.Double", "0.0", "0.0", TType.DOUBLE)
       case StringRef => StringRenderType
       case BinaryRef => BinaryRenderType
-      case ListRef(elem) => SeqRenderType(RenderType(elem))
-      case SetRef(elem) => SetRenderType(RenderType(elem))
-      case MapRef(key, value) => MapRenderType(RenderType(key), RenderType(value))
-      case EnumRef(name) => EnumRenderType(name)
+      case ListRef(elem) => SeqRenderType(RenderType(elem, annotations))
+      case SetRef(elem) => SetRenderType(RenderType(elem, annotations))
+      case MapRef(key, value) => MapRenderType(RenderType(key, annotations), RenderType(value, annotations))
+      case EnumRef(name) => annotations.get("serialize_as") match {
+        case Some("string") => EnumStringRenderType(name)
+        case _ => EnumRenderType(name)
+      }
       case StructRef(name) => StructRenderType(name)
       case UnionRef(name) => StructRenderType(name)
       case ExceptionRef(name) => ExceptionRenderType(name)
       case ServiceRef(name) => throw new CodegenException("Trying to render unrenderable Service type: " + name)
-      case TypedefRef(name, ref) => TypedefRenderType(name, RenderType(ref))
-      case NewtypeRef(name, ref) => NewtypeRenderType(name, RenderType(ref))
-      case EnhancedTypeRef(name, TypedefRef(_, ref)) => RenderType(EnhancedTypeRef(name, ref))
-      case EnhancedTypeRef("bson:ObjectId", ref @ BinaryRef) => ObjectIdRenderType(RenderType(ref))
-      case EnhancedTypeRef("bson:BSONObject", ref @ BinaryRef) => BSONObjectRenderType(RenderType(ref))
-      case EnhancedTypeRef("bson:DateTime", ref @ I64Ref) => DateTimeRenderType(RenderType(ref))
-      case EnhancedTypeRef("java:Date", ref @ StringRef) => JavaDateRenderType(RenderType(ref))
-      case EnhancedTypeRef("fs:DollarAmount", ref @ I64Ref) => DollarAmountRenderType(RenderType(ref))
-      case EnhancedTypeRef(JsonEnhancedType(suffix), ref @ StringRef) => ThriftJsonRenderType(RenderType(ref))
-      case EnhancedTypeRef("fs:MessageSet", ref: StructRef) => MessageSetRenderType(RenderType(ref))
+      case TypedefRef(name, ref) => TypedefRenderType(name, RenderType(ref, annotations))
+      case NewtypeRef(name, ref) => NewtypeRenderType(name, RenderType(ref, annotations))
+      case EnhancedTypeRef(name, TypedefRef(_, ref)) => RenderType(EnhancedTypeRef(name, ref), annotations)
+      case EnhancedTypeRef("bson:ObjectId", ref @ BinaryRef) => ObjectIdRenderType(RenderType(ref, annotations))
+      case EnhancedTypeRef("bson:BSONObject", ref @ BinaryRef) => BSONObjectRenderType(RenderType(ref, annotations))
+      case EnhancedTypeRef("bson:DateTime", ref @ I64Ref) => DateTimeRenderType(RenderType(ref, annotations))
+      case EnhancedTypeRef("java:Date", ref @ StringRef) => JavaDateRenderType(RenderType(ref, annotations))
+      case EnhancedTypeRef("fs:DollarAmount", ref @ I64Ref) => DollarAmountRenderType(RenderType(ref, annotations))
+      case EnhancedTypeRef(JsonEnhancedType(suffix), ref @ StringRef) => ThriftJsonRenderType(RenderType(ref, annotations))
+      case EnhancedTypeRef("fs:MessageSet", ref: StructRef) => MessageSetRenderType(RenderType(ref, annotations))
       case EnhancedTypeRef(name, _) => throw new CodegenException("Unknown enhanced type: " + name)
-      case BitfieldRef(name, bitType, hasSetBits) => BitfieldStructRenderType(name, RenderType(bitType), hasSetBits)
+      case BitfieldRef(name, bitType, hasSetBits) => BitfieldStructRenderType(name, RenderType(bitType, annotations), hasSetBits)
     }
   }
 }
