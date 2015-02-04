@@ -10,7 +10,7 @@ object Default {
   lazy val IvyDefaultConfiguration = config("default") extend(Compile)
   val all: Seq[Setting[_]] = Seq(
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
-    Keys.version := "3.0.0-M6.1",
+    Keys.version := "3.0.0-M7",
     Keys.organization := "com.foursquare",
     Keys.ivyConfigurations += IvyDefaultConfiguration,
     Keys.publishMavenStyle := true,
@@ -73,7 +73,7 @@ object Default {
 
   val scala: Seq[Setting[_]] = Default.all ++ Seq(
     Keys.scalaVersion := "2.9.2",
-    Keys.crossScalaVersions := Seq("2.9.1", "2.9.2", "2.10.3"),
+    Keys.crossScalaVersions := Seq("2.9.2", "2.10.4"),
     Keys.scalacOptions <++= (Keys.scalaVersion).map(v => {
       val opts =
         Seq(
