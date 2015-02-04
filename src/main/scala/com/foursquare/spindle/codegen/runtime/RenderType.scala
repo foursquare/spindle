@@ -132,6 +132,18 @@ case class StructRenderType(override val text: String) extends RefRenderType {
   override def hasOrdering: Boolean = false
 }
 
+case class ExceptionRenderType(override val text: String) extends RefRenderType {
+  override def javaText: String = text.replace(".", "_")
+  override def javaContainerText: String = javaText
+  override def javaTypeParameters: Seq[RenderType] = Vector(this)
+  override def javaUnderlying: String = "com.foursquare.spindle.Record<?>"
+  override def fieldWriteTemplate: String = "write/exception.ssp"
+  override def fieldReadTemplate: String = "read/exception.ssp"
+  override def ttype: TType = TType.STRUCT
+  override def hasOrdering: Boolean = false
+}
+
+
 case class ThriftJsonRenderType(ref: RenderType) extends RefRenderType with EnhancedRenderType {
   override def text: String = "net.liftweb.json.JObject"
   override def javaText: String = "net.liftweb.json.JsonAST.JObject"
@@ -416,7 +428,7 @@ object RenderType {
       case EnumRef(name) => EnumRenderType(name)
       case StructRef(name) => StructRenderType(name)
       case UnionRef(name) => StructRenderType(name)
-      case ExceptionRef(name) => StructRenderType(name)
+      case ExceptionRef(name) => ExceptionRenderType(name)
       case ServiceRef(name) => throw new CodegenException("Trying to render unrenderable Service type: " + name)
       case TypedefRef(name, ref) => TypedefRenderType(name, RenderType(ref))
       case NewtypeRef(name, ref) => NewtypeRenderType(name, RenderType(ref))

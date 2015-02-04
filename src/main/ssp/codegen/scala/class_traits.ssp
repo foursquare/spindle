@@ -4,19 +4,13 @@
   import com.foursquare.spindle.codegen.runtime.StructLike
 %>
 <%@ val cls: StructLike %>
+<%@ val clsContainer: String %>
 
 <% val brace = if (!cls.primaryKeyField.isDefined) "{" else "" %>
 trait ${cls.name}
-#if (cls.isException)
-    extends RuntimeException
-    with Java${cls.name}[#if (cls.typeParameterFields.nonEmpty)${cls.typeParameterFields.map(_.text).distinct.mkString(", ")},#end<%----%>
+    extends #if(clsContainer.nonEmpty)Java${clsContainer}.#endJava${cls.name}[#if (cls.typeParameterFields.nonEmpty)${cls.typeParameterFields.map(_.text).distinct.mkString(", ")},#end<%----%>
       ${cls.name}, Raw${cls.name}, ${cls.name}Meta
     ]
-#else
-    extends Java${cls.name}[#if (cls.typeParameterFields.nonEmpty)${cls.typeParameterFields.map(_.text).distinct.mkString(", ")},#end<%----%>
-      ${cls.name}, Raw${cls.name}, ${cls.name}Meta
-    ]
-#end
 #for (pkField <- cls.primaryKeyField)
     with com.foursquare.spindle.HasPrimaryKey[${pkField.renderType.text}, ${cls.name}]
 #end
@@ -47,7 +41,7 @@ trait ${cls.name}
 <% render("class_traits_mergecopy.ssp", Map("cls" -> cls)) %>
 
 #if (cls.isException)
-  override def getMessage(): String = this.toString
+  def toException: ${clsContainer} = new ${clsContainer}(this)
 #end
 }
 
