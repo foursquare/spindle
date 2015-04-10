@@ -13,6 +13,18 @@ abstract class Enum[T <: Enum[T]] extends Ordered[T] { self: T =>
   override def compare(other: T) = this.id.compare(other.id)
 
   def annotations: Annotations = Annotations.empty
+
+  // Override equals and hashCode to compare Enum instances via the `id`.
+
+  override def equals(other: Any): Boolean = {
+    if (other != null && self.getClass.isAssignableFrom(other.getClass)) {
+      self.id == other.asInstanceOf[Enum[T]].id
+    } else {
+      false
+    }
+  }
+
+  override def hashCode: Int = id.hashCode
 }
 
 abstract class EnumMeta[T <: Enum[T]] {
