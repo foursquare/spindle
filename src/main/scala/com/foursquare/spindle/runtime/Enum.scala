@@ -10,7 +10,7 @@ abstract class Enum[T <: Enum[T]] extends Ordered[T] { self: T =>
   def stringValue: String
 
   // Implementation of Ordered[T].
-  override def compare(other: T) = this.id.compare(other.id)
+  override def compare(other: T): Int = this.id.compare(other.id)
 
   def annotations: Annotations = Annotations.empty
 
