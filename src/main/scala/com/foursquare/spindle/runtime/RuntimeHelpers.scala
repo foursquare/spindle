@@ -3,6 +3,8 @@
 package com.foursquare.spindle
 
 object RuntimeHelpers {
+  def reportError(e: Throwable): Unit = errorHooks.reportError(e)
+
   trait ForeignKeyHooks {
     def missingKey[
         F,
@@ -125,7 +127,16 @@ object RuntimeHelpers {
     ): Option[FR] = None
   }
 
+  trait ErrorHooks {
+    def reportError(e: Throwable): Unit
+  }
+
   object NoopForeignKeyHooks extends DefaultForeignKeyHooks
 
+  object NoopErrorHooks extends ErrorHooks {
+    override def reportError(e: Throwable): Unit = {}
+  }
+
   var fkHooks: ForeignKeyHooks = NoopForeignKeyHooks
+  var errorHooks: ErrorHooks = NoopErrorHooks
 }
