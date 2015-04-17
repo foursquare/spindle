@@ -2,7 +2,7 @@
 
 package com.foursquare.spindle.runtime
 
-import com.foursquare.spindle.Record
+import com.foursquare.spindle.{Record, RuntimeHelpers}
 import org.apache.thrift.TBase
 import org.apache.thrift.protocol.{TField, TProtocol, TProtocolUtil, TType}
 
@@ -71,9 +71,23 @@ case class UnknownFields(rec: TBase[_, _] with Record[_], inputProtocolName: Str
   def writeInline(oprot: TProtocol) {
     stashList.reverse foreach {
       field: UnknownField => {
-        oprot.writeFieldBegin(field.tfield)
-        field.value.write(oprot)
-        oprot.writeFieldEnd()
+        try {
+          oprot.writeFieldBegin(field.tfield)
+          field.value.write(oprot)
+          oprot.writeFieldEnd()
+        } catch {
+          case e: Exception => {
+            RuntimeHelpers.reportError(new RuntimeException(
+              "Failed to stash field %s (%s) in %s record: %s".format(
+                field.tfield.name,
+                field.value.getClass.getSimpleName,
+                rec.meta.recordName,
+                e.getMessage
+              ),
+              e
+            ))
+          }
+        }
       }
     }
   }
