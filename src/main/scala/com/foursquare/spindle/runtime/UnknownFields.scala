@@ -2,7 +2,7 @@
 
 package com.foursquare.spindle.runtime
 
-import com.foursquare.spindle.{Record, RuntimeHelpers}
+import com.foursquare.spindle.{Record, RuntimeHelpers, SemitypedHasPrimaryKey}
 import org.apache.thrift.TBase
 import org.apache.thrift.protocol.{TField, TProtocol, TProtocolUtil, TType}
 
@@ -77,11 +77,17 @@ case class UnknownFields(rec: TBase[_, _] with Record[_], inputProtocolName: Str
           oprot.writeFieldEnd()
         } catch {
           case e: Exception => {
+            val id = rec match {
+              case r: SemitypedHasPrimaryKey[_] => " (%)".format(r.primaryKey.toString)
+              case _ => ""
+            }
+
             RuntimeHelpers.reportError(new RuntimeException(
-              "Failed to stash field %s (%s) in %s record: %s".format(
+              "Failed to stash field %s (%s) in %s record%s: %s".format(
                 field.tfield.name,
                 field.value.getClass.getSimpleName,
                 rec.meta.recordName,
+                id,
                 e.getMessage
               ),
               e
