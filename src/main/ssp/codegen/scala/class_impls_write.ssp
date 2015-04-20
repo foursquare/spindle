@@ -9,9 +9,9 @@
       oprot.writeFieldEnd()
     }
 #end
-#if (cls.annotations.contains("preserve_unknown_fields"))
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
     unknownFields.reverse foreach { _.write(oprot) }
-#end
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }

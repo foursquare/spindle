@@ -4,6 +4,8 @@ package com.foursquare.spindle
 
 object RuntimeHelpers {
   def reportError(e: Throwable): Unit = errorHooks.reportError(e)
+  def preserveUnknownFields(record: Record[_]): Boolean = configHooks.preserveUnknownFields(record)
+
 
   trait ForeignKeyHooks {
     def missingKey[
@@ -127,6 +129,10 @@ object RuntimeHelpers {
     ): Option[FR] = None
   }
 
+  trait ConfigHooks {
+    def preserveUnknownFields(record: Record[_]): Boolean
+  }
+
   trait ErrorHooks {
     def reportError(e: Throwable): Unit
   }
@@ -137,6 +143,13 @@ object RuntimeHelpers {
     override def reportError(e: Throwable): Unit = {}
   }
 
+  object DefaultConfigHooks extends ConfigHooks {
+    override def preserveUnknownFields(record: Record[_]): Boolean = {
+      record.meta.annotations.get("preserve_unknown_fields").isDefined
+    }
+  }
+
   var fkHooks: ForeignKeyHooks = NoopForeignKeyHooks
   var errorHooks: ErrorHooks = NoopErrorHooks
+  var configHooks: ConfigHooks = DefaultConfigHooks
 }

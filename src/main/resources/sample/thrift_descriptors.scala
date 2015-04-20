@@ -373,6 +373,7 @@ final class RawInclude extends JavaIncludeRaw[
     with MutableInclude {
   override def meta: IncludeMeta = Include
 
+  // fields
   // Field #1 - path
   private var _path: String = null  // Underlying type: String
   override def path: String = pathOrThrow
@@ -382,7 +383,10 @@ final class RawInclude extends JavaIncludeRaw[
   override def pathOrThrow: String = if (pathIsSet) _path else throw new java.lang.NullPointerException("field path of Include missing")
   override def pathIsSet: Boolean = _path != null
   override def pathUnset(): Unit = { _path = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -392,11 +396,28 @@ final class RawInclude extends JavaIncludeRaw[
       oprot.writeString(_path)
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -419,8 +440,11 @@ final class RawInclude extends JavaIncludeRaw[
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -474,6 +498,7 @@ final class RawInclude extends JavaIncludeRaw[
 
   override def clear() {
     pathUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Include._Fields = id match {
@@ -797,6 +822,7 @@ final class RawNamespace extends JavaNamespaceRaw[
     with MutableNamespace {
   override def meta: NamespaceMeta = Namespace
 
+  // fields
   // Field #1 - language
   private var _language: String = null  // Underlying type: String
   override def language: String = languageOrThrow
@@ -815,7 +841,10 @@ final class RawNamespace extends JavaNamespaceRaw[
   override def nameOrThrow: String = if (nameIsSet) _name else throw new java.lang.NullPointerException("field name of Namespace missing")
   override def nameIsSet: Boolean = _name != null
   override def nameUnset(): Unit = { _name = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -830,11 +859,28 @@ final class RawNamespace extends JavaNamespaceRaw[
       oprot.writeString(_name)
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -865,8 +911,11 @@ final class RawNamespace extends JavaNamespaceRaw[
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -927,6 +976,7 @@ final class RawNamespace extends JavaNamespaceRaw[
   override def clear() {
     languageUnset()
     nameUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Namespace._Fields = id match {
@@ -1256,6 +1306,7 @@ final class RawAnnotation extends JavaAnnotationRaw[
     with MutableAnnotation {
   override def meta: AnnotationMeta = Annotation
 
+  // fields
   // Field #1 - key
   private var _key: String = null  // Underlying type: String
   override def key: String = keyOrThrow
@@ -1274,7 +1325,10 @@ final class RawAnnotation extends JavaAnnotationRaw[
   override def valueOrThrow: String = if (valueIsSet) _value else throw new java.lang.NullPointerException("field value of Annotation missing")
   override def valueIsSet: Boolean = _value != null
   override def valueUnset(): Unit = { _value = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -1289,11 +1343,28 @@ final class RawAnnotation extends JavaAnnotationRaw[
       oprot.writeString(_value)
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -1324,8 +1395,11 @@ final class RawAnnotation extends JavaAnnotationRaw[
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -1386,6 +1460,7 @@ final class RawAnnotation extends JavaAnnotationRaw[
   override def clear() {
     keyUnset()
     valueUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Annotation._Fields = id match {
@@ -1722,6 +1797,7 @@ final class RawBaseType extends JavaBaseTypeRaw[com.twitter.thrift.descriptors.A
     with MutableBaseType {
   override def meta: BaseTypeMeta = BaseType
 
+  // fields
   // Field #1 - simpleBaseType
   private var _simpleBaseType: com.twitter.thrift.descriptors.SimpleBaseType = null  // Underlying type: com.twitter.thrift.descriptors.SimpleBaseType
   override def simpleBaseType: com.twitter.thrift.descriptors.SimpleBaseType = simpleBaseTypeOrThrow
@@ -1741,7 +1817,10 @@ final class RawBaseType extends JavaBaseTypeRaw[com.twitter.thrift.descriptors.A
   override def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = if (annotationsIsSet) _annotations else throw new java.lang.NullPointerException("field __annotations of BaseType missing")
   override def annotationsIsSet: Boolean = _annotations != null
   override def annotationsUnset(): Unit = { _annotations = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -1760,11 +1839,28 @@ final class RawBaseType extends JavaBaseTypeRaw[com.twitter.thrift.descriptors.A
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -1810,8 +1906,11 @@ final class RawBaseType extends JavaBaseTypeRaw[com.twitter.thrift.descriptors.A
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -1875,6 +1974,7 @@ final class RawBaseType extends JavaBaseTypeRaw[com.twitter.thrift.descriptors.A
   override def clear() {
     simpleBaseTypeUnset()
     annotationsUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): BaseType._Fields = id match {
@@ -2154,6 +2254,7 @@ final class RawListType extends JavaListTypeRaw[
     with MutableListType {
   override def meta: ListTypeMeta = ListType
 
+  // fields
   // Field #1 - elementTypeId
   private var _elementTypeId: String = null  // Underlying type: String
   override def elementTypeId: String = elementTypeIdOrThrow
@@ -2163,7 +2264,10 @@ final class RawListType extends JavaListTypeRaw[
   override def elementTypeIdOrThrow: String = if (elementTypeIdIsSet) _elementTypeId else throw new java.lang.NullPointerException("field elementTypeId of ListType missing")
   override def elementTypeIdIsSet: Boolean = _elementTypeId != null
   override def elementTypeIdUnset(): Unit = { _elementTypeId = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -2173,11 +2277,28 @@ final class RawListType extends JavaListTypeRaw[
       oprot.writeString(_elementTypeId)
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -2200,8 +2321,11 @@ final class RawListType extends JavaListTypeRaw[
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -2255,6 +2379,7 @@ final class RawListType extends JavaListTypeRaw[
 
   override def clear() {
     elementTypeIdUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): ListType._Fields = id match {
@@ -2528,6 +2653,7 @@ final class RawSetType extends JavaSetTypeRaw[
     with MutableSetType {
   override def meta: SetTypeMeta = SetType
 
+  // fields
   // Field #1 - elementTypeId
   private var _elementTypeId: String = null  // Underlying type: String
   override def elementTypeId: String = elementTypeIdOrThrow
@@ -2537,7 +2663,10 @@ final class RawSetType extends JavaSetTypeRaw[
   override def elementTypeIdOrThrow: String = if (elementTypeIdIsSet) _elementTypeId else throw new java.lang.NullPointerException("field elementTypeId of SetType missing")
   override def elementTypeIdIsSet: Boolean = _elementTypeId != null
   override def elementTypeIdUnset(): Unit = { _elementTypeId = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -2547,11 +2676,28 @@ final class RawSetType extends JavaSetTypeRaw[
       oprot.writeString(_elementTypeId)
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -2574,8 +2720,11 @@ final class RawSetType extends JavaSetTypeRaw[
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -2629,6 +2778,7 @@ final class RawSetType extends JavaSetTypeRaw[
 
   override def clear() {
     elementTypeIdUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): SetType._Fields = id match {
@@ -2952,6 +3102,7 @@ final class RawMapType extends JavaMapTypeRaw[
     with MutableMapType {
   override def meta: MapTypeMeta = MapType
 
+  // fields
   // Field #1 - keyTypeId
   private var _keyTypeId: String = null  // Underlying type: String
   override def keyTypeId: String = keyTypeIdOrThrow
@@ -2970,7 +3121,10 @@ final class RawMapType extends JavaMapTypeRaw[
   override def valueTypeIdOrThrow: String = if (valueTypeIdIsSet) _valueTypeId else throw new java.lang.NullPointerException("field valueTypeId of MapType missing")
   override def valueTypeIdIsSet: Boolean = _valueTypeId != null
   override def valueTypeIdUnset(): Unit = { _valueTypeId = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -2985,11 +3139,28 @@ final class RawMapType extends JavaMapTypeRaw[
       oprot.writeString(_valueTypeId)
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -3020,8 +3191,11 @@ final class RawMapType extends JavaMapTypeRaw[
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -3082,6 +3256,7 @@ final class RawMapType extends JavaMapTypeRaw[
   override def clear() {
     keyTypeIdUnset()
     valueTypeIdUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): MapType._Fields = id match {
@@ -3418,6 +3593,7 @@ final class RawContainerType extends JavaContainerTypeRaw[com.twitter.thrift.des
     with MutableContainerType {
   override def meta: ContainerTypeMeta = ContainerType
 
+  // fields
   // Field #1 - simpleContainerType
   private var _simpleContainerType: com.twitter.thrift.descriptors.SimpleContainerType = null  // Underlying type: com.twitter.thrift.descriptors.SimpleContainerType
   override def simpleContainerType: com.twitter.thrift.descriptors.SimpleContainerType = simpleContainerTypeOrThrow
@@ -3437,7 +3613,10 @@ final class RawContainerType extends JavaContainerTypeRaw[com.twitter.thrift.des
   override def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = if (annotationsIsSet) _annotations else throw new java.lang.NullPointerException("field __annotations of ContainerType missing")
   override def annotationsIsSet: Boolean = _annotations != null
   override def annotationsUnset(): Unit = { _annotations = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -3456,11 +3635,28 @@ final class RawContainerType extends JavaContainerTypeRaw[com.twitter.thrift.des
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -3510,8 +3706,11 @@ final class RawContainerType extends JavaContainerTypeRaw[com.twitter.thrift.des
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -3575,6 +3774,7 @@ final class RawContainerType extends JavaContainerTypeRaw[com.twitter.thrift.des
   override def clear() {
     simpleContainerTypeUnset()
     annotationsUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): ContainerType._Fields = id match {
@@ -3854,6 +4054,7 @@ final class RawTyperef extends JavaTyperefRaw[
     with MutableTyperef {
   override def meta: TyperefMeta = Typeref
 
+  // fields
   // Field #1 - typeAlias
   private var _typeAlias: String = null  // Underlying type: String
   override def typeAlias: String = typeAliasOrThrow
@@ -3863,7 +4064,10 @@ final class RawTyperef extends JavaTyperefRaw[
   override def typeAliasOrThrow: String = if (typeAliasIsSet) _typeAlias else throw new java.lang.NullPointerException("field typeAlias of Typeref missing")
   override def typeAliasIsSet: Boolean = _typeAlias != null
   override def typeAliasUnset(): Unit = { _typeAlias = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -3873,11 +4077,28 @@ final class RawTyperef extends JavaTyperefRaw[
       oprot.writeString(_typeAlias)
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -3900,8 +4121,11 @@ final class RawTyperef extends JavaTyperefRaw[
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -3955,6 +4179,7 @@ final class RawTyperef extends JavaTyperefRaw[
 
   override def clear() {
     typeAliasUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Typeref._Fields = id match {
@@ -4278,6 +4503,7 @@ final class RawType extends JavaTypeRaw[com.twitter.thrift.descriptors.SimpleTyp
     with MutableType {
   override def meta: TypeMeta = Type
 
+  // fields
   // Field #1 - id
   private var _id: String = null  // Underlying type: String
   override def id: String = idOrThrow
@@ -4296,7 +4522,10 @@ final class RawType extends JavaTypeRaw[com.twitter.thrift.descriptors.SimpleTyp
   override def simpleTypeOrThrow: com.twitter.thrift.descriptors.SimpleType = if (simpleTypeIsSet) _simpleType else throw new java.lang.NullPointerException("field simpleType of Type missing")
   override def simpleTypeIsSet: Boolean = _simpleType != null
   override def simpleTypeUnset(): Unit = { _simpleType = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -4311,11 +4540,28 @@ final class RawType extends JavaTypeRaw[com.twitter.thrift.descriptors.SimpleTyp
       _simpleType.write(oprot)
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -4350,8 +4596,11 @@ final class RawType extends JavaTypeRaw[com.twitter.thrift.descriptors.SimpleTyp
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -4412,6 +4661,7 @@ final class RawType extends JavaTypeRaw[com.twitter.thrift.descriptors.SimpleTyp
   override def clear() {
     idUnset()
     simpleTypeUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Type._Fields = id match {
@@ -4883,6 +5133,7 @@ final class RawTypedef extends JavaTypedefRaw[com.twitter.thrift.descriptors.Ann
     with MutableTypedef {
   override def meta: TypedefMeta = Typedef
 
+  // fields
   // Field #1 - typeId
   private var _typeId: String = null  // Underlying type: String
   override def typeId: String = typeIdOrThrow
@@ -4911,7 +5162,10 @@ final class RawTypedef extends JavaTypedefRaw[com.twitter.thrift.descriptors.Ann
   override def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = if (annotationsIsSet) _annotations else throw new java.lang.NullPointerException("field __annotations of Typedef missing")
   override def annotationsIsSet: Boolean = _annotations != null
   override def annotationsUnset(): Unit = { _annotations = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -4935,11 +5189,28 @@ final class RawTypedef extends JavaTypedefRaw[com.twitter.thrift.descriptors.Ann
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -4993,8 +5264,11 @@ final class RawTypedef extends JavaTypedefRaw[com.twitter.thrift.descriptors.Ann
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -5065,6 +5339,7 @@ final class RawTypedef extends JavaTypedefRaw[com.twitter.thrift.descriptors.Ann
     typeIdUnset()
     typeAliasUnset()
     annotationsUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Typedef._Fields = id match {
@@ -5400,6 +5675,7 @@ final class RawTypeRegistry extends JavaTypeRegistryRaw[com.twitter.thrift.descr
     with MutableTypeRegistry {
   override def meta: TypeRegistryMeta = TypeRegistry
 
+  // fields
   // Field #1 - idToType
   private var _idToType: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type] = null  // Underlying type: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type]
   override def idToType: scala.collection.immutable.Map[String, com.twitter.thrift.descriptors.Type] = idToTypeOrDefault
@@ -5420,7 +5696,10 @@ final class RawTypeRegistry extends JavaTypeRegistryRaw[com.twitter.thrift.descr
   override def aliasToTypeIdOrThrow: scala.collection.immutable.Map[String, String] = if (aliasToTypeIdIsSet) _aliasToTypeId else throw new java.lang.NullPointerException("field aliasToTypeId of TypeRegistry missing")
   override def aliasToTypeIdIsSet: Boolean = _aliasToTypeId != null
   override def aliasToTypeIdUnset(): Unit = { _aliasToTypeId = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -5445,11 +5724,28 @@ final class RawTypeRegistry extends JavaTypeRegistryRaw[com.twitter.thrift.descr
       oprot.writeMapEnd()
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -5510,8 +5806,11 @@ final class RawTypeRegistry extends JavaTypeRegistryRaw[com.twitter.thrift.descr
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -5578,6 +5877,7 @@ final class RawTypeRegistry extends JavaTypeRegistryRaw[com.twitter.thrift.descr
   override def clear() {
     idToTypeUnset()
     aliasToTypeIdUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): TypeRegistry._Fields = id match {
@@ -6042,6 +6342,7 @@ final class RawConst extends JavaConstRaw[
     with MutableConst {
   override def meta: ConstMeta = Const
 
+  // fields
   // Field #1 - typeId
   private var _typeId: String = null  // Underlying type: String
   override def typeId: String = typeIdOrThrow
@@ -6069,7 +6370,10 @@ final class RawConst extends JavaConstRaw[
   override def valueOrThrow: String = if (valueIsSet) _value else throw new java.lang.NullPointerException("field value of Const missing")
   override def valueIsSet: Boolean = _value != null
   override def valueUnset(): Unit = { _value = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -6089,11 +6393,28 @@ final class RawConst extends JavaConstRaw[
       oprot.writeString(_value)
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -6132,8 +6453,11 @@ final class RawConst extends JavaConstRaw[
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -6201,6 +6525,7 @@ final class RawConst extends JavaConstRaw[
     typeIdUnset()
     nameUnset()
     valueUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Const._Fields = id match {
@@ -6679,6 +7004,7 @@ final class RawEnumElement extends JavaEnumElementRaw[com.twitter.thrift.descrip
     with MutableEnumElement {
   override def meta: EnumElementMeta = EnumElement
 
+  // fields
   // Field #1 - name
   private var _name: String = null  // Underlying type: String
   override def name: String = nameOrThrow
@@ -6709,7 +7035,10 @@ final class RawEnumElement extends JavaEnumElementRaw[com.twitter.thrift.descrip
   override def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = if (annotationsIsSet) _annotations else throw new java.lang.NullPointerException("field __annotations of EnumElement missing")
   override def annotationsIsSet: Boolean = _annotations != null
   override def annotationsUnset(): Unit = { _annotations = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -6733,11 +7062,28 @@ final class RawEnumElement extends JavaEnumElementRaw[com.twitter.thrift.descrip
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -6793,8 +7139,11 @@ final class RawEnumElement extends JavaEnumElementRaw[com.twitter.thrift.descrip
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -6865,6 +7214,7 @@ final class RawEnumElement extends JavaEnumElementRaw[com.twitter.thrift.descrip
     nameUnset()
     valueUnset()
     annotationsUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): EnumElement._Fields = id match {
@@ -7342,6 +7692,7 @@ final class RawEnum extends JavaEnumRaw[com.twitter.thrift.descriptors.Annotatio
     with MutableEnum {
   override def meta: EnumMeta = Enum
 
+  // fields
   // Field #1 - name
   private var _name: String = null  // Underlying type: String
   override def name: String = nameOrThrow
@@ -7371,7 +7722,10 @@ final class RawEnum extends JavaEnumRaw[com.twitter.thrift.descriptors.Annotatio
   override def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = if (annotationsIsSet) _annotations else throw new java.lang.NullPointerException("field __annotations of Enum missing")
   override def annotationsIsSet: Boolean = _annotations != null
   override def annotationsUnset(): Unit = { _annotations = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -7399,11 +7753,28 @@ final class RawEnum extends JavaEnumRaw[com.twitter.thrift.descriptors.Annotatio
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -7472,8 +7843,11 @@ final class RawEnum extends JavaEnumRaw[com.twitter.thrift.descriptors.Annotatio
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -7547,6 +7921,7 @@ final class RawEnum extends JavaEnumRaw[com.twitter.thrift.descriptors.Annotatio
     nameUnset()
     elementsUnset()
     annotationsUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Enum._Fields = id match {
@@ -8224,6 +8599,7 @@ final class RawField extends JavaFieldRaw[com.twitter.thrift.descriptors.Annotat
     with MutableField {
   override def meta: FieldMeta = Field
 
+  // fields
   // Field #1 - identifier
   private var _identifier: Short = 0  // Underlying type: Short
   private var _identifierIsSet: Boolean = false
@@ -8279,7 +8655,10 @@ final class RawField extends JavaFieldRaw[com.twitter.thrift.descriptors.Annotat
   override def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = if (annotationsIsSet) _annotations else throw new java.lang.NullPointerException("field __annotations of Field missing")
   override def annotationsIsSet: Boolean = _annotations != null
   override def annotationsUnset(): Unit = { _annotations = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -8318,11 +8697,28 @@ final class RawField extends JavaFieldRaw[com.twitter.thrift.descriptors.Annotat
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -8402,8 +8798,11 @@ final class RawField extends JavaFieldRaw[com.twitter.thrift.descriptors.Annotat
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -8495,6 +8894,7 @@ final class RawField extends JavaFieldRaw[com.twitter.thrift.descriptors.Annotat
     requirednessUnset()
     defaultValueUnset()
     annotationsUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Field._Fields = id match {
@@ -8990,6 +9390,7 @@ final class RawStruct extends JavaStructRaw[com.twitter.thrift.descriptors.Annot
     with MutableStruct {
   override def meta: StructMeta = Struct
 
+  // fields
   // Field #1 - name
   private var _name: String = null  // Underlying type: String
   override def name: String = nameOrThrow
@@ -9019,7 +9420,10 @@ final class RawStruct extends JavaStructRaw[com.twitter.thrift.descriptors.Annot
   override def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = if (annotationsIsSet) _annotations else throw new java.lang.NullPointerException("field __annotations of Struct missing")
   override def annotationsIsSet: Boolean = _annotations != null
   override def annotationsUnset(): Unit = { _annotations = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -9047,11 +9451,28 @@ final class RawStruct extends JavaStructRaw[com.twitter.thrift.descriptors.Annot
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -9120,8 +9541,11 @@ final class RawStruct extends JavaStructRaw[com.twitter.thrift.descriptors.Annot
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -9195,6 +9619,7 @@ final class RawStruct extends JavaStructRaw[com.twitter.thrift.descriptors.Annot
     nameUnset()
     fieldsUnset()
     annotationsUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Struct._Fields = id match {
@@ -9672,6 +10097,7 @@ final class RawUnion extends JavaUnionRaw[com.twitter.thrift.descriptors.Annotat
     with MutableUnion {
   override def meta: UnionMeta = Union
 
+  // fields
   // Field #1 - name
   private var _name: String = null  // Underlying type: String
   override def name: String = nameOrThrow
@@ -9701,7 +10127,10 @@ final class RawUnion extends JavaUnionRaw[com.twitter.thrift.descriptors.Annotat
   override def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = if (annotationsIsSet) _annotations else throw new java.lang.NullPointerException("field __annotations of Union missing")
   override def annotationsIsSet: Boolean = _annotations != null
   override def annotationsUnset(): Unit = { _annotations = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -9729,11 +10158,28 @@ final class RawUnion extends JavaUnionRaw[com.twitter.thrift.descriptors.Annotat
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -9802,8 +10248,11 @@ final class RawUnion extends JavaUnionRaw[com.twitter.thrift.descriptors.Annotat
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -9877,6 +10326,7 @@ final class RawUnion extends JavaUnionRaw[com.twitter.thrift.descriptors.Annotat
     nameUnset()
     fieldsUnset()
     annotationsUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Union._Fields = id match {
@@ -10354,6 +10804,7 @@ final class RawException extends JavaExceptionRaw[com.twitter.thrift.descriptors
     with MutableException {
   override def meta: ExceptionMeta = Exception
 
+  // fields
   // Field #1 - name
   private var _name: String = null  // Underlying type: String
   override def name: String = nameOrThrow
@@ -10383,7 +10834,10 @@ final class RawException extends JavaExceptionRaw[com.twitter.thrift.descriptors
   override def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = if (annotationsIsSet) _annotations else throw new java.lang.NullPointerException("field __annotations of Exception missing")
   override def annotationsIsSet: Boolean = _annotations != null
   override def annotationsUnset(): Unit = { _annotations = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -10411,11 +10865,28 @@ final class RawException extends JavaExceptionRaw[com.twitter.thrift.descriptors
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -10484,8 +10955,11 @@ final class RawException extends JavaExceptionRaw[com.twitter.thrift.descriptors
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -10559,6 +11033,7 @@ final class RawException extends JavaExceptionRaw[com.twitter.thrift.descriptors
     nameUnset()
     fieldsUnset()
     annotationsUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Exception._Fields = id match {
@@ -11238,6 +11713,7 @@ final class RawFunction extends JavaFunctionRaw[com.twitter.thrift.descriptors.A
     with MutableFunction {
   override def meta: FunctionMeta = Function
 
+  // fields
   // Field #1 - name
   private var _name: String = null  // Underlying type: String
   override def name: String = nameOrThrow
@@ -11296,7 +11772,10 @@ final class RawFunction extends JavaFunctionRaw[com.twitter.thrift.descriptors.A
   override def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = if (annotationsIsSet) _annotations else throw new java.lang.NullPointerException("field __annotations of Function missing")
   override def annotationsIsSet: Boolean = _annotations != null
   override def annotationsUnset(): Unit = { _annotations = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -11343,11 +11822,28 @@ final class RawFunction extends JavaFunctionRaw[com.twitter.thrift.descriptors.A
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -11457,8 +11953,11 @@ final class RawFunction extends JavaFunctionRaw[com.twitter.thrift.descriptors.A
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -11556,6 +12055,7 @@ final class RawFunction extends JavaFunctionRaw[com.twitter.thrift.descriptors.A
     argzUnset()
     throwzUnset()
     annotationsUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Function._Fields = id match {
@@ -12119,6 +12619,7 @@ final class RawService extends JavaServiceRaw[com.twitter.thrift.descriptors.Ann
     with MutableService {
   override def meta: ServiceMeta = Service
 
+  // fields
   // Field #1 - name
   private var _name: String = null  // Underlying type: String
   override def name: String = nameOrThrow
@@ -12156,7 +12657,10 @@ final class RawService extends JavaServiceRaw[com.twitter.thrift.descriptors.Ann
   override def annotationsOrThrow: scala.collection.Seq[com.twitter.thrift.descriptors.Annotation] = if (annotationsIsSet) _annotations else throw new java.lang.NullPointerException("field __annotations of Service missing")
   override def annotationsIsSet: Boolean = _annotations != null
   override def annotationsUnset(): Unit = { _annotations = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -12189,11 +12693,28 @@ final class RawService extends JavaServiceRaw[com.twitter.thrift.descriptors.Ann
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -12270,8 +12791,11 @@ final class RawService extends JavaServiceRaw[com.twitter.thrift.descriptors.Ann
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -12352,6 +12876,7 @@ final class RawService extends JavaServiceRaw[com.twitter.thrift.descriptors.Ann
     extendzUnset()
     functionsUnset()
     annotationsUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Service._Fields = id match {
@@ -13332,6 +13857,7 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
     with MutableProgram {
   override def meta: ProgramMeta = Program
 
+  // fields
   // Field #1 - namespaces
   private var _namespaces: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace] = null  // Underlying type: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace]
   override def namespaces: scala.collection.Seq[com.twitter.thrift.descriptors.Namespace] = namespacesOrDefault
@@ -13431,7 +13957,10 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
   override def typeRegistryOrThrow: com.twitter.thrift.descriptors.TypeRegistry = if (typeRegistryIsSet) _typeRegistry else throw new java.lang.NullPointerException("field typeRegistry of Program missing")
   override def typeRegistryIsSet: Boolean = _typeRegistry != null
   override def typeRegistryUnset(): Unit = { _typeRegistry = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -13522,11 +14051,28 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
       _typeRegistry.write(oprot)
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -13760,8 +14306,11 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -13905,6 +14454,7 @@ final class RawProgram extends JavaProgramRaw[com.twitter.thrift.descriptors.Con
     exceptionsUnset()
     servicesUnset()
     typeRegistryUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): Program._Fields = id match {
@@ -14351,6 +14901,7 @@ final class RawSimpleContainerType extends JavaSimpleContainerTypeRaw[com.twitte
     with MutableSimpleContainerType {
   override def meta: SimpleContainerTypeMeta = SimpleContainerType
 
+  // fields
   // Field #1 - listType
   private var _listType: com.twitter.thrift.descriptors.ListType = null  // Underlying type: com.twitter.thrift.descriptors.ListType
   override def listType_=(x: com.twitter.thrift.descriptors.ListType): Unit = { _listType = x }
@@ -14375,7 +14926,10 @@ final class RawSimpleContainerType extends JavaSimpleContainerTypeRaw[com.twitte
   override def mapTypeOrThrow: com.twitter.thrift.descriptors.MapType = if (mapTypeIsSet) _mapType else throw new java.lang.NullPointerException("field mapType of SimpleContainerType missing")
   override def mapTypeIsSet: Boolean = _mapType != null
   override def mapTypeUnset(): Unit = { _mapType = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -14395,11 +14949,28 @@ final class RawSimpleContainerType extends JavaSimpleContainerTypeRaw[com.twitte
       _mapType.write(oprot)
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -14450,8 +15021,11 @@ final class RawSimpleContainerType extends JavaSimpleContainerTypeRaw[com.twitte
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -14519,6 +15093,7 @@ final class RawSimpleContainerType extends JavaSimpleContainerTypeRaw[com.twitte
     listTypeUnset()
     setTypeUnset()
     mapTypeUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): SimpleContainerType._Fields = id match {
@@ -14922,6 +15497,7 @@ final class RawSimpleType extends JavaSimpleTypeRaw[com.twitter.thrift.descripto
     with MutableSimpleType {
   override def meta: SimpleTypeMeta = SimpleType
 
+  // fields
   // Field #1 - baseType
   private var _baseType: com.twitter.thrift.descriptors.BaseType = null  // Underlying type: com.twitter.thrift.descriptors.BaseType
   override def baseType_=(x: com.twitter.thrift.descriptors.BaseType): Unit = { _baseType = x }
@@ -14946,7 +15522,10 @@ final class RawSimpleType extends JavaSimpleTypeRaw[com.twitter.thrift.descripto
   override def typerefOrThrow: com.twitter.thrift.descriptors.Typeref = if (typerefIsSet) _typeref else throw new java.lang.NullPointerException("field typeref of SimpleType missing")
   override def typerefIsSet: Boolean = _typeref != null
   override def typerefUnset(): Unit = { _typeref = null }
+  // end fields
 
+
+  private var unknownFields: List[com.foursquare.spindle.runtime.UnknownFields] = Nil
 
 
   override def write(oprot: org.apache.thrift.protocol.TProtocol): Unit = {
@@ -14966,11 +15545,28 @@ final class RawSimpleType extends JavaSimpleTypeRaw[com.twitter.thrift.descripto
       _typeref.write(oprot)
       oprot.writeFieldEnd()
     }
+  if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+    unknownFields.reverse foreach { _.write(oprot) }
+  }
     oprot.writeFieldStop()
     oprot.writeStructEnd()
   }
 
   override def read(iprot: org.apache.thrift.protocol.TProtocol) {
+    // Unknown fields in this read go here.
+    var currentUnknownFieldsOpt: Option[com.foursquare.spindle.runtime.UnknownFields] = None
+    def currentUnknownFields(): com.foursquare.spindle.runtime.UnknownFields = currentUnknownFieldsOpt match {
+      case Some(uf) => uf
+      case None => {
+        val uf = new com.foursquare.spindle.runtime.UnknownFields(
+          this,
+          com.foursquare.spindle.runtime.TProtocolInfo.getProtocolName(iprot)
+        )
+        unknownFields = uf :: unknownFields
+        currentUnknownFieldsOpt = Some(uf)
+        uf
+      }
+    }
     iprot.readStructBegin()
     var wire_field_header: org.apache.thrift.protocol.TField = iprot.readFieldBegin()
     while (wire_field_header.`type` != org.apache.thrift.protocol.TType.STOP) {
@@ -15021,8 +15617,11 @@ final class RawSimpleType extends JavaSimpleTypeRaw[com.twitter.thrift.descripto
             }
           }
           case _ => {
-
-            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            if (com.foursquare.spindle.RuntimeHelpers.preserveUnknownFields(this)) {
+              currentUnknownFields().readUnknownField(iprot, field_header, this)  // May call this method recursively.
+            } else {
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field_header.`type`)
+            }
           }
         }  // end match
       } catch {
@@ -15090,6 +15689,7 @@ final class RawSimpleType extends JavaSimpleTypeRaw[com.twitter.thrift.descripto
     baseTypeUnset()
     containerTypeUnset()
     typerefUnset()
+  unknownFields = Nil
   }
 
   def fieldForId(id: Int): SimpleType._Fields = id match {

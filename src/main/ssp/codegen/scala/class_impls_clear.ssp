@@ -1,14 +1,12 @@
 <%
   // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-  import com.foursquare.spindle.codegen.runtime.StructLike 
+  import com.foursquare.spindle.codegen.runtime.StructLike
 %>
 <%@ val cls: StructLike %>
   override def clear() {
 #for (field <- cls.fields)
     ${field.name}Unset()
 #end
-#if (cls.annotations.contains("preserve_unknown_fields"))
   unknownFields = Nil
-#end
   }
