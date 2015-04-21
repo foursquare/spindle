@@ -78,7 +78,7 @@ case class UnknownFields(rec: TBase[_, _] with Record[_], inputProtocolName: Str
         } catch {
           case e: Exception => {
             val id = rec match {
-              case r: SemitypedHasPrimaryKey[_] => " (%)".format(r.primaryKey.toString)
+              case r: SemitypedHasPrimaryKey[_] => " (%s)".format(r.primaryKey.toString)
               case _ => ""
             }
 
