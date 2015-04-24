@@ -238,6 +238,8 @@ public class TBSONObjectProtocol extends TProtocol {
     writeState.putValue(tField.name);
     if (tField instanceof EnhancedTField) {
       enhancedType = ((EnhancedTField)tField).enhancedTypes.get("bson");
+    } else {
+      enhancedType = null;
     }
   }
 
