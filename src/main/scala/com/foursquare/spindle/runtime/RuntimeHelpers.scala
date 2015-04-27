@@ -139,8 +139,8 @@ object RuntimeHelpers {
 
   object NoopForeignKeyHooks extends DefaultForeignKeyHooks
 
-  object NoopErrorHooks extends ErrorHooks {
-    override def reportError(e: Throwable): Unit = {}
+  object ThrowErrorHooks extends ErrorHooks {
+    override def reportError(e: Throwable): Unit = throw e
   }
 
   object DefaultConfigHooks extends ConfigHooks {
@@ -150,6 +150,6 @@ object RuntimeHelpers {
   }
 
   var fkHooks: ForeignKeyHooks = NoopForeignKeyHooks
-  var errorHooks: ErrorHooks = NoopErrorHooks
+  var errorHooks: ErrorHooks = ThrowErrorHooks
   var configHooks: ConfigHooks = DefaultConfigHooks
 }
