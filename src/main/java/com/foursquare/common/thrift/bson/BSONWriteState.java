@@ -43,7 +43,7 @@ class BSONWriteState<B extends BSONObject> {
           currentKey = null;
         }
       } catch (ClassCastException e) {
-        throw new NonStringMapKeyException(item);
+        throw new NonStringMapKeyException(item, e);
       }
     }
   }
