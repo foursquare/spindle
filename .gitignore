@@ -1,6 +1,8 @@
 *.pyc
 .DS_Store
-BUILD
+.pants.d/
+.pantsenv/
+dist/
 .scalate.d/
 project/sbt-launch-*.jar
 target/

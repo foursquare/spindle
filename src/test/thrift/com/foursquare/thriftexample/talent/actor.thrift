@@ -1,6 +1,6 @@
 namespace java com.foursquare.thriftexample.talent
 
-include "com/foursquare/thriftexample/people/person.thrift"
+include "people/person.thrift"
 
 typedef person.Person PersonDetails
 

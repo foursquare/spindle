@@ -1,9 +1,7 @@
 namespace java com.foursquare.thriftexample.av
 
-
-include "com/foursquare/thriftexample/talent/actor.thrift"
-include "com/foursquare/thriftexample/talent/crewmember.thrift"
-
+include "talent/actor.thrift"
+include "talent/crewmember.thrift"
 
 typedef crewmember.CrewMember CrewMember
 typedef binary (enhanced_types="bson:ObjectId") ObjectId

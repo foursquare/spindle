@@ -2,7 +2,7 @@
 
 package com.foursquare.spindle.codegen.binary
 
-import com.foursquare.spindle.{Annotations, Info}
+import com.foursquare.spindle.Annotations
 import com.foursquare.spindle.codegen.runtime.{BitfieldRef, CodegenException, EnhancedTypeRef, EnhancedTypes,
     ProgramSource, ScalaProgram, Scope, TypeDeclaration, TypeDeclarationResolver, TypeReference}
 import com.foursquare.spindle.codegen.parser.{ParserException, ThriftParser}
@@ -11,6 +11,12 @@ import org.clapper.argot.ArgotConverters._
 import org.clapper.argot.ArgotParser
 import org.fusesource.scalate.{RenderContext, TemplateEngine}
 import scala.annotation.tailrec
+
+// TODO(dan): This used to be from a magical sbt plugin. Figure out something
+// clever for pants?
+object Info {
+  val version: String = "3.0.1"
+}
 
 object ThriftCodegen {
   def main(_args: Array[String]): Unit = {

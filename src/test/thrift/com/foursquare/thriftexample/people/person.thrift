@@ -1,6 +1,5 @@
 namespace java com.foursquare.thriftexample.people
 
-
 enum PhoneType {
   HOME
   OFFICE

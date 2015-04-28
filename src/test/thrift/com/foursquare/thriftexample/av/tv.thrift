@@ -1,7 +1,6 @@
 namespace java com.foursquare.thriftexample.av
 
-
-include "com/foursquare/thriftexample/talent/actor.thrift"
+include "talent/actor.thrift"
 
 typedef actor.Actor Actor
 

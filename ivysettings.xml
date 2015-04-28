@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<ivysettings>
+  <property name="ivy.cache.dir" value="${user.home}/.ivy2/cache" override="false"/>
+
+  <property name="root.dir" value="${ivy.settings.dir}/../../../.." override="false"/>
+
+  <settings defaultResolver="chain-repos"/>
+
+  <credentials host="nexus.prod.foursquare.com" realm="Sonatype Nexus Repository Manager" username="${login}" passwd="${password}" />
+
+  <resolvers>
+    <chain name="chain-repos" returnFirst="true">
+<!-- ONLY UNCOMMENT IF *REALLY* KNOW WHAT YOU ARE DOING.
+      <filesystem name="local-maven2" m2compatible="true" >
+        <artifact pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"/>
+        <ivy pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[module]-[revision].pom"/>
+      </filesystem>
+-->
+
+      <filesystem name="sbt-ivy-resolver" transactional="false" local="true">
+        <ivy pattern="${user.home}/.ivy2/local/[organisation]/[module]/[revision]/ivys/ivy.xml"/>
+        <artifact pattern="${user.home}/.ivy2/local/[organisation]/[module]/[revision]/[type]s/[artifact](-[classifier]).[ext]"/>
+      </filesystem>
+
+      <ibiblio name="nexus.prod.foursquare.com"
+               m2compatible="true"
+               usepoms="true"
+               root="http://nexus.prod.foursquare.com/nexus/content/groups/public/"
+               pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"
+               />
+
+      <!-- continuous integration repo.  (prefer ivy xml over pom) -->
+      <url name="nexus.prod.foursquare.com-ci">
+        <ivy pattern="http://nexus.prod.foursquare.com/nexus/content/repositories/ci/[orgPath]/[module]/[revision]/ivy-[revision].xml" />
+        <artifact pattern="http://nexus.prod.foursquare.com/nexus/content/repositories/ci/[orgPath]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]" />
+      </url>
+
+      <!-- support 3 styles of 3rdparty artifacts: paired with an ivy xml, paired with a pom, and a
+           bare jar with no transitive dependency metadata at all -->
+      <filesystem name="3rdparty.ivy" transactional="false" local="true">
+        <ivy pattern="${root.dir}/3rdparty/[module]/ivy-[revision].xml"/>
+        <artifact pattern="${root.dir}/3rdparty/[module]/[artifact]-[revision](-[classifier]).[ext]"/>
+      </filesystem>
+
+      <ibiblio name="3rdparty.m2"
+               m2compatible="true"
+               root="file:${root.dir}/3rdparty/"
+               pattern="[artifact]-[revision](-[classifier]).[ext]"/>
+
+      <filesystem name="3rdparty.simple"
+                  transactional="false"
+                  local="true"
+                  checkmodified="true">
+        <artifact pattern="${root.dir}/3rdparty/[artifact]-[revision](-[classifier]).[ext]"/>
+      </filesystem>
+
+      <!--
+      <ibiblio name="nexus.prod.foursquare.com-third"
+               m2compatible="true"
+               usepoms="true"
+               root="http://nexus.prod.foursquare.com/nexus/content/repositories/thirdparty/"
+               pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"
+               />
+               -->
+
+    </chain>
+
+    <url name="nexus.prod.foursquare.com-publish" m2compatible="true">
+      <artifact pattern="http://nexus.prod.foursquare.com/nexus/content/repositories/releases/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
+    </url>
+    <url name="nexus.prod.foursquare.com-publish-ci" m2compatible="true">
+      <artifact pattern="http://nexus.prod.foursquare.com/nexus/content/repositories/ci/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
+    </url>
+  </resolvers>
+
+  <!-- don't use the default shared cache with other projects because it gets polluted,
+       but do share it for this project so that deploys that re-clone each time share it -->
+  <caches default="default" lockStrategy="no-lock" useOrigin="true">
+    <cache name="default" basedir="${ivy.cache.dir}" useOrigin="true" defaultTTL="8h">
+      <ttl revision="latest.integration" duration="0ms" />
+    </cache>
+  </caches>
+
+</ivysettings>

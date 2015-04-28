@@ -10,7 +10,7 @@ object Default {
   lazy val IvyDefaultConfiguration = config("default") extend(Compile)
   val all: Seq[Setting[_]] = Seq(
     Keys.target <<= (Keys.name)(name => Path.absolute(file("target") / name)),
-    Keys.version := "3.0.0-M10",
+    Keys.version := "3.0.1",
     Keys.organization := "com.foursquare",
     Keys.ivyConfigurations += IvyDefaultConfiguration,
     Keys.publishMavenStyle := true,
@@ -87,11 +87,6 @@ object Default {
         opts
       }
     })
-  ) ++ buildInfoSettings ++ Seq(
-    Keys.sourceGenerators in Compile <+= buildInfo,
-    buildInfoKeys := Seq[BuildInfoKey](Keys.version),
-    buildInfoPackage := "com.foursquare.spindle",
-    buildInfoObject := "Info"
   )
 
   val scalate: Seq[Setting[_]] = Default.scala ++ ScalatePlugin.scalateSettings ++ Seq(
@@ -162,7 +157,7 @@ object Default {
             "--java_template", javaTemplate.absolutePath,
             "--extension", extension,
             "--namespace_out", out.absolutePath,
-            "--thrift_include", "src/test/thrift",
+            "--thrift_include", "src/test/thrift/com/foursquare/thriftexample",
             "--working_dir", workingDir.absolutePath) ++
           thriftSources.map(_.absolutePath),
           s.log

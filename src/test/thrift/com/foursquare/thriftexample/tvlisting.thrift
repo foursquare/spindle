@@ -1,7 +1,7 @@
 namespace java com.foursquare.thriftexample
 
-include "com/foursquare/thriftexample/av/tv.thrift"
-include "com/foursquare/thriftexample/av/movie.thrift"
+include "av/tv.thrift"
+include "av/movie.thrift"
 
 typedef string DateTime // String in the format YYYY-MM-DD HH:MM:SS
 
