@@ -9,4 +9,4 @@
       "lhs" -> lhs,
       "indent" -> indent,
       "wrapLeft" -> (wrapLeft + "{ val bb: java.nio.ByteBuffer = "),
-      "wrapRight" -> ("; new org.bson.types.ObjectId(bb.getInt, bb.getInt, bb.getInt) }" + wrapRight))) %>
+      "wrapRight" -> ("; if (bb.hasArray) { new org.bson.types.ObjectId(bb.array()) } else { val a = new Array[Byte](bb.remaining()) ; bb.get(a); new org.bson.types.ObjectId(a) } }" + wrapRight))) %>
