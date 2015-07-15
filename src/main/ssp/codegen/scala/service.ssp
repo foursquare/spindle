@@ -212,17 +212,61 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
           val __memoryTransport__ = new org.apache.thrift.transport.TMemoryInputTransport(__buffer__)
           val __prot__ = protocolFactory.getProtocol(__memoryTransport__)
           try {
-#if (function.oneWayOption.getOrElse(false) || !function.returnTypeIdIsSet)
-#if (!function.oneWayOption.getOrElse(false))
+#if (function.oneWayOption.getOrElse(false)) <%-- Nothing to read if oneway --%>
+            com.twitter.util.Future.value(null) <%-- Thrift compiler uses null. --%>
+#elseif (!function.returnTypeIdIsSet)  <%-- if void return type, receive empty struct but return null --%>
             (new Client(__prot__)).recv_${function.name}()
-#(end)
             com.twitter.util.Future.value(null) <%-- Thrift compiler uses null. --%>
 #else
             val __client__ = (new Client(__prot__))
             deserializationPoolOpt.map(__deserializationPool__ =>
               __deserializationPool__.apply(__client__.recv_${function.name}())
             ).getOrElse(
-              com.twitter.util.Future.value(__client__.recv_${function.name}())
+              com.twitter.util.Future.apply(__client__.recv_${function.name}())
+            )
+#end
+          } catch {
+            case e: Exception => com.twitter.util.Future.exception(e)
+          }
+        }
+      } catch {
+        case e: org.apache.thrift.TException => com.twitter.util.Future.exception(e)
+      }
+    }
+#end
+  }
+
+<%-- ServiceToProtocolClient adapter --%>\
+  class ServiceToProtocolClient(
+      service: com.twitter.finagle.Service[(org.apache.thrift.protocol.TMessage, org.apache.thrift.TBase[_, _], Boolean), org.apache.thrift.protocol.TProtocol],
+      deserializationPoolOpt: Option[com.twitter.util.FuturePool]
+  ) extends #if (parentServiceName != "")${parentServiceName}.ServiceToProtocolClient(service, deserializationPoolOpt) with ServiceIface #(else)ServiceIface#(end) {
+#for (function <- service.functions)
+
+    override <% render("service_funcsig.ssp", Map("function" -> function, "resolver" -> resolver,
+                  "wrapReturnTypeInFuture" -> true)) %> = {
+      try {
+        val __message__ = new org.apache.thrift.protocol.TMessage("${function.name}", org.apache.thrift.protocol.TMessageType.CALL, 0)
+        val __args__ = ${service.name}_${function.name}_args.createRawRecord
+#for (argument <- function.argz)
+        __args__.${argument.name}_=(${argument.name})
+#end
+
+        val request = (__message__, __args__, #if (function.oneWayOption.getOrElse(false))true#(else)false#(end))
+        val responseF = this.service.apply(request)
+        responseF.flatMap { __prot__ =>
+          try {
+#if (function.oneWayOption.getOrElse(false)) <%-- Nothing to read if oneway --%>
+            com.twitter.util.Future.value(null) <%-- Thrift compiler uses null. --%>
+#elseif (!function.returnTypeIdIsSet)  <%-- if void return type, receive empty struct but return null --%>
+            (new Client(__prot__)).recv_${function.name}()
+            com.twitter.util.Future.value(null) <%-- Thrift compiler uses null. --%>
+#else
+            val __client__ = (new Client(__prot__))
+            deserializationPoolOpt.map(__deserializationPool__ =>
+              __deserializationPool__.apply(__client__.recv_${function.name}())
+            ).getOrElse(
+              com.twitter.util.Future.apply(__client__.recv_${function.name}())
             )
 #end
           } catch {
