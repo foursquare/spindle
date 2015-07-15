@@ -12,7 +12,7 @@ SBT_LAUNCHER="$(dirname $0)/project/sbt-launch-$SBT_VERSION.jar"
 if [ ! -e "$SBT_LAUNCHER" ];
 then
     URL="http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/$SBT_VERSION/sbt-launch.jar"
-    curl -o $SBT_LAUNCHER $URL
+    curl -f -L -o  $SBT_LAUNCHER $URL
 fi
 
 # Call with INTERNAL_OPTS followed by SBT_OPTS (or DEFAULT_OPTS). java aways takes the last option when duplicate.
@@ -26,8 +26,8 @@ if [ $? == "0" ]; then
   echo "You are running java 1.8, scala 2.10 requires java 1.7"
   if [ "$(uname)" == "Darwin" ]; then
     echo "On mac, looking for 1.7"
-    JAVA_17=$(ls -d -1 /Library/Java/JavaVirtualMachines/** | grep 1.7)
-    if [ $JAVA_17 ]; then
+    JAVA_17=$(ls -d -1 /Library/Java/JavaVirtualMachines/** | grep 1.7 | tail -n 1)
+    if [ -d $JAVA_17 ]; then
       echo "found at $JAVA_17"
       JAVA_HOME=$JAVA_17/Contents/Home/
       JAVA_BINARY=$JAVA_HOME/bin/java
