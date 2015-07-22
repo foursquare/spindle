@@ -252,9 +252,9 @@ object ${service.name} extends com.foursquare.spindle.ServiceDescriptor {
         __args__.${argument.name}_=(${argument.name})
 #end
 
-        val request = (__message__, __args__, #if (function.oneWayOption.getOrElse(false))true#(else)false#(end))
-        val responseF = this.service.apply(request)
-        responseF.flatMap { __prot__ =>
+        val __request__ = (__message__, __args__, #if (function.oneWayOption.getOrElse(false))true#(else)false#(end))
+        val __responseF__ = this.service.apply(__request__)
+        __responseF__.flatMap { __prot__ =>
           try {
 #if (function.oneWayOption.getOrElse(false)) <%-- Nothing to read if oneway --%>
             com.twitter.util.Future.value(null) <%-- Thrift compiler uses null. --%>

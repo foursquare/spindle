@@ -29,20 +29,24 @@ class ServicesTest {
     }
 
     val server = Thrift.serveIface(":*", new AService.ServiceIface {
-      def voidMethod(): com.twitter.util.Future[Unit] = {
+      def voidMethod(): Future[Unit] = {
         voidMethodCounter += 1
         Future.Done
       }
 
-      def oneWayVoidMethod(): com.twitter.util.Future[Unit] = {
+      def oneWayVoidMethod(): Future[Unit] = {
         Await.ready(firstBarrierPromise, 2.seconds)
         oneWayVoidMethodCounter += 1
         secondBarrierPromise.setValue(())
         Future.Done
       }
 
-      def add(x: Int, y: Int): com.twitter.util.Future[Int] = {
+      def add(x: Int, y: Int): Future[Int] = {
         Future.value(x + y)
+      }
+
+      def send(request: String): Future[Unit] = {
+        Future.Unit
       }
     })
 
