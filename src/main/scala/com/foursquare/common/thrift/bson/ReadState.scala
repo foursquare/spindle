@@ -31,31 +31,12 @@ trait ReadState {
  */
 object ReadState {
 
-  private def branchStream(inputStream: InputStream, parentSize: Int): BranchingInputStream = {
-    def enforceSize(size: Int) {
-      if (size > parentSize) {
-        throw new TException(s"Parse error. Sub document can't be larger than parent. $size > $parentSize")
-      }
-    }
-    // we need to copy all the bytes from the input stream
-    // for each sub object into their instances of ReadState
-    inputStream match {
-      case is: BranchingInputStream =>
-        is.mark(4)
-        val size = StreamHelper.readInt(is)
-        is.reset()
-        is.branch(size)
-      case _ =>
-        // the mongo driver's InputStream doesn't support mark/reset.
-        val size = StreamHelper.readInt(inputStream)
-        val bytes = new Array[Byte](size)
-        inputStream.read(bytes, 4, size - 4)
-        StreamHelper.writeInt(bytes, 0, size)
-        new BranchingInputStream(bytes, 0, size)
-    }
-  }
-
-  // returns (bytesRead, bsonValueType, items)
+  /**
+   * TProtocol requires that an item count be return when Maps, Lists or Sets are first encountered
+   * so we need to greedily parse out the contents of those collections in order to get the count
+   *
+   * returns a tuple of (bytesRead, bsonValueType, items)
+   */
   def bsonToTuples(inputStream: InputStream, buffer: ByteStringBuilder): (Int, Byte, Vector[(String, Any)]) = {
     var valueType: Byte = BSON.EOO
     // all elements in collection should be of the same type. track here
@@ -86,17 +67,20 @@ object ReadState {
           readState.readBool()
         case BSON.NUMBER_INT =>
           readState.readI32()
-        case BSON.OBJECT | BSON.ARRAY =>
-          val branchingStream = branchStream(inputStream, readState.size)
-          readState.bytesRead += branchingStream.available()
-          branchingStream
+        case BSON.OBJECT =>
+          // this could eventually be read as a Struct or a Map and we have no way to know in advance so
+          // we just create a copy of the bytes for later. Further nested objects will reference
+          // a subsection of the same bytes to avoid data copying
+          readState.readSubStream()
+        case BSON.ARRAY =>
+          readState.readList()
         case BSON.NULL | BSON.MINKEY | BSON.MAXKEY => // zero bytes
         case _ => throw new UnsupportedOperationException("Invalid bson type " + bsonType)
       }
       vectorBuilder += (fieldName -> fieldValue)
     }
     readState.readEnd()
-    (readState.size, valueType, vectorBuilder.result())
+    (readState.totalBytes, valueType, vectorBuilder.result())
   }
 
   def bsonToMap(inputStream: InputStream, buffer: ByteStringBuilder): (Int, MapReadState) = {
@@ -114,14 +98,14 @@ object ReadState {
  * stores parsing state for a Bson Document
  */
 class StructReadState(inputStream: InputStream, buffer: ByteStringBuilder) extends ReadState {
-  val size = StreamHelper.readInt(inputStream) - 4
-  if (size < 0) {
-    throw new TException(s"Document size less than zero $size")
+  val totalBytes = StreamHelper.readInt(inputStream) - 4
+  if (totalBytes < 0) {
+    throw new TException(s"Document size less than zero $totalBytes")
   }
-  if (size > StreamHelper.MaxDocSize) {
-    throw new TException(s"Document size greater than maximum $size")
+  if (totalBytes > StreamHelper.MaxDocSize) {
+    throw new TException(s"Document size greater than maximum $totalBytes")
   }
-  var bytesRead = 0
+  private var bytesRead = 0
 
   // keep track of the last parsed field type so we can enforce that reads match field types
   var lastFieldType: Byte = 0x0
@@ -140,12 +124,42 @@ class StructReadState(inputStream: InputStream, buffer: ByteStringBuilder) exten
   
   private def _readByte(): Byte = {
     bytesRead += 1
-    inputStream.read().asInstanceOf[Byte]
+    inputStream.read().toByte
+  }
+
+  /**
+   * Fully read bytes for structs or maps nested in maps or lists
+   */
+  def readSubStream(): BranchingInputStream = {
+    def enforceSize(size: Int) {
+      bytesRead += size
+      if (size > totalBytes) {
+        throw new TException(s"Parse error. Sub document can't be larger than parent. $size > $totalBytes")
+      }
+    }
+    // we need to copy all the bytes from the input stream
+    // for each sub object into their instances of ReadState
+    inputStream match {
+      case is: BranchingInputStream =>
+        is.mark(4)
+        val size = StreamHelper.readInt(is)
+        enforceSize(size)
+        is.reset()
+        is.branch(size)
+      case _ =>
+        // the mongo driver's InputStream doesn't support mark/reset.
+        val size = StreamHelper.readInt(inputStream)
+        enforceSize(size)
+        val bytes = new Array[Byte](size)
+        inputStream.read(bytes, 4, size - 4)
+        StreamHelper.writeInt(bytes, 0, size)
+        new BranchingInputStream(bytes, 0, size)
+    }
   }
 
   def hasAnotherField: Boolean = {
     val minFieldSize = 3 // type, single byte field name, null
-    bytesRead < size - minFieldSize
+    bytesRead < totalBytes - minFieldSize
   }
 
   def readFieldType(): (String, Byte) = {
@@ -155,8 +169,8 @@ class StructReadState(inputStream: InputStream, buffer: ByteStringBuilder) exten
     var keySize = 0
     buffer.reset()
     while (keyByte > 0) {
-      if (keySize > size) {
-        throw new TException("Parse error. Field name can't be larger than document size. $keySize > $size")
+      if (keySize > totalBytes) {
+        throw new TException("Parse error. Field name can't be larger than document size. $keySize > $totalBytes")
       }
       buffer.append(keyByte)
       keySize += 1
@@ -171,8 +185,8 @@ class StructReadState(inputStream: InputStream, buffer: ByteStringBuilder) exten
     if (BSON.EOO != nullByte) {
       throw new TException(s"Exepected null byte in readEnd, but got $nullByte.")
     }
-    if (bytesRead != size) {
-      throw new TException(s"readEnd called before struct fully read. Still have ${size - bytesRead} bytes remaining")
+    if (bytesRead != totalBytes) {
+      throw new TException(s"readEnd called before struct fully read. Still have ${totalBytes - bytesRead} bytes remaining")
     }
   }
 
@@ -212,8 +226,8 @@ class StructReadState(inputStream: InputStream, buffer: ByteStringBuilder) exten
         buildByteBuffer(oidLength)
       case BSON.BINARY =>
         val length = _readInteger()
-        if (length > size) {
-          throw new TException("Parse error. Binary data can't be larger than document size. $length > $size")
+        if (length > totalBytes) {
+          throw new TException("Parse error. Binary data can't be larger than document size. $length > $totalBytes")
         }
         // read and ignore the binary field type
         _readByte()
@@ -225,7 +239,7 @@ class StructReadState(inputStream: InputStream, buffer: ByteStringBuilder) exten
   def readString(): String = {
     enforceLastFieldType(BSON.STRING)
     val length = _readInteger()
-    if (length > size) {
+    if (length > totalBytes) {
       throw new TException("Parse error. String length can't be larger than document size.")
     }
     buffer.reset()
@@ -242,7 +256,7 @@ class StructReadState(inputStream: InputStream, buffer: ByteStringBuilder) exten
   def readStruct(): StructReadState = {
     enforceLastFieldType(BSON.OBJECT)
     val structReadState = new StructReadState(inputStream, buffer)
-    bytesRead += structReadState.size + 4
+    bytesRead += structReadState.totalBytes + 4
     structReadState
   }
 
@@ -299,7 +313,7 @@ abstract class CollectionReadState(
   }
 
   override def readList(): ListReadState = {
-    ReadState.bsonToList(getCurrentValue().asInstanceOf[BranchingInputStream], buffer)._2
+    getCurrentValue().asInstanceOf[ListReadState]
   }
 }
 
