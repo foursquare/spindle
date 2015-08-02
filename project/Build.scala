@@ -31,6 +31,10 @@ object SpindleBuild extends Build {
     Project(
       id = "common-thrift-bson",
       base = file("src/main/java/com/foursquare/common/thrift/bson")) dependsOn(thriftBase)
+  lazy val thriftBsonScala =
+    Project(
+      id = "common-thrift-bson-scala",
+      base = file("src/main/scala/com/foursquare/common/thrift/bson")) dependsOn(thriftBase)
   lazy val thriftJson =
     Project(
       id = "common-thrift-json",
@@ -38,7 +42,7 @@ object SpindleBuild extends Build {
   lazy val runtime =
     Project(
       id = "spindle-runtime",
-      base = file("src/main/scala/com/foursquare/spindle/runtime")) dependsOn(thriftBase, thriftBson, thriftJson)
+      base = file("src/main/scala/com/foursquare/spindle/runtime")) dependsOn(thriftBase, thriftBson, thriftJson, thriftBsonScala)
   lazy val thriftDescriptors =
     Project(
       id = "thrift-descriptors",
@@ -79,6 +83,10 @@ object SpindleBuild extends Build {
     Project(
       id = "spindle-test-codegen-binary",
       base = file("src/test/scala/com/foursquare/spindle/codegen/binary")) dependsOn(codegenBinary)
+  lazy val testThriftBsonScala =
+    Project(
+      id = "common-test-bson-scala",
+      base = file("src/test/scala/com/foursquare/common/thrift/bson")) dependsOn(thriftBsonScala, testCodegen)
   lazy val testRuntime =
     Project(
       id = "spindle-test-runtime",

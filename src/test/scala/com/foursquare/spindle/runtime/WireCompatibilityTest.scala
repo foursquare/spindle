@@ -48,13 +48,14 @@ class WireCompatibilityTest {
 
   @Test
   def testAllCompatibilityCombos() {
-    // Test all 25 possible combinations of src and dst protocol.
+    // Test all 36 possible combinations of src and dst protocol.
     val protocols = List(
       KnownTProtocolNames.TBinaryProtocol,
       KnownTProtocolNames.TCompactProtocol,
       KnownTProtocolNames.TJSONProtocol,
-      KnownTProtocolNames.TBSONProtocol,
-      KnownTProtocolNames.TReadableJSONProtocol)
+      KnownTProtocolNames.TBSONBinaryProtocol,
+      KnownTProtocolNames.TReadableJSONProtocol,
+      KnownTProtocolNames.TBSONProtocol)
 
     for (src <- protocols; dst <- protocols) {
       println("Testing unknown field compatibility between: %s -> %s".format(src, dst))
@@ -196,14 +197,21 @@ class WireCompatibilityTest {
 
       // Check that we got what we expect.
       val expected = {
-        if (srcProtocol == dstProtocol ||
-          TProtocolInfo.isRobust(srcProtocol) && TProtocolInfo.isRobust(dstProtocol)) {
+        if (
+          (
+            srcProtocol == dstProtocol &&
+            srcProtocol != KnownTProtocolNames.TBSONBinaryProtocol
+          ) ||
+          // TBSONBinaryProtocol uses the same writer as TBSONProtocol
+          (srcProtocol == KnownTProtocolNames.TBSONProtocol && dstProtocol == KnownTProtocolNames.TBSONBinaryProtocol) ||
+          (TProtocolInfo.isRobust(srcProtocol) && TProtocolInfo.isRobust(dstProtocol))
+        ) {
           expectedRoundTrippedObjSameProto.getOrElse(newObj)
         } else {
           expectedRoundTrippedObj.getOrElse(newObj)
         }
       }
-      assertEquals(expected, roundtrippedNewObj)
+      assertEquals(s"Unexpected value for $oldMeta -> $newMeta, $srcProtocol -> $dstProtocol", expected, roundtrippedNewObj)
     }
   }
 
