@@ -1,1 +1,1 @@
-seq(Default.thriftBootstrap: _*)
+//seq(Default.thriftBootstrap: _*)

@@ -6,7 +6,7 @@ INTERNAL_OPTS="-Dfile.encoding=UTF-8 -Xss8M -Xmx2G -d64 -noverify -XX:+CMSClassU
 # Default options, if nothing is specified
 DEFAULT_OPTS=""
 
-SBT_VERSION="0.12.4"
+SBT_VERSION="0.13.2"
 SBT_LAUNCHER="$(dirname $0)/project/sbt-launch-$SBT_VERSION.jar"
 
 if [ ! -e "$SBT_LAUNCHER" ];

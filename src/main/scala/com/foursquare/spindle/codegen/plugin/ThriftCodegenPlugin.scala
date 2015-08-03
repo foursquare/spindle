@@ -60,25 +60,38 @@ object ThriftCodegenPlugin extends Plugin {
       thriftCodegenIncludes in conf <<= (Keys.sourceDirectory in thrift in conf)(dir => Seq(dir))
     )
 
-  private def thriftSettings0 = Seq[Project.Setting[_]](
-    thriftCodegenWorkingDir <<= (Keys.crossTarget, Keys.configuration) { (outDir, conf) =>
-      outDir / (Defaults.prefix(conf.name) + "scalate.d")
-    },
-    Keys.sourceManaged in thrift ~= (_ / "thrift"), // e.g. /target/scala-2.8.1.final/src_managed/main/thrift
-    thrift                       <<= (Keys.javaHome, Keys.classpathTypes in thrift, Keys.update,
-                                  Keys.sources in thrift, thriftCodegenTemplate, thriftCodegenJavaTemplate, Keys.sourceManaged in thrift,
-                                  thriftCodegenIncludes, thriftCodegenAllowReload, thriftCodegenWorkingDir,
-                                  Keys.resolvedScoped, Keys.streams).map(thriftCompile),
-    Keys.sourceGenerators        <+= thrift,
-    Keys.clean in thrift         <<= (Keys.sourceManaged in thrift, thriftCodegenWorkingDir, Keys.resolvedScoped,
-                                  Keys.streams).map(thriftClean)
-  )
+  private def thriftSettings0 = {
+    val sources: Seq[File] = (Keys.sources in thrift).value.toSeq
+    val includes: Seq[File] = thriftCodegenIncludes.value.toSeq
+    Seq[Project.Setting[_]](
+      thriftCodegenWorkingDir <<= (Keys.crossTarget, Keys.configuration) { (outDir, conf) =>
+        outDir / (Defaults.prefix(conf.name) + "scalate.d")
+      },
+      Keys.sourceManaged in thrift ~= (_ / "thrift"), // e.g. /target/scala-2.8.1.final/src_managed/main/thrift
+      thrift                       <<= SettingKey(thriftCompile(
+                                      Keys.javaHome.value.headOption,
+                                      (Keys.classpathTypes in thrift).value,
+                                      Keys.update.value,
+                                      sources,
+                                      thriftCodegenTemplate.value,
+                                      thriftCodegenJavaTemplate.value,
+                                      (Keys.sourceManaged in thrift).value,
+                                      includes,
+                                      thriftCodegenAllowReload.value,
+                                      thriftCodegenWorkingDir.value,
+                                      Keys.resolvedScoped.value,
+                                      Keys.streams.value)),
+      Keys.sourceGenerators        <+= thrift,
+      Keys.clean in thrift         <<= thriftClean((Keys.sourceManaged in thrift).value, thriftCodegenWorkingDir.value, Keys.resolvedScoped.value,
+                                    Keys.streams.value)
+    )
+  }
 
   /**
    * @return the .scala files in `sourceManaged` after compilation.
    */
   private def thriftCompile(
-      javaHome: Option[File],
+      javaHome: Option[java.io.File],
       classpathTypes: Set[String],
       updateReport: UpdateReport,
       thriftSources: Seq[File],
@@ -88,7 +101,7 @@ object ThriftCodegenPlugin extends Plugin {
       includes: Seq[File],
       allowReload: Boolean,
       workingDir: File,
-      resolvedScoped: Project.ScopedKey[_],
+      resolvedScoped: sbt.Def.ScopedKey[_],
       streams: TaskStreams
   ): Seq[File] = {
     import streams.log
@@ -127,7 +140,7 @@ object ThriftCodegenPlugin extends Plugin {
 
     if (shouldProcess) {
       sourceManaged.mkdirs()
-      log.info("Compiling %d Thrift file(s) in %s".format(thriftSources.size, Project.displayFull(resolvedScoped)))
+      log.info("Compiling %d Thrift file(s) in %s".format(thriftSources.size, resolvedScoped.toString))
       log.debug("Thrift java command line: " + options.mkString("\n"))
       val returnCode = (new ForkJava("java")).apply(javaHome, options, log)
       if (returnCode != 0) sys.error("Non zero return code from thrift [%d]".format(returnCode))
@@ -141,7 +154,7 @@ object ThriftCodegenPlugin extends Plugin {
   private def thriftClean(
       sourceManaged: File,
       workingDir: File,
-      resolvedScoped: Project.ScopedKey[_],
+      resolvedScoped: sbt.Def.ScopedKey[_],
       streams: TaskStreams
   ): Unit = {
     import streams.log
@@ -150,7 +163,7 @@ object ThriftCodegenPlugin extends Plugin {
     val filesToDelete = scalaFilesToDelete ++ scalateFilesToDelete
     log.debug("Cleaning Files:\n%s".format(filesToDelete.mkString("\n")))
     if (scalaFilesToDelete.nonEmpty) {
-      log.info("Cleaning %d Thrift generated files in %s".format(scalaFilesToDelete.size, Project.displayFull(resolvedScoped)))
+      log.info("Cleaning %d Thrift generated files in %s".format(scalaFilesToDelete.size, resolvedScoped.toString))
       IO.delete(scalaFilesToDelete)
     }
     if (scalateFilesToDelete.nonEmpty) {
