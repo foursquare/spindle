@@ -5,10 +5,9 @@ package com.foursquare.common.thrift.bson
 import org.junit._
 
 import com.mongodb.{BasicDBObjectBuilder, DBObject}
-import com.foursquare.spindle.{UntypedFieldDescriptor, UntypedMetaRecord, UntypedRecord}
+import com.foursquare.spindle.{UntypedMetaRecord, UntypedRecord}
 import com.foursquare.spindle.test.gen.{InnerStruct, RawTestStruct, TestStruct, TestStructNestedCollections}
 import org.bson.BasicBSONEncoder
-import org.bson.types.ObjectId
 import java.io.ByteArrayInputStream
 import java.nio.ByteBuffer
 

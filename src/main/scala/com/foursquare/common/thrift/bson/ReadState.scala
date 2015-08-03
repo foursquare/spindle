@@ -37,7 +37,11 @@ object ReadState {
    *
    * returns a tuple of (bytesRead, bsonValueType, items)
    */
-  def bsonToTuples(inputStream: InputStream, buffer: ByteStringBuilder): (Int, Byte, Vector[(String, Any)]) = {
+  def bsonToTuples[T](
+    inputStream: InputStream,
+    buffer: ByteStringBuilder,
+    itemFunc: (String, Any) => T
+  ): (Int, Byte, Vector[T]) = {
     var valueType: Byte = BSON.EOO
     // all elements in collection should be of the same type. track here
     def checkTypeConsistency(vType: Byte) {
@@ -49,10 +53,12 @@ object ReadState {
 
     val readState = new StructReadState(inputStream, buffer)
 
-    var vectorBuilder = Vector.newBuilder[(String, Any)]
+    var vectorBuilder = Vector.newBuilder[T]
 
     while (readState.hasAnotherField) {
-      val (fieldName: String, bsonType: Byte) = readState.readFieldType()
+      readState.readFieldType()
+      val fieldName = readState.lastFieldName
+      val bsonType = readState.lastFieldType
       checkTypeConsistency(bsonType)
       val fieldValue: Any = bsonType match {
         case BSON.NUMBER_LONG | BSON.TIMESTAMP | BSON.DATE =>
@@ -77,20 +83,23 @@ object ReadState {
         case BSON.NULL | BSON.MINKEY | BSON.MAXKEY => // zero bytes
         case _ => throw new UnsupportedOperationException("Invalid bson type " + bsonType)
       }
-      vectorBuilder += (fieldName -> fieldValue)
+      vectorBuilder += itemFunc(fieldName, fieldValue)
     }
     readState.readEnd()
     (readState.totalBytes, valueType, vectorBuilder.result())
   }
 
-  def bsonToMap(inputStream: InputStream, buffer: ByteStringBuilder): (Int, MapReadState) = {
-    val resultTuple = bsonToTuples(inputStream, buffer)
-    resultTuple._1 -> new MapReadState(resultTuple._3, buffer, resultTuple._2)
+  private val toTuple: (String, Any) => Tuple2[String, Any] = (s, a) => Tuple2(s, a)
+  private val toAny: (String, Any) => Any = (s, a) => a
+
+  def bsonToMap(inputStream: InputStream, buffer: ByteStringBuilder): MapReadState = {
+    val resultTuple = bsonToTuples(inputStream, buffer, toTuple)
+    new MapReadState(resultTuple._3, buffer, resultTuple._2, resultTuple._1)
   }
 
-  def bsonToList(inputStream: InputStream, buffer: ByteStringBuilder): (Int, ListReadState) = {
-    val resultTuple = bsonToTuples(inputStream, buffer)
-    resultTuple._1 -> new ListReadState(resultTuple._3, buffer, resultTuple._2)
+  def bsonToList(inputStream: InputStream, buffer: ByteStringBuilder): ListReadState = {
+    val resultTuple = bsonToTuples(inputStream, buffer, toAny)
+    new ListReadState(resultTuple._3, buffer, resultTuple._2, resultTuple._1)
   }
 }
 
@@ -162,7 +171,7 @@ class StructReadState(inputStream: InputStream, buffer: ByteStringBuilder) exten
     bytesRead < totalBytes - minFieldSize
   }
 
-  def readFieldType(): (String, Byte) = {
+  def readFieldType() {
     lastFieldType = _readByte()
     var keyByte = _readByte()
 
@@ -177,7 +186,6 @@ class StructReadState(inputStream: InputStream, buffer: ByteStringBuilder) exten
       keyByte = _readByte()
     }
     lastFieldName = buffer.build()
-    lastFieldName -> lastFieldType
   }
 
   def readEnd() {
@@ -262,15 +270,15 @@ class StructReadState(inputStream: InputStream, buffer: ByteStringBuilder) exten
 
   def readMap(): MapReadState = {
     enforceLastFieldType(BSON.OBJECT)
-    val (size: Int, mapReadState: MapReadState) = ReadState.bsonToMap(inputStream, buffer)
-    bytesRead += size + 4
+    val mapReadState: MapReadState = ReadState.bsonToMap(inputStream, buffer)
+    bytesRead += mapReadState.totalBytes + 4
     mapReadState
   }
 
   def readList(): ListReadState = {
     enforceLastFieldType(BSON.ARRAY)
-    val (size: Int, listReadState: ListReadState) = ReadState.bsonToList(inputStream, buffer)
-    bytesRead += size + 4
+    val listReadState: ListReadState = ReadState.bsonToList(inputStream, buffer)
+    bytesRead += listReadState.totalBytes + 4
     listReadState
   }
 }
@@ -279,8 +287,8 @@ class StructReadState(inputStream: InputStream, buffer: ByteStringBuilder) exten
  * used by List and Map sub collections
  * we need to greedily parse out sub collections because thrift needs to know the number of elements ahead of time
  */
-abstract class CollectionReadState(
-  allItems: Vector[(String, Any)],
+abstract class CollectionReadState[T](
+  allItems: Vector[T],
   buffer: ByteStringBuilder,
   val lastFieldType: Byte
 ) extends ReadState {
@@ -309,7 +317,7 @@ abstract class CollectionReadState(
   }
 
   override def readMap(): MapReadState = {
-    ReadState.bsonToMap(getCurrentValue().asInstanceOf[BranchingInputStream], buffer)._2
+    ReadState.bsonToMap(getCurrentValue().asInstanceOf[BranchingInputStream], buffer)
   }
 
   override def readList(): ListReadState = {
@@ -320,8 +328,9 @@ abstract class CollectionReadState(
 class MapReadState(
   allItems: Vector[(String, Any)],
   buffer: ByteStringBuilder,
-  lastFieldType: Byte
-) extends CollectionReadState(allItems, buffer, lastFieldType) {
+  lastFieldType: Byte,
+  val totalBytes: Int
+) extends CollectionReadState[(String, Any)](allItems, buffer, lastFieldType) {
   private var readCounter = 0
 
   var lastFieldName: String = ""
@@ -360,9 +369,10 @@ class MapReadState(
 }
 
 class ListReadState(
-  allItems: Vector[(String, Any)],
+  allItems: Vector[Any],
   buffer: ByteStringBuilder,
-  lastFieldType: Byte
+  lastFieldType: Byte,
+  val totalBytes: Int
 ) extends CollectionReadState(allItems, buffer, lastFieldType) {
   private var readCounter = 0
 
@@ -370,7 +380,7 @@ class ListReadState(
 
   def getCurrentValue(): Any = {
     readCounter += 1
-    allItems(readCounter - 1)._2
+    allItems(readCounter - 1)
   }
 
   override def readString(): String = {

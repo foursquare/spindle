@@ -58,18 +58,18 @@ class TBSONBinaryProtocol() extends TProtocol(null) {
     this
   }
 
-  private def checkReadState[T <: ReadState](readState: ReadState)(implicit manifest: Manifest[T]): T = {
+  private def checkReadState[T <: ReadState](readState: ReadState, clazz: Class[T]): T = {
     if (readState == null) {
       throw new TException("Internal state is null. Possibly readXEnd unpaired with readXBegin.")
     }
-    if (!manifest.runtimeClass.isInstance(readState)) {
+    if (!clazz.isInstance(readState)) {
       throw new TException(s"Internal state error. Expected ${manifest.runtimeClass} but was ${readState.getClass}")
     }
     readState.asInstanceOf[T]
   }
 
-  private def popReadState[T <: ReadState](implicit manifest: Manifest[T]): T = {
-    checkReadState[T](readStack.pop())
+  private def popReadState[T <: ReadState](clazz: Class[T]): T = {
+    checkReadState(readStack.pop(), clazz)
   }
 
   private def currentState(): ReadState = {
@@ -80,7 +80,7 @@ class TBSONBinaryProtocol() extends TProtocol(null) {
     readState
   }
 
-  private def getTType(bsonType: Byte): Byte = bsonType match {
+  def getTType(bsonType: Byte): Byte = bsonType match {
     case BSON.EOO => TType.STOP
     case BSON.NUMBER => TType.DOUBLE
     case BSON.STRING => TType.STRING
@@ -123,15 +123,15 @@ class TBSONBinaryProtocol() extends TProtocol(null) {
   }
 
   def readStructEnd(): Unit = {
-    val readState = popReadState[StructReadState]
+    val readState = popReadState(classOf[StructReadState])
     readState.readEnd()
   }
 
   def readFieldBegin(): TField = {
-    val readState = checkReadState[StructReadState](readStack.peek())
+    val readState = checkReadState(readStack.peek(), classOf[StructReadState])
     if (readState.hasAnotherField) {
-      val (fieldName: String, fieldType: Byte) = readState.readFieldType()
-      return new TField(fieldName, getTType(fieldType), -1);
+      readState.readFieldType()
+      new TField(readState.lastFieldName, getTType(readState.lastFieldType), -1)
     } else {
       TBSONBinaryProtocol.NO_MORE_FIELDS
     }
@@ -147,7 +147,7 @@ class TBSONBinaryProtocol() extends TProtocol(null) {
   }
 
   def readMapEnd(): Unit = {
-    popReadState[MapReadState]
+    popReadState(classOf[MapReadState])
   }
 
   def readListBegin(): TList = {
@@ -157,7 +157,7 @@ class TBSONBinaryProtocol() extends TProtocol(null) {
   }
 
   def readListEnd(): Unit = {
-    popReadState[ListReadState]
+    popReadState(classOf[ListReadState])
   }
 
   def readSetBegin(): TSet = {
@@ -167,7 +167,7 @@ class TBSONBinaryProtocol() extends TProtocol(null) {
   }
 
   def readSetEnd(): Unit = {
-    popReadState[ListReadState]
+    popReadState(classOf[ListReadState])
   }
 
   def readBool(): Boolean = {
