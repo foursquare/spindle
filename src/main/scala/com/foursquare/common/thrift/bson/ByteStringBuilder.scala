@@ -25,10 +25,10 @@ private[bson] object ByteStringBuilder {
     }
   }
 
-  val SinglByteStrings: Array[String] = (32 to 127).map(b => new String(Array(b.toChar))).toArray
+  val SingleByteStrings: Array[String] = (32 to 127).map(b => new String(Array(b.toChar))).toArray
 
   def byteToString(b: Byte): String = {
-    SinglByteStrings(b - 32)
+    SingleByteStrings(b - 32)
   }
 }
 

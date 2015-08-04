@@ -32,7 +32,7 @@ trait ReadState {
 object ReadState {
 
   /**
-   * TProtocol requires that an item count be return when Maps, Lists or Sets are first encountered
+   * TProtocol requires that an item count be returned when Maps, Lists or Sets are first encountered
    * so we need to greedily parse out the contents of those collections in order to get the count
    *
    * returns a tuple of (bytesRead, bsonValueType, items)
@@ -146,10 +146,9 @@ class StructReadState(inputStream: InputStream, buffer: ByteStringBuilder) exten
         throw new TException(s"Parse error. Sub document can't be larger than parent. $size > $totalBytes")
       }
     }
-    // we need to copy all the bytes from the input stream
-    // for each sub object into their instances of ReadState
     inputStream match {
       case is: BranchingInputStream =>
+        // do zero copying if this is already a substream
         is.mark(4)
         val size = StreamHelper.readInt(is)
         enforceSize(size)
@@ -285,7 +284,6 @@ class StructReadState(inputStream: InputStream, buffer: ByteStringBuilder) exten
 
 /**
  * used by List and Map sub collections
- * we need to greedily parse out sub collections because thrift needs to know the number of elements ahead of time
  */
 abstract class CollectionReadState[T](
   allItems: Vector[T],
@@ -350,7 +348,7 @@ class MapReadState(
   }
 
   override def readString(): String = {
-    // alternate between reading key names and ready values
+    // alternate between reading key names and values
     if (readCounter % 2 == 0) {
       getCurrentPair()._1
     } else {
@@ -359,7 +357,7 @@ class MapReadState(
   }
 
   override def readBinary(): ByteBuffer = {
-    // alternate between reading key names and ready values
+    // alternate between reading key names and values
     if (readCounter % 2 == 0) {
       ByteBuffer.wrap(getCurrentPair()._1.getBytes(ByteStringBuilder.UTF8_CHARSET))
     } else {

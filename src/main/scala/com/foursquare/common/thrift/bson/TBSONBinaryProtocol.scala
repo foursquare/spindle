@@ -63,7 +63,7 @@ class TBSONBinaryProtocol() extends TProtocol(null) {
       throw new TException("Internal state is null. Possibly readXEnd unpaired with readXBegin.")
     }
     if (!clazz.isInstance(readState)) {
-      throw new TException(s"Internal state error. Expected ${manifest.runtimeClass} but was ${readState.getClass}")
+      throw new TException(s"Internal state error. Expected ${clazz} but was ${readState.getClass}")
     }
     readState.asInstanceOf[T]
   }
