@@ -15,7 +15,7 @@ import org.apache.thrift.protocol.{TProtocol, TProtocolUtil, TType}
 
 object TProtoBench {
 
-  def testStruct = TestStruct.newBuilder
+  def largeNestedStruct = TestStruct.newBuilder
     .aByte(12.toByte)
     .anI16(1234.toShort)
     .anI32(123456)
@@ -38,6 +38,8 @@ object TProtoBench {
     ))
     .result()
 
+  def smallStruct = InnerStruct("inner in list one", 1)
+
   def readStruct(proto: TProtocol) {
     TProtocolUtil.skip(proto, TType.STRUCT)
   }
@@ -56,32 +58,15 @@ object TProtoBench {
     readStruct(binaryProtocol)
   }
 
-  def getGCBytes(): Long = {
-    ManagementFactory.getGarbageCollectorMXBeans().asScala.map{ bean =>
-      bean match {
-        case iBean: com.sun.management.GarbageCollectorMXBean =>
-          val gcInfo = iBean.getLastGcInfo()
-          println(s"before ${gcInfo.getMemoryUsageBeforeGc}")
-          val before = gcInfo.getMemoryUsageBeforeGc.entrySet.asScala.map{ entry =>
-            entry.getValue.getUsed
-          }.sum
-          println(s"after ${gcInfo.getMemoryUsageAfterGc}")
-          val after = gcInfo.getMemoryUsageAfterGc.entrySet.asScala.map{ entry =>
-            entry.getValue.getUsed
-          }.sum
-          before - after
-        case _ => 
-          println("No match!")
-          0L
-      }
-    }.sum
+  def getMemoryUsage(): Long = {
+    val runtime = Runtime.getRuntime()
+    runtime.totalMemory() - runtime.freeMemory()
   }
 
-
   /**
-   * returns nanoseconds (total, average per iteration)
+   * returns (allocated bytes, average time per decode in nanoseconds)
    */
-  def runBench(iterations: Int, func: (InputStream) => Unit): (Long, Long, Long) = {
+  def runBench(iterations: Int, testStruct: UntypedRecord, func: (InputStream) => Unit): (Long, Long) = {
     val protocolFactory = new TBSONObjectProtocol.WriterFactoryForDBObject
     val writeProtocol = protocolFactory.getProtocol
     testStruct.write(writeProtocol)
@@ -89,33 +74,40 @@ object TProtoBench {
     val encoder = new BasicBSONEncoder()
     val bytes: Array[Byte] = encoder.encode(dbo)
     var counter = 0
-    //System.gc()
+    System.gc()
+    val startUsage = getMemoryUsage()
     val startTime = System.nanoTime
     while (counter < iterations) {
       func(new ByteArrayInputStream(bytes))
       counter += 1
     }
     val totalTime = (System.nanoTime - startTime)
-    //System.gc()
-    (0L, totalTime, totalTime / iterations)
+    (getMemoryUsage() - startUsage, totalTime / iterations)
   }
 
   def main(args: Array[String]): Unit = {
     val iterations = 10000
-    def benchDbo = runBench(iterations, parseBytesDBO)
-    def benchBinary = runBench(iterations, parseBytesBinary)
+    def benchDbo(struct: UntypedRecord) = runBench(iterations, struct, parseBytesDBO)
+    def benchBinary(struct: UntypedRecord) = runBench(iterations, struct, parseBytesBinary)
 
     // warmups
     (1 to 5).foreach{i =>
-      benchDbo
-      benchBinary
+      benchDbo(largeNestedStruct)
+      benchBinary(largeNestedStruct)
     }
 
-    (1 to 5).foreach{i =>
-      println(s"Run $i: ")
-      println(s"Dbo takes ${benchDbo}")
-      println(s"Binary takes ${benchBinary}")
+    def benchWithStruct(struct: UntypedRecord) {
+      println(s"\nBenching with ${struct.getClass}")
+      (1 to 5).foreach{i =>
+        println(s"Run $i: ")
+        println(s"Dbo takes ${benchDbo(struct)}")
+        println(s"Binary takes ${benchBinary(struct)}")
+      }
     }
+
+    benchWithStruct(largeNestedStruct)
+    benchWithStruct(smallStruct)
+
   }
   
 }
