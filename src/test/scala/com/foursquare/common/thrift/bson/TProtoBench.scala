@@ -45,11 +45,11 @@ object TProtoBench {
   }
 
   val decoder = new BasicBSONDecoder()
+  val dboProtocol = new TBSONObjectProtocol.ReaderFactory().getProtocol
   def parseBytesDBO(is: InputStream) {
-    val protocolFactory = new TBSONObjectProtocol.ReaderFactory
-    val protocol = protocolFactory.getProtocol
-    protocol.setSource(decoder.readObject(is))
-    readStruct(protocol)
+    dboProtocol.reset()
+    dboProtocol.setSource(decoder.readObject(is))
+    readStruct(dboProtocol)
   }
 
   val binaryProtocol = new TBSONBinaryProtocol()
