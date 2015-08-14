@@ -1,6 +1,6 @@
 // Copyright 2013 Foursquare Labs Inc. All Rights Reserved.
 
-//import com.foursquare.spindle.codegen.plugin.ThriftCodegenPlugin
+import com.foursquare.spindle.codegen.plugin.ThriftCodegenPlugin
 import com.mojolly.scalate.ScalatePlugin
 import com.mojolly.scalate.ScalatePlugin.{ScalateKeys, TemplateConfig}
 import sbtbuildinfo.Plugin._
@@ -72,20 +72,12 @@ object Default {
   )
 
   val scala: Seq[Setting[_]] = Default.all ++ Seq(
-    Keys.scalaVersion := "2.10.4",
-    Keys.crossScalaVersions := Seq("2.10.4"),
+    Keys.scalaVersion := "2.10.5",
+    Keys.crossScalaVersions := Seq("2.10.5"),
     Keys.scalacOptions <++= (Keys.scalaVersion).map(v => {
-      val opts =
         Seq(
           "-deprecation",
           "-unchecked")
-      if (v.startsWith("2.9.")) {
-        opts ++ Seq(
-          "-Ydependent-method-types",
-          "-Xfatal-warnings")
-      } else {
-        opts
-      }
     })
   ) ++ buildInfoSettings ++ Seq(
     Keys.sourceGenerators in Compile <+= buildInfo,
@@ -110,33 +102,33 @@ object Default {
       ThirdParty.scalate(v))
   )
 
-  // val thriftBootstrap = Default.scala ++ ThriftCodegenPlugin.thriftSettings ++ Seq(
-  //   Keys.sourceDirectory in ThriftCodegenPlugin.thrift in Compile <<= (Keys.baseDirectory)(identity),
-  //   Keys.scalaBinaryVersion in ThriftCodegenPlugin.thrift := "2.9.2",
-  //   ThriftCodegenPlugin.thriftCodegenVersion := "3.0.0-M6",
-  //   ThriftCodegenPlugin.thriftCodegenRuntimeLibs := ThirdParty.scalajCollection,
-  //   ThriftCodegenPlugin.thriftCodegenTemplate := file("src/main/ssp/codegen/scala/record.ssp").absolutePath,
-  //   ThriftCodegenPlugin.thriftCodegenJavaTemplate := file("src/main/ssp/codegen/javagen/record.ssp").absolutePath,
-  //   Keys.ivyScala <<= (Keys.ivyScala)(_.map(_.copy(checkExplicit = false, filterImplicit = false, overrideScalaVersion =false))),
-  //   Keys.update <<= (Keys.ivyModule, Keys.thisProjectRef, Keys.updateConfiguration, Keys.cacheDirectory, Keys.transitiveUpdate,
-  //       Keys.executionRoots, Keys.resolvedScoped, Keys.skip in Keys.update, Keys.streams) map {
-  //     (module, ref, config, cacheDirectory, reports, roots, resolved, skip, s) =>
-  //       val depsUpdated = reports.exists(!_.stats.cached)
-  //       val isRoot = roots contains resolved
-  //       Classpaths.cachedUpdate(cacheDirectory / "update", Project.display(ref), module, config, None, skip = skip, force = isRoot, depsUpdated = depsUpdated, log = s.log)
-  //   } tag(Tags.Update, Tags.Network),
-  //   ThriftCodegenPlugin.thriftCodegenBinaryLibs <<=
-  //     (ThriftCodegenPlugin.thriftCodegenVersion, Keys.scalaBinaryVersion in ThriftCodegenPlugin.thrift)((cv, bv) =>
-  //       Seq(
-  //         "com.foursquare" % "common-thrift-base" % cv,
-  //         "com.foursquare" % "common-thrift-json" % cv,
-  //         "com.foursquare" % ("spindle-codegen-binary_" + bv) % cv,
-  //         "org.scalaj" % ("scalaj-collection_" + bv) % "1.5",
-  //         "org.scala-lang" % "scala-library" % bv,
-  //         "org.scala-lang" % "scala-compiler" % bv
-  //       )
-  //     )
-  // )
+  val thriftBootstrap = Default.scala ++ ThriftCodegenPlugin.thriftSettings ++ Seq(
+    Keys.sourceDirectory in ThriftCodegenPlugin.thrift in Compile <<= (Keys.baseDirectory)(identity),
+    Keys.scalaBinaryVersion in ThriftCodegenPlugin.thrift := "2.10.5",
+    ThriftCodegenPlugin.thriftCodegenVersion := "3.0.0-M15",
+    ThriftCodegenPlugin.thriftCodegenRuntimeLibs := ThirdParty.scalajCollection,
+    ThriftCodegenPlugin.thriftCodegenTemplate := file("src/main/ssp/codegen/scala/record.ssp").absolutePath,
+    ThriftCodegenPlugin.thriftCodegenJavaTemplate := file("src/main/ssp/codegen/javagen/record.ssp").absolutePath,
+    Keys.ivyScala <<= (Keys.ivyScala)(_.map(_.copy(checkExplicit = false, filterImplicit = false, overrideScalaVersion =false))),
+    Keys.update <<= (Keys.ivyModule, Keys.thisProjectRef, Keys.updateConfiguration, Keys.cacheDirectory, Keys.transitiveUpdate,
+        Keys.executionRoots, Keys.resolvedScoped, Keys.skip in Keys.update, Keys.streams) map {
+      (module, ref, config, cacheDirectory, reports, roots, resolved, skip, s) =>
+        val depsUpdated = reports.exists(!_.stats.cached)
+        val isRoot = roots contains resolved
+        Classpaths.cachedUpdate(cacheDirectory / "update", ref.toString, module, config, identity, skip = skip, force = isRoot, depsUpdated = depsUpdated, log = s.log)
+    } tag(Tags.Update, Tags.Network),
+    ThriftCodegenPlugin.thriftCodegenBinaryLibs <<=
+      (ThriftCodegenPlugin.thriftCodegenVersion, Keys.scalaBinaryVersion in ThriftCodegenPlugin.thrift)((cv, bv) =>
+        Seq(
+          "com.foursquare" % "common-thrift-base" % cv,
+          "com.foursquare" % "common-thrift-json" % cv,
+          "com.foursquare" %% "spindle-codegen-binary" % cv,
+          "org.scalaj" %% "scalaj-collection" % "1.5",
+          "org.scala-lang" % "scala-library" % bv,
+          "org.scala-lang" % "scala-compiler" % bv
+        )
+      )
+  )
 
   val thriftTestLocal = Default.scala ++ Seq(
     Keys.libraryDependencies <++= (Keys.scalaVersion) (v =>
