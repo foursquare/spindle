@@ -60,6 +60,15 @@ class ${cls.name}Meta
 #end
     ret
   }
+<% val indexes = cls.annotations.toSeq.filter(_._1 == "index").map(_._2) %>
+#if (indexes.nonEmpty)
+  object indexes {
+#for (index <- indexes)
+    lazy val `${index.replace(": asc", "Asc").replace(": desc", "Desc").replace(",", "").replace(" ", "")}` =
+      com.foursquare.spindle.IndexParser.parseIndex("${index}").right.get
+#end
+  }
+#end
 }
 
 class ${cls.name}CompanionProvider extends com.foursquare.spindle.CompanionProvider[${cls.name}] {
