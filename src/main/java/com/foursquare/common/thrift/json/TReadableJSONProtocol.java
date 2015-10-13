@@ -786,7 +786,7 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
     }
   }
 
-  private ReadContext currentReadContext() throws TException {
+  protected ReadContext currentReadContext() throws TException {
     try {
       return readContextStack.peek();
     } catch (EmptyStackException e) {
@@ -811,7 +811,7 @@ public class TReadableJSONProtocol extends TProtocol implements SerializeDatesAs
   /**
    * Encapsulates the current structure being read (e.g. objects or arrays)
    */
-  private abstract static class ReadContext {
+  protected abstract static class ReadContext {
     /**
      * The JsonParser that can be used to read/parse fields as they're encountered.
      */
